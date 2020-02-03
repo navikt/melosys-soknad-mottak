@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: local
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: health

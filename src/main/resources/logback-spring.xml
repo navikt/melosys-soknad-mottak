@@ -1,0 +1,27 @@
+<configuration>
+  <springProfile name="!local">
+    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <fieldNames>
+          <version>[ignore]</version>
+        </fieldNames>
+      </encoder>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="stdout_json"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="local">
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %logger{10} - %msg%n</pattern>
+      </encoder>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="console"/>
+    </root>
+  </springProfile>
+</configuration>
