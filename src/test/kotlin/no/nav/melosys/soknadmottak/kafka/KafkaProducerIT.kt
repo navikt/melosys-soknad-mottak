@@ -1,6 +1,7 @@
 package no.nav.melosys.soknadmottak.kafka
 
 import no.nav.common.KafkaEnvironment
+import no.nav.melosys.soknadmottak.Soknad
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
@@ -21,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles
 @Import(SoknadMottakTestConfiguration::class)
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class KafkaProducerTest {
+class KafkaProducerIT {
 
     @Autowired
     private lateinit var kafkaTemplate: KafkaTemplate<String, Soknad>

@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kafka
+package no.nav.melosys.soknadmottak
 
 data class Soknad(
     val felt: String
