@@ -1,0 +1,21 @@
+KAFKA_TOPIC: test-topic
+SRV_USERNAME: dummy
+SRV_PASSWORD: dummy
+
+spring:
+  application:
+    name: melosys-soknad-mottak
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    properties:
+      schema.registry.url: dummy
+      reconnect.backoff.ms: 1000
+      ssl:
+        truststore.location:
+        truststore.password:
+        protocol: PLAINTEXT
+      security.protocol: PLAINTEXT
+
