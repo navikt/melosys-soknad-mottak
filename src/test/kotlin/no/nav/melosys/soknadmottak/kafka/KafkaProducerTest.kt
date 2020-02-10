@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.kafka
 
 import no.nav.common.KafkaEnvironment
-import no.nav.melosys.soknadmottak.TestConfig
+import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.mockito.ArgumentCaptor
@@ -18,7 +18,7 @@ import org.springframework.kafka.support.SendResult
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
-@Import(TestConfig::class)
+@Import(SoknadMottakTestConfiguration::class)
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaProducerTest {
