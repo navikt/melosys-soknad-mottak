@@ -27,12 +27,9 @@ class KafkaProducerConfig(
 
 @Service
 class KafkaProducer(
-        @Autowired
         private val kafkaTemplate: KafkaTemplate<String, Soknad>,
-        @Autowired
         private val callbackService: CallbackService,
-        @Value("\${melosys.kafka.producer.topic-name}")
-        private val topicName: String
+        @Value("\${melosys.kafka.producer.topic-name}") private val topicName: String
 ) {
     fun publiserMelding(
             soknad: Soknad,
