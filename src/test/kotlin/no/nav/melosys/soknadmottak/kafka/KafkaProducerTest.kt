@@ -5,10 +5,10 @@ import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers
 import org.mockito.Captor
-import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.timeout
+import org.mockito.Mockito.verify
+import org.mockito.Spy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,8 +26,8 @@ class KafkaProducerTest {
     @Autowired
     private lateinit var kafkaTemplate: KafkaTemplate<String, Soknad>
 
-    @Mock
-    private lateinit var callbackService: CallbackService
+    @Spy
+    private val callbackService: CallbackService = CallbackService()
 
     @Value("\${melosys.kafka.producer.topic-name}")
     private lateinit var topicName: String
@@ -57,11 +57,9 @@ class KafkaProducerTest {
 
     @Test
     internal fun publiserMelding() {
-        `when`(callbackService.kvitter(ArgumentMatchers.any())).thenCallRealMethod()
-
         kafkaProducer.publiserMelding(Soknad("innhold"))
 
-        verify(callbackService, timeout(5_000).times(1)).kvitter(resultCaptor.capture())
+        verify(callbackService, timeout(5_000)).kvitter(resultCaptor.capture())
         assertThat(resultCaptor.value.producerRecord.value().felt).isEqualTo("innhold")
     }
 }
