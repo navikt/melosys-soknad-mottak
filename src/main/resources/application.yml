@@ -1,6 +1,19 @@
 spring:
   profiles:
     active: local
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${melosys.systemuser.username}" password="${melosys.systemuser.password}";
+      reconnect.backoff.ms: 1000
 
 management:
   endpoint:
@@ -13,3 +26,11 @@ management:
     web:
       exposure:
         include: health
+
+melosys:
+  kafka:
+    producer:
+      topic-name: ${KAFKA_TOPIC}
+  systemuser:
+    username: ${SRV_USERNAME}
+    password: ${SRV_PASSWORD}
