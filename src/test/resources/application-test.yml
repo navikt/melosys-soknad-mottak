@@ -1,8 +1,6 @@
-KAFKA_TOPIC: test-topic
-SRV_USERNAME: dummy
-SRV_PASSWORD: dummy
-
 spring:
+  main:
+    banner-mode: off
   application:
     name: melosys-soknad-mottak
   kafka:
@@ -14,4 +12,19 @@ spring:
         truststore.password:
         protocol: PLAINTEXT
       security.protocol: PLAINTEXT
+
+SRV_USERNAME: dummy
+SRV_PASSWORD: dummy
+KAFKA_TOPIC: test-topic
+
+STS_URL: fixme
+
+ALTINN_INFORMASJON_URL: https://altinn.no/altinnInformasjon
+ALTINN_USERNAME: dummy
+ALTINN_PASSWORD: dummy
+ALTINN_SERVICE_CODE: 0000
+
+
+
+
 

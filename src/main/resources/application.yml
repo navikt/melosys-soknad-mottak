@@ -7,7 +7,6 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         enable.idempotence: true
-
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     properties:
       security.protocol: SASL_SSL
@@ -21,7 +20,6 @@ management:
       enabled: true
     prometheus:
       enabled: true
-
   endpoints:
     web:
       exposure:
@@ -34,3 +32,16 @@ melosys:
   systemuser:
     username: ${SRV_USERNAME}
     password: ${SRV_PASSWORD}
+
+altinn:
+  informasjon:
+    url: ${ALTINN_INFORMASJON_URL}
+  service:
+    code: ${ALTINN_SERVICE_CODE}
+  username: ${ALTINN_USERNAME}
+  password: ${ALTINN_PASSWORD}
+
+sts:
+  url: ${STS_URL}
+  username: ${SRV_USERNAME}
+  password: ${SRV_PASSWORD}

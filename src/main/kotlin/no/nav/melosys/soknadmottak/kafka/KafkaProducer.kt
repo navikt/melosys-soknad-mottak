@@ -1,6 +1,7 @@
 package no.nav.melosys.soknadmottak.kafka
 
 import mu.KotlinLogging
+import no.nav.melosys.soknadmottak.Soknad
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
