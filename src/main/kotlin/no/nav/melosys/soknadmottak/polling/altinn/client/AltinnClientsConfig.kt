@@ -37,6 +37,6 @@ class AltinnClientsConfig(
         }
         .create(serviceClazz)
         .apply {
-            stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING) //FIXME STS_SAML_POLICY
+            stsClient.configureFor(this, STS_SAML_POLICY)
         }
 }
