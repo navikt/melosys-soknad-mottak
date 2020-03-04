@@ -176,4 +176,12 @@
         </plugins>
     </build>
 
+    <repositories>
+        <!-- Skal brukes hvis bygget kjøres fra en Github Action -->
+        <repository>
+            <id>github-package-registry-navikt</id>
+            <url>https://maven.pkg.github.com/navikt/maven-release</url>
+        </repository>
+    </repositories>
+
 </project>
