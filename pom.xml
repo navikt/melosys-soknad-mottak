@@ -20,7 +20,7 @@
         <kotlin.code.style>official</kotlin.code.style>
 
         <cxf.version>3.3.5</cxf.version>
-        <kotlin-logging.version>1.7.7</kotlin-logging.version>
+        <kotlin-logging.version>1.7.8</kotlin-logging.version>
         <kotlin-test.version>3.4.2</kotlin-test.version>
         <kafka-embedded-env.version>2.3.0</kafka-embedded-env.version>
         <log4j.version>1.2.12</log4j.version>
