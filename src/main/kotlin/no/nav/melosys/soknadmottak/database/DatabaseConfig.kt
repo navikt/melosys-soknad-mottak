@@ -23,12 +23,29 @@ import javax.sql.DataSource
 @Configuration
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {
+    companion object {
+        private const val DATABASE_NAME = "melosys-soknad"
+        private const val PROD_MOUNT_PATH = "postgresql/prod-fss"
+        private const val PREPROD_MOUNT_PATH = "postgresql/preprod-fss"
+    }
 
-    private val isProduction: Boolean
-        get() {
-            val cluster = environment.getProperty("NAIS_CLUSTER_NAME")
-            return cluster != null && cluster.equals("prod-fss", ignoreCase = true)
+    private val isProduction: Boolean =
+        environment.getProperty("NAIS_CLUSTER_NAME")?.equals("prod-fss", ignoreCase = true) ?: false
+
+    @Bean
+    fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean =
+        LocalContainerEntityManagerFactoryBean().apply {
+            dataSource = userDataSource()
+            setPackagesToScan("no.nav.melosys.soknadmottak")
+
+            jpaVendorAdapter = HibernateJpaVendorAdapter().apply {
+                setDatabase(Database.POSTGRESQL)
+            }
         }
+
+    @Bean(name = ["transactionManager"])
+    fun jpaTransactionManager(entityManagerFactory: EntityManagerFactory): PlatformTransactionManager =
+        JpaTransactionManager(entityManagerFactory)
 
     @Bean
     fun adminDataSource(): DataSource {
@@ -44,50 +61,29 @@ class DatabaseConfig(private val environment: Environment) {
     @Bean
     fun flywayConfig(@Qualifier("adminDataSource") adminDataSource: DataSource): FlywayConfigurationCustomizer =
         FlywayConfigurationCustomizer {
-            it.initSql(String.format("SET ROLE \"%s-admin\"", environment.getRequiredProperty("DATABASE_NAME")))
-            .dataSource(adminDataSource);
+            it.initSql("SET ROLE \"${environment.getRequiredProperty("DATABASE_NAME")}-admin\"")
+                .dataSource(adminDataSource)
         }
 
+    private fun dataSource(user: String): HikariDataSource =
+        HikariConfig().apply {
+            jdbcUrl = environment.getProperty("spring.datasource.url")
+            maximumPoolSize = 3
+            minimumIdle = 1
+        }.let { config ->
+            HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, getMountPath(), dbRole(user))
+        }
 
-    @Bean
-    fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean {
-        val entityManagerFactoryBean = LocalContainerEntityManagerFactoryBean()
-        entityManagerFactoryBean.setDataSource(userDataSource())
-        entityManagerFactoryBean.setPackagesToScan("no.nav.melosys.soknadmottak")
-
-        val vendorAdapter = HibernateJpaVendorAdapter()
-        vendorAdapter.setDatabase(Database.POSTGRESQL)
-        entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter)
-
-        return entityManagerFactoryBean
-    }
-
-    @Bean(name = ["transactionManager"])
-    fun jpaTransactionManager(entityManagerFactory: EntityManagerFactory): PlatformTransactionManager {
-        val transactionManager = JpaTransactionManager()
-        transactionManager.setEntityManagerFactory(entityManagerFactory)
-        return transactionManager
-    }
-
-    private fun dataSource(user: String): HikariDataSource {
-        val config = HikariConfig()
-        config.setJdbcUrl(environment.getProperty("spring.datasource.url"))
-        config.setMaximumPoolSize(3)
-        config.setMinimumIdle(1)
-        val mountPath = if (isProduction) PROD_MOUNT_PATH else PREPROD_MOUNT_PATH
-        return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, mountPath, dbRole(user))
+    private fun getMountPath() = when {
+        isProduction -> PROD_MOUNT_PATH
+        else -> PREPROD_MOUNT_PATH
     }
 
     private fun dbRole(role: String): String {
         val namespace = environment.getProperty("NAIS_NAMESPACE")
-        return if (isProduction) {
-            arrayOf(DATABASE_NAME, role).joinToString("-")
-        } else arrayOf(DATABASE_NAME, namespace, role).joinToString("-")
-    }
-
-    companion object {
-        private val DATABASE_NAME = "melosys-soknad"
-        private val PROD_MOUNT_PATH = "postgresql/prod-fss"
-        private val PREPROD_MOUNT_PATH = "postgresql/preprod-fss"
+        return when {
+            isProduction -> arrayOf(DATABASE_NAME, role)
+            else -> arrayOf(DATABASE_NAME, namespace, role)
+        }.joinToString("-")
     }
 }
