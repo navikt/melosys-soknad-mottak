@@ -21,6 +21,7 @@
 
         <cxf.version>3.3.5</cxf.version>
         <flyway.version>6.2.4</flyway.version>
+        <h2.version>1.4.197</h2.version>
         <kotlin-logging.version>1.7.8</kotlin-logging.version>
         <kotlin-test.version>3.4.2</kotlin-test.version>
         <kafka-embedded-env.version>2.3.0</kafka-embedded-env.version>
@@ -68,15 +69,15 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>
@@ -128,6 +129,11 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
             <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
 
         <dependency>
