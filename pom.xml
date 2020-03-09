@@ -24,7 +24,7 @@
         <h2.version>1.4.197</h2.version>
         <kotlin-logging.version>1.7.8</kotlin-logging.version>
         <kotlin-test.version>3.4.2</kotlin-test.version>
-        <kafka-embedded-env.version>2.3.0</kafka-embedded-env.version>
+        <kafka-embedded-env.version>2.4.0</kafka-embedded-env.version>
         <log4j.version>1.2.17</log4j.version>
         <prometheus.version>0.8.1</prometheus.version>
         <tjenestespesifikasjoner.version>1.2019.12.20-15.00-e8dbb8221116</tjenestespesifikasjoner.version>
