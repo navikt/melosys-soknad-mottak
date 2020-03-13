@@ -58,9 +58,9 @@ class KafkaProducerIT {
 
     @Test
     internal fun publiserMelding() {
-        kafkaProducer.publiserMelding(Soknad("innhold"))
+        kafkaProducer.publiserMelding(Soknad("ref", "innhold"))
 
         verify(callbackService, timeout(5_000)).kvitter(resultCaptor.capture())
-        assertThat(resultCaptor.value.producerRecord.value().felt).isEqualTo("innhold")
+        assertThat(resultCaptor.value.producerRecord.value().content).isEqualTo("innhold")
     }
 }

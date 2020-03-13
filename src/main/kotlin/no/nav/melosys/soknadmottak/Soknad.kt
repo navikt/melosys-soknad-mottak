@@ -1,5 +1,17 @@
 package no.nav.melosys.soknadmottak
 
-data class Soknad(
-    val felt: String
+import javax.persistence.*
+
+@Entity
+@Table(name = "SOKNAD_MOTTAK")
+class Soknad(
+    @Column(name= "archive_ref", nullable = false)
+    var archiveReference: String,
+
+    @Column(nullable = false)
+    var content: String,
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 )
