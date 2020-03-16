@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
+private const val ETT_SEKUND_MILLI = 30 * 1000L
 
 @Service
 class DownloadQueueService(
@@ -26,7 +27,7 @@ class DownloadQueueService(
     private val username = properties.username
     private val password = properties.password
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
     fun pollDocuments() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
@@ -41,7 +42,7 @@ class DownloadQueueService(
                         throw UnsupportedOperationException("Vedlegg støttes ikke.")
                     }
 
-                    val søknad = Soknad(item.archiveReference, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    val søknad = Soknad(item.archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     soknadRepository.save(søknad)
                     kafkaProducer.publiserMelding(søknad)
                     //TODO: Callback purgeItemFromDownloadQueue(item.archiveReference)

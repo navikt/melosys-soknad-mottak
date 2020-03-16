@@ -58,7 +58,7 @@ class DownloadQueueServiceTest {
             attachments = ArchivedAttachmentExternalListDQBE()
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
-        every { søknadRepository.save<Soknad>(any()) } returns Soknad("ref", "content", 1)
+        every { søknadRepository.save<Soknad>(any()) } returns Soknad("ref", false,"content", 1)
 
         downloadQueueService.pollDocuments()
 

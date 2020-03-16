@@ -1,5 +1,6 @@
 CREATE TABLE SOKNAD_MOTTAK(
     id SERIAL PRIMARY KEY,
-    archive_ref VARCHAR(4000) NOT NULL,
-    content VARCHAR(4000) NOT NULL
+    archive_ref VARCHAR(500) NOT NULL,
+    delivered BOOLEAN NOT NULL,
+    content TEXT NOT NULL
 );

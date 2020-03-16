@@ -9,6 +9,9 @@ class Soknad(
     var archiveReference: String,
 
     @Column(nullable = false)
+    var delivered: Boolean,
+
+    @Column(nullable = false)
     var content: String,
 
     @Id
