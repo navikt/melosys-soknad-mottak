@@ -39,7 +39,7 @@ class DownloadQueueService(
 
                     logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${item.archiveReference}'" }
                     attachments.forEachIndexed { attachmentIndex, attachment ->
-                        throw UnsupportedOperationException("Vedlegg støttes ikke.")
+                        logger.info { "Vedlegg støttes ikke."}
                     }
 
                     val søknad = Soknad(item.archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
