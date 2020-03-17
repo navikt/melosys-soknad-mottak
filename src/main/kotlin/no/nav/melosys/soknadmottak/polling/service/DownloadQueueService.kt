@@ -34,20 +34,23 @@ class DownloadQueueService(
                 val items = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
                 logger.debug { "DownloadQueue: processing '${items.size}' items" }
                 items.forEachIndexed { index, item ->
-                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(item.archiveReference)
+                    val archiveReference = item.archiveReference
+                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${item.archiveReference}'" }
+                    logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
                     attachments.forEachIndexed { attachmentIndex, attachment ->
                         logger.info { "Vedlegg støttes ikke."}
                     }
 
-                    val søknad = Soknad(item.archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
-                    soknadRepository.save(søknad)
-                    kafkaProducer.publiserMelding(søknad)
+                    val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
+                        soknadRepository.save(søknad)
+                        kafkaProducer.publiserMelding(søknad)
+                    }
                     //TODO: Callback purgeItemFromDownloadQueue(item.archiveReference)
-                    logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${item.archiveReference}')" }
-                    Metrics.altinnSkjemaReceivedCounter.inc()
+                    //logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')" }
+                    //Metrics.altinnSkjemaReceivedCounter.inc()
                 }
                 logger.debug { "DownloadQueue: completed processing '${items.size}' items" }
             }
