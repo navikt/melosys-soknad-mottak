@@ -1,71 +1,56 @@
 package no.nav.melosys.soknadmottak.polling.service
 
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
 import mu.KotlinLogging
-import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBE
+import mu.withLoggingContext
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.nav.melosys.soknadmottak.Soknad
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
-import no.nav.melosys.soknadmottak.common.retry
+import no.nav.melosys.soknadmottak.database.SoknadRepository
+import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.metrics.Metrics
 import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
 import org.slf4j.MDC
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.w3c.dom.Document
-import org.xml.sax.InputSource
 import java.util.*
-import javax.xml.parsers.DocumentBuilder
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.XPath
-import javax.xml.xpath.XPathExpression
-import javax.xml.xpath.XPathFactory
 
-private const val CALL_NAME = "Altinn - DownloadQueue"
 private val logger = KotlinLogging.logger { }
+private const val ETT_SEKUND_MILLI = 30 * 1000L
 
 @Service
 class DownloadQueueService(
+    val soknadRepository: SoknadRepository,
+    val kafkaProducer: KafkaProducer,
     private val properties: AltinnProperties,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
     private val username = properties.username
     private val password = properties.password
 
-    suspend fun pollDocuments() {
-        val xPath: XPath = XPathFactory.newInstance().newXPath()
-        val forsendelseIdXpath: XPathExpression = xPath.compile("/melding/Skjema/henvendelse/forsendelsesId")
-
-        val documentBuilder: DocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-
-        logger.info { "DownloadQueue: initiated polling from DownloadQueue" }
-
+    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
+    fun pollDocuments() {
         try {
-            MDC.put(MDC_CALL_ID, UUID.randomUUID().toString())
-            withContext(MDCContext()) {
+            withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 val items = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
                 logger.debug { "DownloadQueue: processing '${items.size}' items" }
                 items.forEachIndexed { index, item ->
-                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(item.archiveReference)
-                    val doc: Document = documentBuilder.parse(
-                        InputSource(
-                            archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
-                                .removePrefix("<![CDATA[")
-                                .removeSuffix("]]>")
-                                .reader()
-                        )
-                    )
-                    val forsendelseId = forsendelseIdXpath.evaluate(doc)
-
+                    val archiveReference = item.archiveReference
+                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${item.archiveReference}'" }
+                    logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
                     attachments.forEachIndexed { attachmentIndex, attachment ->
-                        throw UnsupportedOperationException("Vedlegg støttes ikke.")
+                        logger.info { "Vedlegg støttes ikke."}
                     }
-                    // TODO Kafka oppdateres
-                    purgeItemFromDownloadQueue(item)
-                    logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${item.archiveReference}')" }
-                    Metrics.altinnSkjemaReceivedCounter.inc()
+
+                    val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
+                        soknadRepository.save(søknad)
+                        kafkaProducer.publiserMelding(søknad)
+                    }
+                    //TODO: Callback purgeItemFromDownloadQueue(item.archiveReference)
+                    //logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')" }
+                    //Metrics.altinnSkjemaReceivedCounter.inc()
                 }
                 logger.debug { "DownloadQueue: completed processing '${items.size}' items" }
             }
@@ -78,22 +63,18 @@ class DownloadQueueService(
         iDownloadQueueExternalBasic.getDownloadQueueItems(username, password, serviceCode)
 
 
-    private suspend fun purgeItem(archiveReference: String) =
-        retry(callName = CALL_NAME) {
-            iDownloadQueueExternalBasic.purgeItem(username, password, archiveReference)
-        }
+    private fun purgeItem(archiveReference: String) =
+        iDownloadQueueExternalBasic.purgeItem(username, password, archiveReference)
 
-    private suspend fun getArchivedFormTaskBasicDQ(archiveReference: String) =
-        retry(callName = CALL_NAME) {
-            iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(username, password, archiveReference, null, false)
-        }
+    private fun getArchivedFormTaskBasicDQ(archiveReference: String) =
+        iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(username, password, archiveReference, null, false)
 
-    private suspend fun purgeItemFromDownloadQueue(item: DownloadQueueItemBE) {
+    fun purgeItemFromDownloadQueue(archiveReference: String) {
         try {
-            purgeItem(item.archiveReference)
-            logger.debug { "DownloadQueue: successfully purged archive reference '${item.archiveReference}'" }
+            purgeItem(archiveReference)
+            logger.info { "DownloadQueue: successfully purged archive reference '${archiveReference}'" }
         } catch (e: Throwable) {
-            logger.error { "DownloadQueue: failed to purge archive reference '${item.archiveReference}'" }
+            logger.error { "DownloadQueue: failed to purge archive reference '${archiveReference}'" }
         }
     }
 }

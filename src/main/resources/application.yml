@@ -1,6 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://${PG_HOST}:5432/${DATABASE_NAME}
+  jpa:
+    open-in-view: false
   profiles:
     active: local
   kafka:

@@ -32,10 +32,4 @@ class KafkaProducer(
     }
 }
 
-// todo: Denne tjenesten byttes ut med den som skal kvittere mot altinn
-@Service
-class CallbackService {
-    fun kvitter(result: SendResult<String, Soknad>?) =
-        logger.info { "Melding ble sendt på topic: ${result?.producerRecord?.value()}" }
-}
 

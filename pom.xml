@@ -78,6 +78,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>
@@ -188,6 +189,9 @@
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
+                    <pluginOptions>
+                        <option>spring:annotation=javax.persistence.Entity</option>
+                    </pluginOptions>
                 </configuration>
                 <dependencies>
                     <dependency>
