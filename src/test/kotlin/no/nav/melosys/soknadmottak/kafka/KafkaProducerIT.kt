@@ -1,15 +1,14 @@
 package no.nav.melosys.soknadmottak.kafka
 
+import io.mockk.junit5.MockKExtension
+import io.mockk.slot
+import io.mockk.spyk
+import io.mockk.verify
 import no.nav.common.KafkaEnvironment
-import no.nav.melosys.soknadmottak.Soknad
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
-import org.mockito.Mockito.timeout
-import org.mockito.Mockito.verify
-import org.mockito.Spy
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,27 +18,18 @@ import org.springframework.kafka.support.SendResult
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
+@ExtendWith(MockKExtension::class)
 @Import(SoknadMottakTestConfiguration::class)
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class KafkaProducerIT {
-
-    @Autowired
-    private lateinit var kafkaTemplate: KafkaTemplate<String, Soknad>
-
-    @Spy
-    private val callbackService: CallbackService = CallbackService()
-
+class KafkaProducerIT @Autowired constructor(
+    private val kafkaTemplate: KafkaTemplate<String, MottattSoknadMelding>,
+    private val embeddedKafka: KafkaEnvironment,
     @Value("\${melosys.kafka.producer.topic-name}")
-    private lateinit var topicName: String
-
+    private val topicName: String
+) {
+    private val callbackService = spyk<CallbackService>()
     private lateinit var kafkaProducer: KafkaProducer
-
-    @Autowired
-    private lateinit var embeddedKafka: KafkaEnvironment
-
-    @Captor
-    private lateinit var resultCaptor: ArgumentCaptor<SendResult<String, Soknad>>
 
     @BeforeEach
     internal fun beforeEach() {
@@ -58,9 +48,11 @@ class KafkaProducerIT {
 
     @Test
     internal fun publiserMelding() {
-        kafkaProducer.publiserMelding(Soknad("ref",  true,"innhold"))
+        kafkaProducer.publiserMelding(MottattSoknadMelding("ref"))
 
-        verify(callbackService, timeout(5_000)).kvitter(resultCaptor.capture())
-        assertThat(resultCaptor.value.producerRecord.value().content).isEqualTo("innhold")
+        val slot = slot<SendResult<String, MottattSoknadMelding>>()
+        verify(timeout = 5_000) { callbackService.kvitter(capture(slot)) }
+
+        assertThat(slot.captured.producerRecord.value().archiveReference).isEqualTo("ref")
     }
 }
