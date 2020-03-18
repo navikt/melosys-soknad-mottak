@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import java.util.*
 
 @WebMvcTest(SoknadController::class)
 class SoknadControllerTest @Autowired constructor(
@@ -28,11 +29,11 @@ class SoknadControllerTest @Autowired constructor(
 
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
-        every { soknadRepository.findByArchiveReference("ref") } returns listOf(
+        every { soknadRepository.findById(123) } returns Optional.of(
             Soknad("ref", true, "<innhold>xml</innhold>", 123)
         )
 
-        val result = mockMvc.get("/api/soknader/ref") {
+        val result = mockMvc.get("/api/soknader/123") {
             accept(MediaType.APPLICATION_XML)
         }.andExpect {
             status { isOk }
@@ -41,7 +42,7 @@ class SoknadControllerTest @Autowired constructor(
             }
         }.andReturn()
 
-        verify { soknadRepository.findByArchiveReference("ref") }
+        verify { soknadRepository.findById(123) }
         result.response.contentAsString.let {
             assertThat(it).isEqualTo("<innhold>xml</innhold>")
         }
@@ -49,14 +50,14 @@ class SoknadControllerTest @Autowired constructor(
 
     @Test
     fun `hent søknad som ikke finnes, forvent not found`() {
-        every { soknadRepository.findByArchiveReference("ref") } returns emptyList()
+        every { soknadRepository.findById(123) } returns Optional.empty()
 
-        mockMvc.get("/api/soknader/ref") {
+        mockMvc.get("/api/soknader/123") {
             accept(MediaType.APPLICATION_XML)
         }.andExpect {
             status { isNotFound }
         }
 
-        verify { soknadRepository.findByArchiveReference("ref") }
+        verify { soknadRepository.findById(123) }
     }
 }

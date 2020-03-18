@@ -3,12 +3,13 @@ package no.nav.melosys.soknadmottak.kafka
 import no.nav.melosys.soknadmottak.Soknad
 
 data class MottattSoknadMelding(
-    val archiveReference: String
+    val soknadID: Long
 ) {
     companion object {
         operator fun invoke(soknad: Soknad) =
             MottattSoknadMelding(
-                archiveReference = soknad.archiveReference
+                soknadID = soknad.id
+                    ?: throw UnsupportedOperationException("Kan ikke opprette MottattSoknadMelding uten id")
             )
     }
 }

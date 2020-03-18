@@ -22,12 +22,12 @@ private val logger = KotlinLogging.logger { }
 class SoknadController @Autowired constructor(
     private val soknadRepository: SoknadRepository
 ) {
-    @ApiOperation("Henter xml-innhold til en søknad med gitt archiveReference")
-    @GetMapping("{archiveReference}", produces = [MediaType.APPLICATION_XML_VALUE])
-    fun hentSøknad(@PathVariable archiveReference: String): ResponseEntity<String> {
-        logger.info { "Henter søknad med referanse $archiveReference" }
-        return soknadRepository.findByArchiveReference(archiveReference)
+    @ApiOperation("Henter xml-innhold til en søknad med gitt ID")
+    @GetMapping("{soknadID}", produces = [MediaType.APPLICATION_XML_VALUE])
+    fun hentSøknad(@PathVariable soknadID: Long): ResponseEntity<String> {
+        logger.info { "Henter søknad med ID $soknadID" }
+        return soknadRepository.findById(soknadID)
             .map { ResponseEntity.ok(it.content) }
-            .firstOrNull() ?: ResponseEntity.notFound().build()
+            .orElseGet { ResponseEntity.notFound().build() }
     }
 }

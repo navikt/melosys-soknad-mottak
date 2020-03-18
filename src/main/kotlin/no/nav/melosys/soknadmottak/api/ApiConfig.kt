@@ -42,7 +42,7 @@ class SwaggerConfig {
                         .build()
                 )
             )
-            .securitySchemes(listOf(ApiKey("JWT", "Authorization", "header")));
+            .securitySchemes(listOf(ApiKey("JWT", "Authorization", "header")))
 }
 
 @Configuration

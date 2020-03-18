@@ -40,17 +40,12 @@ class DownloadQueueService(
 
                     logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
                     attachments.forEachIndexed { attachmentIndex, attachment ->
-                        logger.info { "Vedlegg støttes ikke."}
+                        logger.info { "Vedlegg støttes ikke." }
                     }
 
                     val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
-                        soknadRepository.save(søknad)
-                        kafkaProducer.publiserMelding(
-                            MottattSoknadMelding(
-                                søknad
-                            )
-                        )
+                        kafkaProducer.publiserMelding(MottattSoknadMelding(soknadRepository.save(søknad)))
                     }
                     //TODO: Callback purgeItemFromDownloadQueue(item.archiveReference)
                     //logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')" }

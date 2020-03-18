@@ -63,6 +63,6 @@ class DownloadQueueServiceTest {
         downloadQueueService.pollDocuments()
 
         verify { søknadRepository.save(any<Soknad>()) }
-        verify { kafkaProducer.publiserMelding(any()) }
+        verify { kafkaProducer.publiserMelding(match { it.soknadID == 1L }) }
     }
 }

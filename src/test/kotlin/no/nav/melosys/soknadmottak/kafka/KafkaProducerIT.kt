@@ -48,11 +48,11 @@ class KafkaProducerIT @Autowired constructor(
 
     @Test
     internal fun publiserMelding() {
-        kafkaProducer.publiserMelding(MottattSoknadMelding("ref"))
+        kafkaProducer.publiserMelding(MottattSoknadMelding(123))
 
         val slot = slot<SendResult<String, MottattSoknadMelding>>()
         verify(timeout = 5_000) { callbackService.kvitter(capture(slot)) }
 
-        assertThat(slot.captured.producerRecord.value().archiveReference).isEqualTo("ref")
+        assertThat(slot.captured.producerRecord.value().soknadID).isEqualTo(123)
     }
 }
