@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.polling.service
 
 import mu.KotlinLogging
 import mu.withLoggingContext
+import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.Soknad
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
@@ -38,18 +39,15 @@ class DownloadQueueService(
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
-                    attachments.forEachIndexed { attachmentIndex, attachment ->
-                        logger.info { "Vedlegg støttes ikke." }
-                    }
-
                     val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
                         kafkaProducer.publiserMelding(MottattSoknadMelding(soknadRepository.save(søknad)))
+                        processAttachments(attachments, archiveReference)
+                        purgeItemFromDownloadQueue(archiveReference)
+                        logger.info {
+                            "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')"
+                        }
                     }
-                    //TODO: Callback purgeItemFromDownloadQueue(item.archiveReference)
-                    //logger.info { "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')" }
-                    //Metrics.altinnSkjemaReceivedCounter.inc()
                 }
                 logger.debug { "DownloadQueue: completed processing '${items.size}' items" }
             }
@@ -58,9 +56,18 @@ class DownloadQueueService(
         }
     }
 
+    private fun processAttachments(
+        attachments: MutableList<ArchivedAttachmentDQBE>,
+        archiveReference: String
+    ) {
+        logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
+        attachments.forEachIndexed { attachmentIndex, attachment ->
+            logger.info { "Vedlegg støttes ikke." }
+        }
+    }
+
     fun getDownloadQueueItems(serviceCode: String) =
         iDownloadQueueExternalBasic.getDownloadQueueItems(username, password, serviceCode)
-
 
     private fun purgeItem(archiveReference: String) =
         iDownloadQueueExternalBasic.purgeItem(username, password, archiveReference)
