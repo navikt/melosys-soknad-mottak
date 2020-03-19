@@ -64,5 +64,6 @@ class DownloadQueueServiceTest {
 
         verify { søknadRepository.save(any<Soknad>()) }
         verify { kafkaProducer.publiserMelding(match { it.soknadID == 1L }) }
+        verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 }
