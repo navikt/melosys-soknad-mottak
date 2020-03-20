@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @Protected
 @RestController
@@ -24,6 +23,6 @@ class SoknadController @Autowired constructor(
     @GetMapping("{soknadID}", produces = [MediaType.APPLICATION_XML_VALUE])
     fun hentSøknad(@PathVariable soknadID: String): ResponseEntity<String> =
         ResponseEntity.ok(
-            altinnSoknadService.hentSøknad(UUID.fromString(soknadID)).content
+            altinnSoknadService.hentSøknad(soknadID).content
         )
 }

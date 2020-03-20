@@ -2,11 +2,10 @@ package no.nav.melosys.soknadmottak.database
 
 import no.nav.melosys.soknadmottak.Soknad
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
 
 interface SoknadRepository : JpaRepository<Soknad, Long> {
     fun findByArchiveReference(ref: String): Iterable<Soknad>
 
-    fun findBySoknadID(soknadID: UUID): Soknad?
+    fun findBySoknadID(soknadID: String): Soknad?
 }
 

@@ -39,11 +39,7 @@ class DownloadQueueService(
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    val søknad = Soknad(
-                        archiveReference = archiveReference,
-                        delivered = false,
-                        content = archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
-                    )
+                    val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
                         soknadRepository.save(søknad)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))

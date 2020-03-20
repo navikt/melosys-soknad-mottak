@@ -31,7 +31,7 @@ class SoknadControllerTest @Autowired constructor(
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
         every { altinnSoknadService.hentSøknad(SOKNAD_ID) } returns
-                Soknad(SOKNAD_ID.toString(), "ref", true, "<innhold>xml</innhold>", 123)
+                Soknad("ref", true, "<innhold>xml</innhold>", 123, SOKNAD_ID)
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
@@ -62,6 +62,6 @@ class SoknadControllerTest @Autowired constructor(
     }
 
     companion object {
-        private val SOKNAD_ID = UUID.randomUUID()
+        private val SOKNAD_ID = UUID.randomUUID().toString()
     }
 }
