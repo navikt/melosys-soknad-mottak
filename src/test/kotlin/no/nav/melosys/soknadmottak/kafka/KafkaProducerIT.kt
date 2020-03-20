@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
 import org.springframework.test.context.ActiveProfiles
+import java.util.*
 
 @SpringBootTest
 @ExtendWith(MockKExtension::class)
@@ -23,7 +24,7 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaProducerIT @Autowired constructor(
-    private val kafkaTemplate: KafkaTemplate<String, MottattSoknadMelding>,
+    private val kafkaTemplate: KafkaTemplate<String, SoknadMottatt>,
     private val embeddedKafka: KafkaEnvironment,
     @Value("\${melosys.kafka.producer.topic-name}")
     private val topicName: String
@@ -48,11 +49,12 @@ class KafkaProducerIT @Autowired constructor(
 
     @Test
     internal fun publiserMelding() {
-        kafkaProducer.publiserMelding(MottattSoknadMelding(123))
+        val soknadID = UUID.randomUUID().toString()
+        kafkaProducer.publiserMelding(SoknadMottatt(soknadID))
 
-        val slot = slot<SendResult<String, MottattSoknadMelding>>()
+        val slot = slot<SendResult<String, SoknadMottatt>>()
         verify(timeout = 5_000) { callbackService.kvitter(capture(slot)) }
 
-        assertThat(slot.captured.producerRecord.value().soknadID).isEqualTo(123)
+        assertThat(slot.captured.producerRecord.value().soknadID).isEqualTo(soknadID)
     }
 }

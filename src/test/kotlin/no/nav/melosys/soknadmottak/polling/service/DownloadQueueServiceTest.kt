@@ -43,7 +43,8 @@ class DownloadQueueServiceTest {
             archiveReference = "ref"
         }
         itemList.downloadQueueItemBE.add(item)
-        val downloadQueueService = DownloadQueueService(søknadRepository, kafkaProducer, altinnProperties, downloadQueue)
+        val downloadQueueService =
+            DownloadQueueService(søknadRepository, kafkaProducer, altinnProperties, downloadQueue)
         every { downloadQueue.getDownloadQueueItems("user", "pass", "code") } returns itemList
 
         val søknadXML = "<note>\n" +
@@ -58,12 +59,17 @@ class DownloadQueueServiceTest {
             attachments = ArchivedAttachmentExternalListDQBE()
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
-        every { søknadRepository.save<Soknad>(any()) } returns Soknad("ref", false,"content", 1)
+        every { søknadRepository.save<Soknad>(any()) } returns Soknad(
+            archiveReference = "ref",
+            delivered = false,
+            content = "content",
+            id = 1
+        )
 
         downloadQueueService.pollDocuments()
 
         verify { søknadRepository.save(any<Soknad>()) }
-        verify { kafkaProducer.publiserMelding(match { it.soknadID == 1L }) }
+        verify { kafkaProducer.publiserMelding(any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 }

@@ -18,6 +18,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 private const val API_PAKKE = "no.nav.melosys.soknadmottak.api"
 
 @Configuration
+class ApiConfig : WebMvcConfigurer {
+    companion object {
+        private const val API_PREFIX = "/api"
+    }
+
+    override fun configurePathMatch(configurer: PathMatchConfigurer) {
+        configurer.addPathPrefix(API_PREFIX) { erApiTjeneste(it) }
+    }
+
+    private fun erApiTjeneste(clazz: Class<*>): Boolean =
+        clazz.packageName.startsWith(API_PAKKE)
+                && clazz.isAnnotationPresent(RestController::class.java)
+}
+
+@Configuration
 @EnableSwagger2
 @ConditionalOnProperty(name = ["NAIS_CLUSTER_NAME"], havingValue = "dev-fss", matchIfMissing = true)
 class SwaggerConfig {
@@ -43,19 +58,4 @@ class SwaggerConfig {
                 )
             )
             .securitySchemes(listOf(ApiKey("JWT", "Authorization", "header")))
-}
-
-@Configuration
-class ApiConfig : WebMvcConfigurer {
-    companion object {
-        private const val API_PREFIX = "/api"
-    }
-
-    override fun configurePathMatch(configurer: PathMatchConfigurer) {
-        configurer.addPathPrefix(API_PREFIX) { erApiTjeneste(it) }
-    }
-
-    private fun erApiTjeneste(clazz: Class<*>): Boolean =
-        clazz.packageName.startsWith(API_PAKKE)
-                && clazz.isAnnotationPresent(RestController::class.java)
 }

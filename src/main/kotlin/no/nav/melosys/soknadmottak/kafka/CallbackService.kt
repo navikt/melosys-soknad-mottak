@@ -8,6 +8,6 @@ private val logger = KotlinLogging.logger { }
 
 @Service
 class CallbackService {
-    fun kvitter(result: SendResult<String, MottattSoknadMelding>?) =
+    fun kvitter(result: SendResult<String, SoknadMottatt>?) =
         logger.info { "Melding ble sendt på topic: ${result?.producerRecord?.value()}" }
 }

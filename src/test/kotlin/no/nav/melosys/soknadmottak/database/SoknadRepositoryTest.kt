@@ -15,7 +15,7 @@ class SoknadRepositoryTest @Autowired constructor(
 
     @Test
     fun givenNewSoknad_whenSaved_thenFound() {
-        val soknad = Soknad("ref_altinn", false, "blech")
+        val soknad = Soknad(archiveReference = "ref_altinn", delivered = false, content = "blech")
         entityManager.persist(soknad)
         entityManager.flush()
         val found = soknadRepository.findByIdOrNull(soknad.id)

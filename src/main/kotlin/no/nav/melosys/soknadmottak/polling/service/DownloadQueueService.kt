@@ -8,7 +8,7 @@ import no.nav.melosys.soknadmottak.Soknad
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.database.SoknadRepository
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.kafka.MottattSoknadMelding
+import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
@@ -39,9 +39,14 @@ class DownloadQueueService(
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    val søknad = Soknad(
+                        archiveReference = archiveReference,
+                        delivered = false,
+                        content = archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
+                    )
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
-                        kafkaProducer.publiserMelding(MottattSoknadMelding(soknadRepository.save(søknad)))
+                        soknadRepository.save(søknad)
+                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         processAttachments(attachments, archiveReference)
                         purgeItemFromDownloadQueue(archiveReference)
                         logger.info {
