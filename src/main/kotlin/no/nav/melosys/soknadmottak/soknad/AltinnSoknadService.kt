@@ -14,8 +14,14 @@ class AltinnSoknadService @Autowired constructor(
     private val soknadRepository: SoknadRepository
 ) {
     fun hentSøknad(soknadID: String): Soknad {
-        logger.info { "Henter søknad med ID $soknadID" }
+        logger.debug{ "Henter søknad med ID $soknadID" }
         return soknadRepository.findBySoknadID(soknadID)
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
+    }
+
+    fun updateDeliveryStatus(soknadID: String) {
+        soknadRepository.save(hentSøknad(soknadID).apply {
+            delivered = true
+        })
     }
 }
