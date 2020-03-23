@@ -13,11 +13,11 @@ spec:
     max: 1
   liveness:
     path: /actuator/health
-    initialDelay: 20
+    initialDelay: 100
     timeout: 10
   readiness:
     path: /actuator/health
-    initialDelay: 20
+    initialDelay: 100
     timeout: 10
   resources:
     limits:
