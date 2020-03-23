@@ -11,6 +11,8 @@
     <root level="INFO">
       <appender-ref ref="stdout_json"/>
     </root>
+
+    <logger name="org.apache.cxf" level="ERROR"/>
   </springProfile>
 
   <springProfile name="local">
