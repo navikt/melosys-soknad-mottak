@@ -25,63 +25,63 @@ class DownloadQueueService(
     private val properties: AltinnProperties,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
-    private val username = properties.username
-    private val password = properties.password
+    private val brukernavn = properties.username
+    private val passord = properties.password
 
     @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
     fun pollDocuments() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                val items = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
-                logger.debug { "DownloadQueue: processing '${items.size}' items" }
-                items.forEachIndexed { index, item ->
+                val elementer = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
+                logger.debug { "DownloadQueue: behandler '${elementer.size}' elementer" }
+                elementer.forEachIndexed { index, item ->
                     val archiveReference = item.archiveReference
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
-                    val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
+                    val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
                     val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
                         soknadRepository.save(søknad)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                        processAttachments(attachments, archiveReference)
-                        purgeItemFromDownloadQueue(archiveReference)
+                        behandleVedlegg(vedlegg, archiveReference)
+                        fjernerElementFraKø(archiveReference)
                         logger.info {
-                            "DownloadQueue: processing of item '${index + 1} of ${items.size}' complete (AR: '${archiveReference}')"
+                            "DownloadQueue: behandlet AR: '${archiveReference}' ('${index + 1} av ${elementer.size}') "
                         }
                     }
                 }
-                logger.debug { "DownloadQueue: completed processing '${items.size}' items" }
+                logger.debug { "DownloadQueue: ferdig med behandling av '${elementer.size}' elementer." }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
         }
     }
 
-    private fun processAttachments(
+    private fun behandleVedlegg(
         attachments: MutableList<ArchivedAttachmentDQBE>,
         archiveReference: String
     ) {
-        logger.info { "DownloadQueue: processing '${attachments.size}' attachments for archive: '${archiveReference}'" }
+        logger.info { "DownloadQueue: behandler '${attachments.size}' vedlegg for arkiv: '${archiveReference}'" }
         attachments.forEachIndexed { attachmentIndex, attachment ->
             logger.info { "Vedlegg støttes ikke." }
         }
     }
 
     fun getDownloadQueueItems(serviceCode: String) =
-        iDownloadQueueExternalBasic.getDownloadQueueItems(username, password, serviceCode)
+        iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)
 
     private fun purgeItem(archiveReference: String) =
-        iDownloadQueueExternalBasic.purgeItem(username, password, archiveReference)
+        iDownloadQueueExternalBasic.purgeItem(brukernavn, passord, archiveReference)
 
     private fun getArchivedFormTaskBasicDQ(archiveReference: String) =
-        iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(username, password, archiveReference, null, false)
+        iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(brukernavn, passord, archiveReference, null, false)
 
-    fun purgeItemFromDownloadQueue(archiveReference: String) {
+    fun fjernerElementFraKø(archiveReference: String) {
         try {
             purgeItem(archiveReference)
-            logger.info { "DownloadQueue: successfully purged archive reference '${archiveReference}'" }
+            logger.info { "DownloadQueue: fjernet arkiv '${archiveReference}'" }
         } catch (e: Throwable) {
-            logger.error { "DownloadQueue: failed to purge archive reference '${archiveReference}'" }
+            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${archiveReference}'" }
         }
     }
 }
