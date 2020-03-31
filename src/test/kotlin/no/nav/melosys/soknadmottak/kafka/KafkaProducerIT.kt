@@ -1,6 +1,7 @@
 package no.nav.melosys.soknadmottak.kafka
 
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
@@ -29,7 +30,7 @@ class KafkaProducerIT @Autowired constructor(
     @Value("\${melosys.kafka.producer.topic-name}")
     private val topicName: String
 ) {
-    private val callbackService = spyk<CallbackService>()
+    private val callbackService = spyk(CallbackService(mockk()))
     private lateinit var kafkaProducer: KafkaProducer
 
     @BeforeEach
