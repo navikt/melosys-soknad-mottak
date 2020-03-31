@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.database;
 
-import no.nav.melosys.soknadmottak.Soknad
+import no.nav.melosys.soknadmottak.SoknadMottak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ class SoknadRepositoryTest @Autowired constructor(
 
     @Test
     fun givenNewSoknad_whenSaved_thenFound() {
-        val soknad = Soknad("ref_altinn", false, "blech")
+        val soknad = SoknadMottak("ref_altinn", false, "blech")
         entityManager.persist(soknad)
         entityManager.flush()
         val found = soknadRepository.findByIdOrNull(soknad.id)

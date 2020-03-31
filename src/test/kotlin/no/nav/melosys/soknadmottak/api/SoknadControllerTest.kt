@@ -3,7 +3,7 @@ package no.nav.melosys.soknadmottak.api
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.melosys.soknadmottak.Soknad
+import no.nav.melosys.soknadmottak.SoknadMottak
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import no.nav.melosys.soknadmottak.soknad.AltinnSoknadService
 import org.assertj.core.api.Assertions.assertThat
@@ -31,7 +31,7 @@ class SoknadControllerTest @Autowired constructor(
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
         every { altinnSoknadService.hentSøknad(SOKNAD_ID) } returns
-                Soknad("ref", true, "<innhold>xml</innhold>", 123, SOKNAD_ID)
+                SoknadMottak("ref", true, "<innhold>xml</innhold>", 123, SOKNAD_ID)
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)

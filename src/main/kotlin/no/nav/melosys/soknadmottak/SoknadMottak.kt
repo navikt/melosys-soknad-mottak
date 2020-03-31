@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "SOKNAD_MOTTAK")
-class Soknad(
+class SoknadMottak(
     @Column(name = "archive_ref", nullable = false)
     var archiveReference: String,
 

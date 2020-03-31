@@ -6,9 +6,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.melosys.soknadmottak.Soknad
+import no.nav.melosys.soknadmottak.SoknadMottak
 import no.nav.melosys.soknadmottak.database.SoknadRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,13 +35,13 @@ internal class AltinnSoknadServiceTest {
     @Test
     fun updateDeliveryStatus() {
         val soknadID = "soknadID"
-        val soknad = Soknad("ref", false, "content", 123, soknadID)
+        val soknad = SoknadMottak("ref", false, "content", 123, soknadID)
         every { soknadRepository.findBySoknadID(soknadID) } returns soknad
-        every { soknadRepository.save(any<Soknad>()) } returns mockk()
+        every { soknadRepository.save(any<SoknadMottak>()) } returns mockk()
 
         altinnSoknadService.updateDeliveryStatus(soknadID)
 
-        val slot = slot<Soknad>()
+        val slot = slot<SoknadMottak>()
         verify { soknadRepository.save(capture(slot)) }
         assertThat(slot.captured.delivered).isTrue()
     }

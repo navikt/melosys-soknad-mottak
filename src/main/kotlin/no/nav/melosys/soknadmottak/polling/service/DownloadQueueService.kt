@@ -4,7 +4,7 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
-import no.nav.melosys.soknadmottak.Soknad
+import no.nav.melosys.soknadmottak.SoknadMottak
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.database.SoknadRepository
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
@@ -39,7 +39,7 @@ class DownloadQueueService(
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
                     val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    val søknad = Soknad(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    val søknad = SoknadMottak(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
                     if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
                         soknadRepository.save(søknad)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
