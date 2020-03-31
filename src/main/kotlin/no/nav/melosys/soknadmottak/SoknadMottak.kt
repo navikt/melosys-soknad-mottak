@@ -7,13 +7,13 @@ import javax.persistence.*
 @Table(name = "SOKNAD_MOTTAK")
 class SoknadMottak(
     @Column(name = "archive_ref", nullable = false)
-    var archiveReference: String,
+    var arkivReferanse: String,
 
-    @Column(nullable = false)
-    var delivered: Boolean,
+    @Column(name = "delivered", nullable = false)
+    var levert: Boolean,
 
-    @Column(nullable = false)
-    var content: String,
+    @Column(name = "content", nullable = false)
+    var innhold: String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

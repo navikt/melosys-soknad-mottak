@@ -21,7 +21,7 @@ class AltinnSoknadService @Autowired constructor(
 
     fun updateDeliveryStatus(soknadID: String) {
         soknadRepository.save(hentSøknad(soknadID).apply {
-            delivered = true
+            levert = true
         })
     }
 }

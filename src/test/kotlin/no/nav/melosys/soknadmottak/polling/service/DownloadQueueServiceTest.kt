@@ -60,9 +60,9 @@ class DownloadQueueServiceTest {
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
         every { søknadRepository.save<SoknadMottak>(any()) } returns SoknadMottak(
-            archiveReference = "ref",
-            delivered = false,
-            content = "content",
+            arkivReferanse = "ref",
+            levert = false,
+            innhold = "content",
             id = 1
         )
 

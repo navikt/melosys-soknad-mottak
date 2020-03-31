@@ -43,6 +43,6 @@ internal class AltinnSoknadServiceTest {
 
         val slot = slot<SoknadMottak>()
         verify { soknadRepository.save(capture(slot)) }
-        assertThat(slot.captured.delivered).isTrue()
+        assertThat(slot.captured.levert).isTrue()
     }
 }

@@ -35,18 +35,18 @@ class DownloadQueueService(
                 val elementer = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
                 logger.debug { "DownloadQueue: behandler '${elementer.size}' elementer" }
                 elementer.forEachIndexed { index, item ->
-                    val archiveReference = item.archiveReference
-                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(archiveReference)
+                    val arkivRef = item.archiveReference
+                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
                     val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
 
-                    val søknad = SoknadMottak(archiveReference, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
-                    if (soknadRepository.findByArchiveReference(archiveReference).count() == 0) {
+                    val søknad = SoknadMottak(arkivRef, false, archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData)
+                    if (soknadRepository.findByArkivReferanse(arkivRef).count() == 0) {
                         soknadRepository.save(søknad)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                        behandleVedlegg(vedlegg, archiveReference)
-                        fjernerElementFraKø(archiveReference)
+                        behandleVedlegg(vedlegg, arkivRef)
+                        fjernElementFraKø(arkivRef)
                         logger.info {
-                            "DownloadQueue: behandlet AR: '${archiveReference}' ('${index + 1} av ${elementer.size}') "
+                            "DownloadQueue: behandlet AR: '${arkivRef}' ('${index + 1} av ${elementer.size}') "
                         }
                     }
                 }
@@ -67,21 +67,22 @@ class DownloadQueueService(
         }
     }
 
+
+    private fun fjernElementFraKø(arkivRef: String) {
+        try {
+            purgeItem(arkivRef)
+            logger.info { "DownloadQueue: fjernet arkiv '${arkivRef}'" }
+        } catch (e: Throwable) {
+            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${arkivRef}'" }
+        }
+    }
+
     fun getDownloadQueueItems(serviceCode: String) =
         iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)
 
-    private fun purgeItem(archiveReference: String) =
-        iDownloadQueueExternalBasic.purgeItem(brukernavn, passord, archiveReference)
+    private fun purgeItem(arkivRef: String) =
+        iDownloadQueueExternalBasic.purgeItem(brukernavn, passord, arkivRef)
 
-    private fun getArchivedFormTaskBasicDQ(archiveReference: String) =
-        iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(brukernavn, passord, archiveReference, null, false)
-
-    fun fjernerElementFraKø(archiveReference: String) {
-        try {
-            purgeItem(archiveReference)
-            logger.info { "DownloadQueue: fjernet arkiv '${archiveReference}'" }
-        } catch (e: Throwable) {
-            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${archiveReference}'" }
-        }
-    }
+    private fun getArchivedFormTaskBasicDQ(arkivRef: String) =
+        iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(brukernavn, passord, arkivRef, null, false)
 }
