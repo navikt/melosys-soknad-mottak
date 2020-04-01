@@ -7,19 +7,22 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class SoknadServiceTest {
     @RelaxedMockK()
     lateinit var soknadRepository: SoknadRepository
 
     lateinit var soknadService: SoknadService
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         soknadService = SoknadService(soknadRepository)
     }

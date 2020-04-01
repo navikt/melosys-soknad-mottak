@@ -1,13 +1,15 @@
 package no.nav.melosys.soknadmottak.polling.altinn
 
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
-import no.nav.melosys.soknadmottak.ws.*
+import no.nav.melosys.soknadmottak.ws.STS_SAML_POLICY
+import no.nav.melosys.soknadmottak.ws.StsProperties
+import no.nav.melosys.soknadmottak.ws.configureFor
+import no.nav.melosys.soknadmottak.ws.stsClient
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.ws.addressing.WSAddressingFeature
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
 
 @Configuration
 class AltinnClientsConfig(
