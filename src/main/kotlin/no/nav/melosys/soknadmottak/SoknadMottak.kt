@@ -1,5 +1,7 @@
 package no.nav.melosys.soknadmottak
 
+import org.hibernate.annotations.GenericGenerator
+import org.hibernate.annotations.Parameter
 import java.util.*
 import javax.persistence.*
 
@@ -16,7 +18,10 @@ class SoknadMottak(
     var innhold: String,
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "soknad_mottak_seq")
+    @GenericGenerator(name = "soknad_mottak_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+        parameters = arrayOf(Parameter(name = "sequence_name", value = "soknad_mottak_id_seq"))
+    )
     var id: Long? = null,
 
     @Column(name = "soknad_id", nullable = false, updatable = false)
