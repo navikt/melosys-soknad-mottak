@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.kafka
 
-import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.common.DomainEvent
+import no.nav.melosys.soknadmottak.soknad.Soknad
 import java.time.ZonedDateTime
 
 data class SoknadMottatt(
@@ -11,7 +11,7 @@ data class SoknadMottatt(
     companion object {
         operator fun invoke(soknad: Soknad) =
             SoknadMottatt(
-                soknadID = soknad.soknadID
+                soknadID = soknad.soknadID.toString()
             )
     }
 }

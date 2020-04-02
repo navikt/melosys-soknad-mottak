@@ -28,7 +28,7 @@ class SoknadControllerTest @Autowired constructor(
 
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
-        every { soknadService.hentSøknad(SOKNAD_ID) } returns
+        every { soknadService.hentSøknad(SOKNAD_ID.toString()) } returns
                 Soknad(
                     "ref", true, "<innhold>xml</innhold>", 123,
                     SOKNAD_ID
@@ -43,7 +43,7 @@ class SoknadControllerTest @Autowired constructor(
             }
         }.andReturn()
 
-        verify { soknadService.hentSøknad(SOKNAD_ID) }
+        verify { soknadService.hentSøknad(SOKNAD_ID.toString()) }
         result.response.contentAsString.let {
             assertThat(it).isEqualTo("<innhold>xml</innhold>")
         }
@@ -51,7 +51,7 @@ class SoknadControllerTest @Autowired constructor(
 
     @Test
     fun `hent søknad som ikke finnes, forvent not found`() {
-        every { soknadService.hentSøknad(SOKNAD_ID) } throws IkkeFunnetException("Søknad ikke funnet")
+        every { soknadService.hentSøknad(SOKNAD_ID.toString()) } throws IkkeFunnetException("Søknad ikke funnet")
 
         mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
@@ -59,10 +59,10 @@ class SoknadControllerTest @Autowired constructor(
             status { isNotFound }
         }
 
-        verify { soknadService.hentSøknad(SOKNAD_ID) }
+        verify { soknadService.hentSøknad(SOKNAD_ID.toString()) }
     }
 
     companion object {
-        private val SOKNAD_ID = UUID.randomUUID().toString()
+        private val SOKNAD_ID = UUID.randomUUID()
     }
 }

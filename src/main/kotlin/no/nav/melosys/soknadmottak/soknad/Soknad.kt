@@ -25,5 +25,5 @@ class Soknad(
     var id: Long? = null,
 
     @Column(name = "soknad_id", nullable = false, updatable = false)
-    var soknadID: String = UUID.randomUUID().toString()
+    var soknadID: UUID = UUID.randomUUID()
 )

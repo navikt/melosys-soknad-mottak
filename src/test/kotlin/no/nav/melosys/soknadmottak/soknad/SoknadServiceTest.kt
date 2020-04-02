@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 internal class SoknadServiceTest {
@@ -32,13 +33,13 @@ internal class SoknadServiceTest {
 
     @Test
     fun updateDeliveryStatus() {
-        val soknadID = "soknadID"
+        val soknadID = UUID.randomUUID()
         val soknad =
             Soknad("ref", false, "content", 123, soknadID)
-        every { soknadRepository.findBySoknadID(soknadID) } returns soknad
+        every { soknadRepository.findBySoknadID(soknadID.toString()) } returns soknad
         every { soknadRepository.save(any<Soknad>()) } returns mockk()
 
-        soknadService.updateDeliveryStatus(soknadID)
+        soknadService.updateDeliveryStatus(soknadID.toString())
 
         val slot = slot<Soknad>()
         verify { soknadRepository.save(capture(slot)) }
