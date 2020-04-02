@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.kafka
 
-import no.nav.melosys.soknadmottak.SoknadMottak
+import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.common.DomainEvent
 import java.time.ZonedDateTime
 
@@ -9,9 +9,9 @@ data class SoknadMottatt(
     override val occuredOn: ZonedDateTime = ZonedDateTime.now()
 ) : DomainEvent {
     companion object {
-        operator fun invoke(soknadMottak: SoknadMottak) =
+        operator fun invoke(soknad: Soknad) =
             SoknadMottatt(
-                soknadID = soknadMottak.soknadID
+                soknadID = soknad.soknadID
             )
     }
 }

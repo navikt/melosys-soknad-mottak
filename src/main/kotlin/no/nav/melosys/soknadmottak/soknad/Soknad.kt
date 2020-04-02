@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak
+package no.nav.melosys.soknadmottak.soknad
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "SOKNAD_MOTTAK")
-class SoknadMottak(
+class Soknad(
     @Column(name = "archive_ref", nullable = false)
     var arkivReferanse: String,
 

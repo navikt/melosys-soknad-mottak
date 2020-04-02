@@ -1,11 +1,9 @@
-package no.nav.melosys.soknadmottak.api
+package no.nav.melosys.soknadmottak.soknad
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.melosys.soknadmottak.SoknadMottak
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
-import no.nav.melosys.soknadmottak.soknad.AltinnSoknadService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,18 +18,21 @@ import java.util.*
 @WebMvcTest(SoknadController::class)
 class SoknadControllerTest @Autowired constructor(
     private val mockMvc: MockMvc,
-    private val altinnSoknadService: AltinnSoknadService
+    private val soknadService: SoknadService
 ) {
     @TestConfiguration
     class SoknadControllerTestConfig {
         @Bean
-        fun altinnSoknadService() = mockk<AltinnSoknadService>()
+        fun altinnSoknadService() = mockk<SoknadService>()
     }
 
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
-        every { altinnSoknadService.hentSøknad(SOKNAD_ID) } returns
-                SoknadMottak("ref", true, "<innhold>xml</innhold>", 123, SOKNAD_ID)
+        every { soknadService.hentSøknad(SOKNAD_ID) } returns
+                Soknad(
+                    "ref", true, "<innhold>xml</innhold>", 123,
+                    SOKNAD_ID
+                )
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
@@ -42,7 +43,7 @@ class SoknadControllerTest @Autowired constructor(
             }
         }.andReturn()
 
-        verify { altinnSoknadService.hentSøknad(SOKNAD_ID) }
+        verify { soknadService.hentSøknad(SOKNAD_ID) }
         result.response.contentAsString.let {
             assertThat(it).isEqualTo("<innhold>xml</innhold>")
         }
@@ -50,7 +51,7 @@ class SoknadControllerTest @Autowired constructor(
 
     @Test
     fun `hent søknad som ikke finnes, forvent not found`() {
-        every { altinnSoknadService.hentSøknad(SOKNAD_ID) } throws IkkeFunnetException("Søknad ikke funnet")
+        every { soknadService.hentSøknad(SOKNAD_ID) } throws IkkeFunnetException("Søknad ikke funnet")
 
         mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
@@ -58,7 +59,7 @@ class SoknadControllerTest @Autowired constructor(
             status { isNotFound }
         }
 
-        verify { altinnSoknadService.hentSøknad(SOKNAD_ID) }
+        verify { soknadService.hentSøknad(SOKNAD_ID) }
     }
 
     companion object {

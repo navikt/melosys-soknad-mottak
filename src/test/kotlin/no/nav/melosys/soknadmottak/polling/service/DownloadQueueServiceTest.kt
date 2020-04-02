@@ -11,8 +11,8 @@ import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedForm
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedFormListDQBE
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedFormTaskDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
-import no.nav.melosys.soknadmottak.SoknadMottak
-import no.nav.melosys.soknadmottak.database.SoknadRepository
+import no.nav.melosys.soknadmottak.soknad.Soknad
+import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
 import org.junit.jupiter.api.Test
@@ -59,7 +59,7 @@ class DownloadQueueServiceTest {
             attachments = ArchivedAttachmentExternalListDQBE()
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
-        every { søknadRepository.save<SoknadMottak>(any()) } returns SoknadMottak(
+        every { søknadRepository.save<Soknad>(any()) } returns Soknad(
             arkivReferanse = "ref",
             levert = false,
             innhold = "content",
@@ -68,7 +68,7 @@ class DownloadQueueServiceTest {
 
         downloadQueueService.pollDocuments()
 
-        verify { søknadRepository.save(any<SoknadMottak>()) }
+        verify { søknadRepository.save(any<Soknad>()) }
         verify { kafkaProducer.publiserMelding(any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }

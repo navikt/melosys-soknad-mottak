@@ -15,7 +15,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 
-private const val API_PAKKE = "no.nav.melosys.soknadmottak.api"
+private const val API_PAKKE = "no.nav.melosys.soknadmottak"
 
 @Configuration
 class ApiConfig : WebMvcConfigurer {

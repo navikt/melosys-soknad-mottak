@@ -3,7 +3,7 @@ package no.nav.melosys.soknadmottak.polling.service
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
-import no.nav.melosys.soknadmottak.database.SoknadRepository
+import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
