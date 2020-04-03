@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.polling.altinn.client
+package no.nav.melosys.soknadmottak.polling.altinn
 
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.ws.*

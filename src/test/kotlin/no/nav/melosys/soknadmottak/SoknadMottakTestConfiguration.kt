@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak
 
 import no.nav.common.KafkaEnvironment
-import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnClientsConfig
+import no.nav.melosys.soknadmottak.polling.altinn.AltinnClientsConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value

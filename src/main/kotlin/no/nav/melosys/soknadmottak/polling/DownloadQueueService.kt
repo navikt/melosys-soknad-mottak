@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.polling.service
+package no.nav.melosys.soknadmottak.polling
 
 import mu.KotlinLogging
 import mu.withLoggingContext
@@ -9,7 +9,7 @@ import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
+import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service

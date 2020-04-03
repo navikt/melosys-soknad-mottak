@@ -14,7 +14,8 @@ import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternal
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
+import no.nav.melosys.soknadmottak.polling.DownloadQueueService
+import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -44,7 +45,12 @@ class DownloadQueueServiceTest {
         }
         itemList.downloadQueueItemBE.add(item)
         val downloadQueueService =
-            DownloadQueueService(søknadRepository, kafkaProducer, altinnProperties, downloadQueue)
+            DownloadQueueService(
+                søknadRepository,
+                kafkaProducer,
+                altinnProperties,
+                downloadQueue
+            )
         every { downloadQueue.getDownloadQueueItems("user", "pass", "code") } returns itemList
 
         val søknadXML = "<note>\n" +

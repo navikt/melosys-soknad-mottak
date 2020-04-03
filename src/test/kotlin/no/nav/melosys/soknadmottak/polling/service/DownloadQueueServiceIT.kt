@@ -3,8 +3,9 @@ package no.nav.melosys.soknadmottak.polling.service
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
+import no.nav.melosys.soknadmottak.polling.DownloadQueueService
 import no.nav.melosys.soknadmottak.soknad.SoknadRepository
-import no.nav.melosys.soknadmottak.polling.altinn.client.AltinnProperties
+import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -17,8 +18,10 @@ internal class DownloadQueueServiceIT(
     @Autowired val altinnProperties: AltinnProperties,
     @Autowired val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
-    private var downloadQueueService = DownloadQueueService(soknadRepository,
-        mockk(), altinnProperties, iDownloadQueueExternalBasic)
+    private var downloadQueueService = DownloadQueueService(
+        soknadRepository,
+        mockk(), altinnProperties, iDownloadQueueExternalBasic
+    )
 
     @Test
     fun getDownloadQueueItems() {
