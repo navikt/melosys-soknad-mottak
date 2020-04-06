@@ -8,7 +8,6 @@ import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,14 +34,15 @@ internal class SoknadServiceTest {
     }
 
     @Test
-    fun updateDeliveryStatus() {
+    fun oppdaterLeveringsstatus() {
         val soknadID = UUID.randomUUID()
-        val soknad =
-            Soknad("ref", false, "content", 123, soknadID)
+        val soknad = SoknadFactory.lagSoknad().apply {
+            this.soknadID = soknadID
+        }
         every { soknadRepository.findBySoknadID(soknadID.toString()) } returns soknad
         every { soknadRepository.save(any<Soknad>()) } returns mockk()
 
-        soknadService.updateDeliveryStatus(soknadID.toString())
+        soknadService.oppdaterLeveringsstatus(soknadID.toString())
 
         val slot = slot<Soknad>()
         verify { soknadRepository.save(capture(slot)) }

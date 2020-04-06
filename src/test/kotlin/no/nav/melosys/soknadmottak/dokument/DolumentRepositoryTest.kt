@@ -17,10 +17,13 @@ class DolumentRepositoryTest @Autowired constructor(
     fun givenNyttDokument_whenLagret_thenFunnet() {
         val soknad = SoknadFactory.lagSoknad()
         entityManager.persist(soknad)
-        val dokument = DokumentFactory.lagDokument(soknad)
+        val dokument = DokumentFactory.lagDokument(soknad).apply {
+            lagretTidspunkt = null
+        }
         entityManager.persist(dokument)
         entityManager.flush()
         val funnet = dokumentRepository.findByIdOrNull(dokument.id)
         assertThat(funnet).isEqualTo(dokument)
+        assertThat(funnet!!.lagretTidspunkt).isNotNull()
     }
 }

@@ -17,7 +17,7 @@ class SoknadService @Autowired constructor(
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }
 
-    fun updateDeliveryStatus(soknadID: String) {
+    fun oppdaterLeveringsstatus(soknadID: String) {
         soknadRepository.save(hentSøknad(soknadID).apply {
             levert = true
         })

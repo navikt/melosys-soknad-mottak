@@ -31,6 +31,6 @@ internal class CallbackServiceTest {
 
         callbackService.kvitter(SendResult(producerRecord, mockk()))
 
-        verify { soknadService.updateDeliveryStatus(uuid) }
+        verify { soknadService.oppdaterLeveringsstatus(uuid) }
     }
 }
