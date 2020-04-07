@@ -16,7 +16,7 @@ internal class CallbackServiceTest {
     @MockK(relaxUnitFun = true)
     lateinit var soknadService: SoknadService
 
-    lateinit var callbackService: CallbackService
+    private lateinit var callbackService: CallbackService
 
     @BeforeEach
     internal fun beforeEach() {
@@ -31,6 +31,6 @@ internal class CallbackServiceTest {
 
         callbackService.kvitter(SendResult(producerRecord, mockk()))
 
-        verify { soknadService.updateDeliveryStatus(uuid) }
+        verify { soknadService.oppdaterLeveringsstatus(uuid) }
     }
 }

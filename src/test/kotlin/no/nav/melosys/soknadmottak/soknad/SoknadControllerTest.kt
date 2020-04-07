@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import java.time.Instant
 import java.util.*
 
 @WebMvcTest(SoknadController::class)
@@ -30,8 +31,8 @@ class SoknadControllerTest @Autowired constructor(
     fun `hent søknad som finnes, forvent søknad med innhold`() {
         every { soknadService.hentSøknad(SOKNAD_ID.toString()) } returns
                 Soknad(
-                    "ref", true, "<innhold>xml</innhold>", 123,
-                    SOKNAD_ID
+                    "ref", true, "<innhold>xml</innhold>",
+                    Instant.MIN, 123, SOKNAD_ID
                 )
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {

@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.soknad;
+package no.nav.melosys.soknadmottak.soknad
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ class SoknadRepositoryTest @Autowired constructor(
 ) {
 
     @Test
-    fun givenNewSoknad_whenSaved_thenFound() {
+    fun givenNySoknad_whenLagret_thenFunnet() {
         val soknad = Soknad("ref_altinn", false, "blech")
         entityManager.persist(soknad)
         entityManager.flush()
