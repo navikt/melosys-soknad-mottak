@@ -36,7 +36,7 @@ class Dokument(
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dokument_seq")
     @GenericGenerator(
         name = "dokument_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = arrayOf(Parameter(name = "sequence_name", value = "dokument_id_seq"))
+        parameters = [Parameter(name = "sequence_name", value = "dokument_id_seq")]
     )
     var id: Long? = null
 ) {

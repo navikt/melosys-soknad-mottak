@@ -27,7 +27,7 @@ class Soknad(
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "soknad_mottak_seq")
     @GenericGenerator(
         name = "soknad_mottak_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = arrayOf(Parameter(name = "sequence_name", value = "soknad_mottak_id_seq"))
+        parameters = [Parameter(name = "sequence_name", value = "soknad_mottak_id_seq")]
     )
     var id: Long? = null,
 

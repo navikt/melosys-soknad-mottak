@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.polling
 
 import mu.KotlinLogging
 import mu.withLoggingContext
+import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
@@ -24,9 +25,9 @@ private const val ETT_SEKUND_MILLI = 30 * 1000L
 
 @Service
 class DownloadQueueService(
-    val soknadRepository: SoknadRepository,
-    val dokumentService: DokumentService,
-    val kafkaProducer: KafkaProducer,
+    private val soknadRepository: SoknadRepository,
+    private val dokumentService: DokumentService,
+    private val kafkaProducer: KafkaProducer,
     private val properties: AltinnProperties,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
@@ -51,7 +52,7 @@ class DownloadQueueService(
                     )
                     if (soknadRepository.findByArkivReferanse(arkivRef).count() == 0) {
                         soknadRepository.save(søknad)
-                        dokumentService.lagreDokument(Dokument(søknad, "TODO", SOKNAD, hentSkjemaPdf(arkivRef)))
+                        dokumentService.lagreDokument(Dokument(søknad, "ref_$arkivRef.pdf", SOKNAD, hentSkjemaPdf(arkivRef)))
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         fjernElementFraKø(arkivRef)
@@ -101,7 +102,7 @@ class DownloadQueueService(
         }
     }
 
-    fun getDownloadQueueItems(serviceCode: String) =
+    fun getDownloadQueueItems(serviceCode: String): DownloadQueueItemBEList =
         iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)
 
     private fun purgeItem(arkivRef: String) =

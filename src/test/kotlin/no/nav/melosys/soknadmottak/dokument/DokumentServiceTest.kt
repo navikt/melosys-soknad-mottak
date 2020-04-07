@@ -13,10 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class DokumentServiceTest {
-    @RelaxedMockK()
+    @RelaxedMockK
     lateinit var dokumentRepository: DokumentRepository
 
-    lateinit var dokumentService: DokumentService
+    private lateinit var dokumentService: DokumentService
 
     @BeforeAll
     fun setUp() {

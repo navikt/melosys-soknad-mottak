@@ -16,10 +16,10 @@ import java.util.*
 @ExtendWith(MockKExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class SoknadServiceTest {
-    @RelaxedMockK()
+    @RelaxedMockK
     lateinit var soknadRepository: SoknadRepository
 
-    lateinit var soknadService: SoknadService
+    private lateinit var soknadService: SoknadService
 
     @BeforeAll
     fun setUp() {

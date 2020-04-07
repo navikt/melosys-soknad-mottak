@@ -32,7 +32,7 @@ class DownloadQueueServiceTest {
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
-    val altinnProperties = AltinnProperties(
+    private val altinnProperties = AltinnProperties(
         AltinnProperties.Informasjon("url"),
         "user",
         "pass",

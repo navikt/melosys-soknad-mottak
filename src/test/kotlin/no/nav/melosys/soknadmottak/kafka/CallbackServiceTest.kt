@@ -16,7 +16,7 @@ internal class CallbackServiceTest {
     @MockK(relaxUnitFun = true)
     lateinit var soknadService: SoknadService
 
-    lateinit var callbackService: CallbackService
+    private lateinit var callbackService: CallbackService
 
     @BeforeEach
     internal fun beforeEach() {
