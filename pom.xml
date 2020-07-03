@@ -45,6 +45,7 @@
         <snappy.version>1.1.7.3</snappy.version>
         <xmlsec.version>2.1.5</xmlsec.version>
         <zkclient.version>0.11</zkclient.version>
+        <zookeeper.version>3.5.7</zookeeper.version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +80,11 @@
                 <groupId>org.apache.santuario</groupId>
                 <artifactId>xmlsec</artifactId>
                 <version>${xmlsec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
