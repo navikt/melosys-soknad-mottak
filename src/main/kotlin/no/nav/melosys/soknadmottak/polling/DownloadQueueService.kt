@@ -89,8 +89,8 @@ class DownloadQueueService(
             passord,
             arkivRef,
             1044,
-            "6065",
-            43900
+            null,
+            null
         )!!
 
     private fun fjernElementFraKø(arkivRef: String) {
