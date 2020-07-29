@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.database
+package no.nav.melosys.soknadmottak.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
