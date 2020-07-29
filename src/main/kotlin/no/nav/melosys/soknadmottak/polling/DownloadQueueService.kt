@@ -6,6 +6,7 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
+import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType.SOKNAD
@@ -28,17 +29,18 @@ class DownloadQueueService(
     private val soknadRepository: SoknadRepository,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
-    private val properties: AltinnProperties,
+    private val mottakConfig: MottakConfig,
+    private val altinn: AltinnProperties,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
-    private val brukernavn = properties.username
-    private val passord = properties.password
+    private val brukernavn = altinn.username
+    private val passord = altinn.password
 
     @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
     fun pollDokumentKø() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                val elementer = getDownloadQueueItems(properties.service.code).downloadQueueItemBE
+                val elementer = getDownloadQueueItems(altinn.service.code).downloadQueueItemBE
                 logger.debug { "DownloadQueue: behandler '${elementer.size}' elementer" }
                 elementer.forEachIndexed { index, item ->
                     val arkivRef = item.archiveReference
@@ -95,7 +97,9 @@ class DownloadQueueService(
 
     private fun fjernElementFraKø(arkivRef: String) {
         try {
-            purgeItem(arkivRef)
+            if (mottakConfig.fjernFraDq) {
+                purgeItem(arkivRef)
+            }
             logger.info { "DownloadQueue: fjernet arkiv '${arkivRef}'" }
         } catch (e: Throwable) {
             logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${arkivRef}'" }

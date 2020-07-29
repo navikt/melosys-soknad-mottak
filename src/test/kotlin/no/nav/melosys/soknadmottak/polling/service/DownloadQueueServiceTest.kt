@@ -9,6 +9,7 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
@@ -32,6 +33,10 @@ class DownloadQueueServiceTest {
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
+    private val mottakConfig = MottakConfig(
+        true
+    )
+
     private val altinnProperties = AltinnProperties(
         AltinnProperties.Informasjon("url"),
         "user",
@@ -51,6 +56,7 @@ class DownloadQueueServiceTest {
                 søknadRepository,
                 dokumentService,
                 kafkaProducer,
+                mottakConfig,
                 altinnProperties,
                 downloadQueue
             )
