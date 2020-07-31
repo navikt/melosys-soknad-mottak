@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 private val logger = KotlinLogging.logger { }
 
@@ -13,7 +14,7 @@ class SoknadService @Autowired constructor(
 ) {
     fun hentSøknad(soknadID: String): Soknad {
         logger.debug{ "Henter søknad med ID $soknadID" }
-        return soknadRepository.findBySoknadID(soknadID)
+        return soknadRepository.findBySoknadID(UUID.fromString(soknadID))
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }
 

@@ -28,8 +28,8 @@ internal class SoknadServiceTest {
 
     @Test
     fun hentSøknad() {
-        val soknadID = "soknadID"
-        soknadService.hentSøknad(soknadID)
+        val soknadID = UUID.randomUUID()
+        soknadService.hentSøknad(soknadID.toString())
         verify { soknadRepository.findBySoknadID(soknadID) }
     }
 
@@ -39,7 +39,7 @@ internal class SoknadServiceTest {
         val soknad = SoknadFactory.lagSoknad().apply {
             this.soknadID = soknadID
         }
-        every { soknadRepository.findBySoknadID(soknadID.toString()) } returns soknad
+        every { soknadRepository.findBySoknadID(soknadID) } returns soknad
         every { soknadRepository.save(any<Soknad>()) } returns mockk()
 
         soknadService.oppdaterLeveringsstatus(soknadID.toString())
