@@ -20,7 +20,7 @@
         <kotlin.code.style>official</kotlin.code.style>
 
         <cxf.version>3.3.7</cxf.version>
-        <flyway.version>6.5.0</flyway.version>
+        <flyway.version>6.5.3</flyway.version>
         <h2.version>1.4.200</h2.version>
         <kotlin-logging.version>1.7.9</kotlin-logging.version>
         <kotlin-test.version>3.4.2</kotlin-test.version>
