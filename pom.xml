@@ -28,7 +28,7 @@
         <log4j.version>1.2.17</log4j.version>
         <logstash-encoder.version>6.4</logstash-encoder.version>
         <prometheus.version>0.9.0</prometheus.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
         <tjenestespesifikasjoner.version>1.2019.12.20-15.00-e8dbb8221116</tjenestespesifikasjoner.version>
         <token-support.version>1.2.0</token-support.version>
         <ulid.version>8.2.0</ulid.version>
