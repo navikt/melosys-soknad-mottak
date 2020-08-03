@@ -34,7 +34,7 @@ internal class DokumentServiceTest {
     @Test
     fun hentVedlegg() {
         val soknadID = UUID.randomUUID()
-        dokumentService.hentVedlegg(soknadID.toString())
+        dokumentService.hentDokumenterForSoknad(soknadID.toString())
         verify { dokumentRepository.findBySoknadSoknadID(soknadID) }
     }
 

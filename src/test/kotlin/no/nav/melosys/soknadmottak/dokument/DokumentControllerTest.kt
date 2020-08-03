@@ -64,7 +64,7 @@ class DokumentControllerTest @Autowired constructor(
 
     @Test
     fun `hent vedlegg for en søknad, forvent vedlegg`() {
-        every { dokumentService.hentVedlegg(SOKNAD_ID.toString()) } returns listOf(DokumentFactory.lagDokument())
+        every { dokumentService.hentDokumenterForSoknad(SOKNAD_ID.toString()) } returns listOf(DokumentFactory.lagDokument())
 
         mockMvc.get("/api/dokumenter/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ class DokumentControllerTest @Autowired constructor(
             }
         }
 
-        verify { dokumentService.hentVedlegg(SOKNAD_ID.toString()) }
+        verify { dokumentService.hentDokumenterForSoknad(SOKNAD_ID.toString()) }
     }
 
     companion object {

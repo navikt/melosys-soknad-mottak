@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class SoknadController @Autowired constructor(
     private val soknadService: SoknadService
 ) {
-    @ApiOperation("Henter xml-innhold til en søknad med gitt ID")
+    @ApiOperation("Henter XML-innhold til en søknad med gitt ID")
     @GetMapping("{soknadID}", produces = [MediaType.APPLICATION_XML_VALUE])
     fun hentSøknad(@PathVariable soknadID: String): ResponseEntity<String> =
         ResponseEntity.ok(

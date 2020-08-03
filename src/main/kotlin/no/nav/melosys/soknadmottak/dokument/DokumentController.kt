@@ -25,10 +25,10 @@ class DokumentController @Autowired constructor(
             dokumentService.hentDokument(dokumentID).innhold
         )
 
-    @ApiOperation("Henter vedlegg for en søknad med gitt ID")
+    @ApiOperation("Henter dokumenter for en søknad med gitt ID")
     @GetMapping("{soknadID}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun hentVedlegg(@PathVariable soknadID: String): ResponseEntity<Iterable<Dokument>> =
+    fun hentVedlegg(@PathVariable soknadID: String): ResponseEntity<List<DokumentDto>> =
         ResponseEntity.ok(
-            dokumentService.hentVedlegg(soknadID)
+            dokumentService.hentDokumenterForSoknad(soknadID).map { dok -> DokumentDto(dok) }
         )
 }

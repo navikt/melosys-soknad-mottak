@@ -20,8 +20,7 @@ class DokumentService @Autowired constructor(
             ?: throw IkkeFunnetException("Finner ikke dokument med ID $dokumentID")
     }
 
-    fun hentVedlegg(soknadID: String): Iterable<Dokument> {
-        logger.debug{ "Henter vedlegg for soknadID $soknadID" }
+    fun hentDokumenterForSoknad(soknadID: String): Iterable<Dokument> {
         return dokumentRepository.findBySoknadSoknadID(UUID.fromString(soknadID))
     }
 
