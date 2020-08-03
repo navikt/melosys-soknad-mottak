@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -32,8 +33,8 @@ internal class DokumentServiceTest {
 
     @Test
     fun hentVedlegg() {
-        val soknadID = "soknadID"
-        dokumentService.hentVedlegg(soknadID)
+        val soknadID = UUID.randomUUID()
+        dokumentService.hentVedlegg(soknadID.toString())
         verify { dokumentRepository.findBySoknadSoknadID(soknadID) }
     }
 

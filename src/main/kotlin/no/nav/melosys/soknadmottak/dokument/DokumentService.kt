@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 private val logger = KotlinLogging.logger { }
 private val ulidGenerator = ULID()
@@ -21,7 +22,7 @@ class DokumentService @Autowired constructor(
 
     fun hentVedlegg(soknadID: String): Iterable<Dokument> {
         logger.debug{ "Henter vedlegg for soknadID $soknadID" }
-        return dokumentRepository.findBySoknadSoknadID(soknadID)
+        return dokumentRepository.findBySoknadSoknadID(UUID.fromString(soknadID))
     }
 
     fun lagreDokument(dokument: Dokument): String {
