@@ -19,6 +19,9 @@ spec:
     path: /actuator/health
     initialDelay: 100
     timeout: 10
+  prometheus:
+    enabled: false
+    path: /actuator/prometheus
   resources:
     limits:
       cpu: 500m
@@ -26,9 +29,8 @@ spec:
     requests:
       cpu: 200m
       memory: 512Mi
-  prometheus:
-    enabled: false
-    path: /actuator/prometheus
+  ingresses:
+    - {{ingress}}
   vault:
     enabled: true
 
