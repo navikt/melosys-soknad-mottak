@@ -28,7 +28,7 @@
         <log4j.version>1.2.17</log4j.version>
         <logstash-encoder.version>6.4</logstash-encoder.version>
         <prometheus.version>0.9.0</prometheus.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
         <tjenestespesifikasjoner.version>1.2019.12.20-15.00-e8dbb8221116</tjenestespesifikasjoner.version>
         <token-support.version>1.2.0</token-support.version>
         <ulid.version>8.2.0</ulid.version>
@@ -37,6 +37,7 @@
         <!-- Transitive avhengiheter med konflikter -->
         <asm.version>7.2</asm.version>
         <bcprov-jdk15on.version>1.66</bcprov-jdk15on.version>
+        <github-classgraph.version>4.8.83</github-classgraph.version>
         <guava.version>24.1.1-jre</guava.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <json-smart.version>2.3</json-smart.version>
@@ -65,6 +66,11 @@
                 <groupId>com.thoughtworks.paranamer</groupId>
                 <artifactId>paranamer</artifactId>
                 <version>${paranamer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${github-classgraph.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.activation</groupId>
