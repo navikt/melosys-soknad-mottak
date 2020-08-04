@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class DokumentController @Autowired constructor(
     private val dokumentService: DokumentService
 ) {
+    @Deprecated(message = "Pdf som BASE64-string returneres i hentVedlegg")
     @ApiOperation("Henter pdf for et dokument med gitt ID")
     @GetMapping("{dokumentID}", produces = [MediaType.APPLICATION_PDF_VALUE])
     fun hentPdf(@PathVariable dokumentID: String): ResponseEntity<ByteArray> {

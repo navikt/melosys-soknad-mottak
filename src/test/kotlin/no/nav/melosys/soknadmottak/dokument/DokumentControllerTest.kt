@@ -1,5 +1,6 @@
 package no.nav.melosys.soknadmottak.dokument
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import de.huxhorn.sulky.ulid.ULID
 import io.mockk.every
 import io.mockk.mockk
@@ -63,16 +64,21 @@ class DokumentControllerTest @Autowired constructor(
     }
 
     @Test
-    fun `hent vedlegg for en søknad, forvent vedlegg`() {
+    fun `hent vedlegg for en søknad, forvent vedlegg med pdf som base64-string`() {
+
         every { dokumentService.hentDokumenterForSoknad(SOKNAD_ID.toString()) } returns listOf(DokumentFactory.lagDokument())
 
-        mockMvc.get("/api/dokumenter/$SOKNAD_ID") {
+        val res = mockMvc.get("/api/dokumenter/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_JSON)
         }.andExpect {
             status { isOk }
             content {
                 contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
             }
+        }.andReturn()
+
+        res.response.contentAsString.let {
+            assertThat(ObjectMapper().readTree(it).path(0).path("innhold").textValue()).isBase64()
         }
 
         verify { dokumentService.hentDokumenterForSoknad(SOKNAD_ID.toString()) }
