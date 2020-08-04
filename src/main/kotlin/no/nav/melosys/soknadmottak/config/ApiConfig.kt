@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import springfox.documentation.builders.PathSelectors
@@ -40,7 +41,7 @@ class ApiConfig : WebMvcConfigurer {
 }
 
 @Configuration
-@EnableSwagger2
+@EnableWebMvc
 @ConditionalOnProperty(name = ["NAIS_CLUSTER_NAME"], havingValue = "dev-fss", matchIfMissing = true)
 class SwaggerConfig {
     @Bean
