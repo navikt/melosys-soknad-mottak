@@ -64,11 +64,11 @@ class DokumentControllerTest @Autowired constructor(
     }
 
     @Test
-    fun `hent vedlegg for en søknad, forvent vedlegg med pdf som base64-string`() {
+    fun `hent dokumenter for en søknad, forvent liste med ett dokument med pdf som base64-string`() {
 
         every { dokumentService.hentDokumenterForSoknad(SOKNAD_ID.toString()) } returns listOf(DokumentFactory.lagDokument())
 
-        val res = mockMvc.get("/api/dokumenter/$SOKNAD_ID") {
+        val res = mockMvc.get("/api/soknader/$SOKNAD_ID/dokumenter") {
             accept(MediaType.APPLICATION_JSON)
         }.andExpect {
             status { isOk }
