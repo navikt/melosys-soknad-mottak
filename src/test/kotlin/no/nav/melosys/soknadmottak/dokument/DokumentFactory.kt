@@ -8,7 +8,7 @@ import java.time.Instant
 object DokumentFactory {
     private val ulid: ULID = ULID()
 
-    fun lagDokument(soknad: Soknad = lagSoknad(), innhold: ByteArray = ByteArray(10)): Dokument {
+    fun lagDokument(soknad: Soknad = lagSoknad(), innhold: ByteArray = "pdf".toByteArray()): Dokument {
         return Dokument(soknad, "fil_navn", DokumentType.VEDLEGG, innhold, Instant.MIN, ulid.nextULID())
     }
 }
