@@ -17,10 +17,9 @@ class Dokument(
     @Column(name = "filnavn", nullable = false)
     var filnavn: String,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "dok_type", nullable = false)
-    var type: DokumentType,
-    
+    var type: String,
+
     @Column(name = "innhold", nullable = false)
     var innhold: ByteArray,
 

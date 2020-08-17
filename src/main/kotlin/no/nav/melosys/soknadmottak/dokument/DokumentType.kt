@@ -1,5 +1,7 @@
 package no.nav.melosys.soknadmottak.dokument
 
-enum class DokumentType {
-    SOKNAD, VEDLEGG
+class DokumentType {
+    companion object {
+        val SOKNAD = "SOKNAD"
+    }
 }

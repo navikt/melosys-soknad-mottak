@@ -6,7 +6,7 @@ data class DokumentDto(
     val soknadID: String,
     val dokumentID: String,
     val tittel: String,
-    val dokumentType: DokumentType,
+    val dokumentType: String,
     val innhold: String
 ) {
     constructor(dokument: Dokument) : this(
