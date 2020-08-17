@@ -65,6 +65,7 @@ class DownloadQueueServiceTest {
         val vedlegg1 = ArchivedAttachmentDQBE().apply {
             attachmentData = ByteArray(8)
             fileName = "vedlegg_1"
+            attachmentTypeName = "Fullmakt"
         }
         val vedleggListe = ArchivedAttachmentExternalListDQBE().withArchivedAttachmentDQBE(vedlegg1)
 

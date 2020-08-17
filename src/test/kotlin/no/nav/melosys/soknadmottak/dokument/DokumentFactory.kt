@@ -9,6 +9,6 @@ object DokumentFactory {
     private val ulid: ULID = ULID()
 
     fun lagDokument(soknad: Soknad = lagSoknad(), innhold: ByteArray = "pdf".toByteArray()): Dokument {
-        return Dokument(soknad, "fil_navn", DokumentType.VEDLEGG, innhold, Instant.MIN, ulid.nextULID())
+        return Dokument(soknad, "fil_navn", DokumentType.SOKNAD, innhold, Instant.MIN, ulid.nextULID())
     }
 }

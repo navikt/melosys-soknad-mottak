@@ -9,8 +9,7 @@ import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
-import no.nav.melosys.soknadmottak.dokument.DokumentType.SOKNAD
-import no.nav.melosys.soknadmottak.dokument.DokumentType.VEDLEGG
+import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
@@ -54,7 +53,7 @@ class DownloadQueueService(
                     )
                     if (soknadRepository.findByArkivReferanse(arkivRef).count() == 0) {
                         soknadRepository.save(søknad)
-                        dokumentService.lagreDokument(Dokument(søknad, "ref_$arkivRef.pdf", SOKNAD, hentSkjemaPdf(arkivRef)))
+                        dokumentService.lagreDokument(Dokument(søknad, "ref_$arkivRef.pdf", DokumentType.SOKNAD, hentSkjemaPdf(arkivRef)))
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         fjernElementFraKø(arkivRef)
@@ -82,7 +81,7 @@ class DownloadQueueService(
     }
 
     private fun behandleVedlegg(søknad: Soknad, attachment: ArchivedAttachmentDQBE) {
-        dokumentService.lagreDokument(Dokument(søknad, attachment.fileName, VEDLEGG, attachment.attachmentData))
+        dokumentService.lagreDokument(Dokument(søknad, attachment.fileName, attachment.attachmentTypeName, attachment.attachmentData))
     }
 
     private fun hentSkjemaPdf(arkivRef: String) =
