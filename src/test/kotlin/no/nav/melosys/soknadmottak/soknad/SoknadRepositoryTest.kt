@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
+import java.time.Instant
 
 @DataJpaTest
 class SoknadRepositoryTest @Autowired constructor(
@@ -15,7 +16,7 @@ class SoknadRepositoryTest @Autowired constructor(
 
     @Test
     fun givenNySoknad_whenLagret_thenFunnet() {
-        val soknad = Soknad("ref_altinn", false, "blech")
+        val soknad = Soknad("ref_altinn", false, "blech", Instant.now())
         entityManager.persist(soknad)
         entityManager.flush()
         val found = soknadRepository.findByIdOrNull(soknad.id)

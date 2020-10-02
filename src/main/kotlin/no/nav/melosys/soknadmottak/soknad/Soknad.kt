@@ -19,6 +19,9 @@ class Soknad(
     @Column(name = "innhold", nullable = false)
     var innhold: String,
 
+    @Column(name = "innsendt_tidspunkt", nullable = false)
+    var innsendtTidspunkt: Instant,
+
     @Column(name = "lagret_tidspunkt", nullable = false)
     @CreationTimestamp
     var lagretTidspunkt: Instant? = null,

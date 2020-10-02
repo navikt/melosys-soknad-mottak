@@ -32,7 +32,7 @@ class SoknadControllerTest @Autowired constructor(
         every { soknadService.hentSøknad(SOKNAD_ID.toString()) } returns
                 Soknad(
                     "ref", true, "<innhold>xml</innhold>",
-                    Instant.MIN, 123, SOKNAD_ID
+                    Instant.MIN, Instant.MIN, 123, SOKNAD_ID
                 )
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {

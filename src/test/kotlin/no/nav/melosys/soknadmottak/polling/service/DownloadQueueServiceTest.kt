@@ -21,6 +21,7 @@ import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import javax.xml.datatype.DatatypeFactory
 
 @ExtendWith(MockKExtension::class)
 class DownloadQueueServiceTest {
@@ -79,6 +80,7 @@ class DownloadQueueServiceTest {
             forms = ArchivedFormListDQBE()
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = vedleggListe
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar()
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
         every { søknadRepository.save<Soknad>(any()) } returns SoknadFactory.lagSoknad(1)

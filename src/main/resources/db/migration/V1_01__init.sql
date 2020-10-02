@@ -5,6 +5,7 @@ CREATE TABLE SOKNAD_MOTTAK
     arkiv_ref        VARCHAR(100) NOT NULL,
     levert           BOOLEAN      NOT NULL,
     innhold          TEXT         NOT NULL,
+    innsendt_tidspunkt TIMESTAMP    NOT NULL,
     lagret_tidspunkt TIMESTAMP    NOT NULL
 );
 
