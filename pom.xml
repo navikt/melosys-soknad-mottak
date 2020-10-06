@@ -29,7 +29,7 @@
         <logstash-encoder.version>6.4</logstash-encoder.version>
         <prometheus.version>0.9.0</prometheus.version>
         <springfox.version>3.0.0</springfox.version>
-        <tjenestespesifikasjoner.version>1.2019.12.20-15.00-e8dbb8221116</tjenestespesifikasjoner.version>
+        <tjenestespesifikasjoner.version>1.2020.09.21-09.58-dde2f6764e92</tjenestespesifikasjoner.version>
         <token-support.version>1.3.0</token-support.version>
         <ulid.version>8.2.0</ulid.version>
         <vault-jdbc.version>1.3.7</vault-jdbc.version>
