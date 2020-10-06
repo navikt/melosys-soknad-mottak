@@ -15,9 +15,8 @@ import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.polling.DownloadQueueService
 import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
-import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
-import no.nav.melosys.soknadmottak.soknad.SoknadRepository
+import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class DownloadQueueServiceTest {
     @RelaxedMockK
-    lateinit var søknadRepository: SoknadRepository
+    lateinit var soknadService: SoknadService
     @RelaxedMockK
     lateinit var dokumentService: DokumentService
     @RelaxedMockK
@@ -53,7 +52,7 @@ class DownloadQueueServiceTest {
         itemList.downloadQueueItemBE.add(item)
         val downloadQueueService =
             DownloadQueueService(
-                søknadRepository,
+                soknadService,
                 dokumentService,
                 kafkaProducer,
                 mottakConfig,
@@ -81,12 +80,13 @@ class DownloadQueueServiceTest {
             attachments = vedleggListe
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
-        every { søknadRepository.save<Soknad>(any()) } returns SoknadFactory.lagSoknad(1)
+        every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
+        every { soknadService.lagre(any()) } returns SoknadFactory.lagSoknad(1)
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         downloadQueueService.pollDokumentKø()
 
-        verify { søknadRepository.save(any<Soknad>()) }
+        verify { soknadService.lagre(any()) }
         val slot = slot<Dokument>()
         verify { dokumentService.lagreDokument(capture(slot)) }
         assertThat(slot.captured.filnavn).isEqualTo("vedlegg_1")

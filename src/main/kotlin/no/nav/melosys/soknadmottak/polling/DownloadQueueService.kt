@@ -14,7 +14,7 @@ import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.Soknad
-import no.nav.melosys.soknadmottak.soknad.SoknadRepository
+import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -25,7 +25,7 @@ private const val ETT_SEKUND_MILLI = 30 * 1000L
 
 @Service
 class DownloadQueueService(
-    private val soknadRepository: SoknadRepository,
+    private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
     private val mottakConfig: MottakConfig,
@@ -51,8 +51,8 @@ class DownloadQueueService(
                         false,
                         archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
                     )
-                    if (soknadRepository.findByArkivReferanse(arkivRef).count() == 0) {
-                        soknadRepository.save(søknad)
+                    if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
+                        soknadService.lagre(søknad)
                         dokumentService.lagreDokument(Dokument(søknad, "ref_$arkivRef.pdf", DokumentType.SOKNAD, hentSkjemaPdf(arkivRef)))
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)

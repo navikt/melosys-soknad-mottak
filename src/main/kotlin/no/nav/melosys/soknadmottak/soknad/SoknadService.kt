@@ -12,10 +12,18 @@ private val logger = KotlinLogging.logger { }
 class SoknadService @Autowired constructor(
     private val soknadRepository: SoknadRepository
 ) {
+    fun erSøknadArkivIkkeLagret(arkivRef: String): Boolean {
+        return soknadRepository.findByArkivReferanse(arkivRef).count() == 0
+    }
+
     fun hentSøknad(soknadID: String): Soknad {
         logger.debug{ "Henter søknad med ID $soknadID" }
         return soknadRepository.findBySoknadID(UUID.fromString(soknadID))
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
+    }
+
+    fun lagre(soknad: Soknad): Soknad {
+        return soknadRepository.save(soknad)
     }
 
     fun oppdaterLeveringsstatus(soknadID: String) {
