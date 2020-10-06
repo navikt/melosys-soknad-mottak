@@ -21,6 +21,9 @@ import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import javax.xml.datatype.DatatypeFactory
 
 @ExtendWith(MockKExtension::class)
@@ -76,22 +79,26 @@ class DownloadQueueServiceTest {
                 "<heading>Reminder</heading>\n" +
                 "<body>Don't forget me this weekend!</body>\n" +
                 "</note>"
+        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
+
         val archivedForms = ArchivedFormTaskDQBE().apply {
             forms = ArchivedFormListDQBE()
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = vedleggListe
-            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar()
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
-        every { søknadRepository.save<Soknad>(any()) } returns SoknadFactory.lagSoknad(1)
+        val soknadSlot = slot<Soknad>()
+        every { søknadRepository.save<Soknad>(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         downloadQueueService.pollDokumentKø()
+        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
         verify { søknadRepository.save(any<Soknad>()) }
-        val slot = slot<Dokument>()
-        verify { dokumentService.lagreDokument(capture(slot)) }
-        assertThat(slot.captured.filnavn).isEqualTo("vedlegg_1")
+        val dokumentSlot = slot<Dokument>()
+        verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
+        assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
         verify { kafkaProducer.publiserMelding(any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
