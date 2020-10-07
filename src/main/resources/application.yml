@@ -45,6 +45,9 @@ altinn:
   username: ${ALTINN_USERNAME}
   password: ${ALTINN_PASSWORD}
 
+dokgen:
+  url: ${DOKGEN_URL}
+
 mottak:
   fjern-fra-dq: ${FJERN_FRA_DQ}
 

@@ -27,6 +27,7 @@
         <kafka-embedded-env.version>2.3.0</kafka-embedded-env.version>
         <log4j.version>1.2.17</log4j.version>
         <logstash-encoder.version>6.4</logstash-encoder.version>
+        <pdfbox.version>2.0.21</pdfbox.version>
         <prometheus.version>0.9.0</prometheus.version>
         <springfox.version>3.0.0</springfox.version>
         <tjenestespesifikasjoner.version>1.2020.09.21-09.58-dde2f6764e92</tjenestespesifikasjoner.version>
@@ -153,6 +154,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -305,6 +310,12 @@
                     <artifactId>mockito-core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${pdfbox.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

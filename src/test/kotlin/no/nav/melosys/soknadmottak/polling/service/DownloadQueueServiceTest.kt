@@ -87,6 +87,7 @@ class DownloadQueueServiceTest {
         downloadQueueService.pollDokumentKø()
 
         verify { soknadService.lagre(any()) }
+        verify { soknadService.hentPdf(any()) }
         val slot = slot<Dokument>()
         verify { dokumentService.lagreDokument(capture(slot)) }
         assertThat(slot.captured.filnavn).isEqualTo("vedlegg_1")

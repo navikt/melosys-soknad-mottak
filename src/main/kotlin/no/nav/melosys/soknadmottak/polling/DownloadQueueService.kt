@@ -53,7 +53,8 @@ class DownloadQueueService(
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
                         soknadService.lagre(søknad)
-                        dokumentService.lagreDokument(Dokument(søknad, "ref_$arkivRef.pdf", DokumentType.SOKNAD, hentSkjemaPdf(arkivRef)))
+                        dokumentService.lagreDokument(Dokument(søknad,
+                            "ref_$arkivRef.pdf", DokumentType.SOKNAD, soknadService.hentPdf(søknad)))
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         fjernElementFraKø(arkivRef)
@@ -83,16 +84,6 @@ class DownloadQueueService(
     private fun behandleVedlegg(søknad: Soknad, attachment: ArchivedAttachmentDQBE) {
         dokumentService.lagreDokument(Dokument(søknad, attachment.fileName, attachment.attachmentTypeName, attachment.attachmentData))
     }
-
-    private fun hentSkjemaPdf(arkivRef: String) =
-        iDownloadQueueExternalBasic.getFormSetPdfBasic(
-            brukernavn,
-            passord,
-            arkivRef,
-            1044,
-            null,
-            null
-        )!!
 
     private fun fjernElementFraKø(arkivRef: String) {
         try {
