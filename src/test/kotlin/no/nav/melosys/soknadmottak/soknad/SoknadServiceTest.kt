@@ -7,7 +7,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenConsumer
+import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -21,19 +21,19 @@ internal class SoknadServiceTest {
     @RelaxedMockK
     lateinit var soknadRepository: SoknadRepository
     @MockK
-    lateinit var dokgenConsumer: DokgenConsumer
+    lateinit var dokgenService: DokgenService
 
     private lateinit var soknadService: SoknadService
 
     @BeforeAll
     fun setUp() {
-        soknadService = SoknadService(soknadRepository, dokgenConsumer)
+        soknadService = SoknadService(soknadRepository, dokgenService)
     }
 
     @Test
     fun hentPdf() {
         val soknad = SoknadFactory.lagSoknad()
-        every { dokgenConsumer.lagPDF(eq("soeknad"), any()) } returns ByteArray(8)
+        every { dokgenService.lagSøknadPDF(any()) } returns ByteArray(8)
 
         val pdf = soknadService.hentPdf(soknad)
         assertThat(pdf).hasSize(8)

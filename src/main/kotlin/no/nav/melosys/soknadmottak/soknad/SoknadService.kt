@@ -3,6 +3,7 @@ package no.nav.melosys.soknadmottak.soknad
 import mu.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenConsumer
+import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
 import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -13,7 +14,7 @@ private val logger = KotlinLogging.logger { }
 @Service
 class SoknadService @Autowired constructor(
     private val soknadRepository: SoknadRepository,
-    private val dokgenConsumer: DokgenConsumer
+    private val dokgenService: DokgenService
 ) {
     fun erSøknadArkivIkkeLagret(arkivRef: String): Boolean {
         return soknadRepository.findByArkivReferanse(arkivRef).count() == 0
@@ -22,7 +23,7 @@ class SoknadService @Autowired constructor(
     fun hentPdf(søknad: Soknad): ByteArray {
         // TODO mapping fra søknad.innhold til soknadFelter
         val soknadFelter = SoknadFelterBuilder().build()
-        return dokgenConsumer.lagPDF("soeknad", soknadFelter)
+        return dokgenService.lagSøknadPDF(soknadFelter)
     }
 
     fun hentSøknad(soknadID: String): Soknad {
