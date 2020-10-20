@@ -17,7 +17,7 @@ import no.nav.melosys.soknadmottak.polling.DownloadQueueService
 import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
-import no.nav.melosys.soknadmottak.soknad.SoknadRepository
+import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,7 +29,7 @@ import javax.xml.datatype.DatatypeFactory
 @ExtendWith(MockKExtension::class)
 class DownloadQueueServiceTest {
     @RelaxedMockK
-    lateinit var søknadRepository: SoknadRepository
+    lateinit var soknadService: SoknadService
     @RelaxedMockK
     lateinit var dokumentService: DokumentService
     @RelaxedMockK
@@ -57,7 +57,7 @@ class DownloadQueueServiceTest {
         itemList.downloadQueueItemBE.add(item)
         val downloadQueueService =
             DownloadQueueService(
-                søknadRepository,
+                soknadService,
                 dokumentService,
                 kafkaProducer,
                 mottakConfig,
@@ -88,14 +88,16 @@ class DownloadQueueServiceTest {
             archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
+        every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
         val soknadSlot = slot<Soknad>()
-        every { søknadRepository.save<Soknad>(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
+        every { soknadService.lagre(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         downloadQueueService.pollDokumentKø()
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
-        verify { søknadRepository.save(any<Soknad>()) }
+        verify { soknadService.lagre(any()) }
+        verify { soknadService.hentPdf(any()) }
         val dokumentSlot = slot<Dokument>()
         verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
         assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")

@@ -23,10 +23,11 @@
         <flyway.version>6.5.3</flyway.version>
         <h2.version>1.4.200</h2.version>
         <kotlin-logging.version>1.12.0</kotlin-logging.version>
-        <kotlin-test.version>3.4.2</kotlin-test.version>
+        <kotest.version>4.2.6</kotest.version>
         <kafka-embedded-env.version>2.3.0</kafka-embedded-env.version>
         <log4j.version>1.2.17</log4j.version>
         <logstash-encoder.version>6.4</logstash-encoder.version>
+        <pdfbox.version>2.0.21</pdfbox.version>
         <prometheus.version>0.9.0</prometheus.version>
         <springfox.version>3.0.0</springfox.version>
         <tjenestespesifikasjoner.version>1.2020.09.21-09.58-dde2f6764e92</tjenestespesifikasjoner.version>
@@ -155,6 +156,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
@@ -268,10 +273,10 @@
 
         <!--test-->
         <dependency>
-            <groupId>io.kotlintest</groupId>
-            <artifactId>kotlintest-runner-junit5</artifactId>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-runner-junit5-jvm</artifactId>
             <scope>test</scope>
-            <version>${kotlin-test.version}</version>
+            <version>${kotest.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
@@ -300,7 +305,17 @@
                     <groupId>org.junit.vintage</groupId>
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${pdfbox.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

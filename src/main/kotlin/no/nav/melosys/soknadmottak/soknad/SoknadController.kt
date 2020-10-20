@@ -2,7 +2,6 @@ package no.nav.melosys.soknadmottak.soknad
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

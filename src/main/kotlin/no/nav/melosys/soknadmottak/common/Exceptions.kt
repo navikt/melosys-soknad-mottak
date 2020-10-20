@@ -12,6 +12,10 @@ class IkkeFunnetException : Exception {
     constructor(throwable: Throwable) : super(throwable)
 }
 
+class IntegrasjonException : Exception {
+    constructor(melding: String) : super(melding)
+}
+
 class PubliserSoknadException : Exception {
     constructor(melding: String, throwable: Throwable) : super(melding, throwable)
 
