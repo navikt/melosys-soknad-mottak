@@ -4,6 +4,6 @@ import java.time.Instant
 
 object SoknadFactory {
     fun lagSoknad(id: Long? = null): Soknad {
-        return Soknad("referanse", false, "innhold", Instant.MIN, id)
+        return Soknad("referanse", false, "innhold", Instant.now(), Instant.MIN, id)
     }
 }

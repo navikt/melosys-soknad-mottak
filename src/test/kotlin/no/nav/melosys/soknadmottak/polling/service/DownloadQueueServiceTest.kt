@@ -15,11 +15,16 @@ import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.polling.DownloadQueueService
 import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import javax.xml.datatype.DatatypeFactory
 
 @ExtendWith(MockKExtension::class)
 class DownloadQueueServiceTest {
@@ -74,23 +79,28 @@ class DownloadQueueServiceTest {
                 "<heading>Reminder</heading>\n" +
                 "<body>Don't forget me this weekend!</body>\n" +
                 "</note>"
+        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
+
         val archivedForms = ArchivedFormTaskDQBE().apply {
             forms = ArchivedFormListDQBE()
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = vedleggListe
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
         every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
-        every { soknadService.lagre(any()) } returns SoknadFactory.lagSoknad(1)
+        val soknadSlot = slot<Soknad>()
+        every { soknadService.lagre(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         downloadQueueService.pollDokumentKø()
+        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
         verify { soknadService.lagre(any()) }
         verify { soknadService.hentPdf(any()) }
-        val slot = slot<Dokument>()
-        verify { dokumentService.lagreDokument(capture(slot)) }
-        assertThat(slot.captured.filnavn).isEqualTo("vedlegg_1")
+        val dokumentSlot = slot<Dokument>()
+        verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
+        assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
         verify { kafkaProducer.publiserMelding(any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }

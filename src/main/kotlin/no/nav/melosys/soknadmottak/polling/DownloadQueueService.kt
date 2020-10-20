@@ -45,11 +45,13 @@ class DownloadQueueService(
                     val arkivRef = item.archiveReference
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
                     val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
+                    val innsendtTidspunkt = archivedFormTaskBasicDQ.archiveTimeStamp.toGregorianCalendar().toInstant()
 
                     val søknad = Soknad(
                         arkivRef,
                         false,
-                        archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
+                        archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData,
+                        innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
                         soknadService.lagre(søknad)
