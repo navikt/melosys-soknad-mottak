@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: '11.x'
       - name: Setup Maven
-        uses: actions/cache@preview
+        uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}

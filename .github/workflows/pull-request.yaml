@@ -12,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Setup Maven
-      uses: actions/cache@preview
+      uses: actions/cache@v2
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
