@@ -2,7 +2,6 @@ package no.nav.melosys.soknadmottak.soknad
 
 import mu.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
-import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenConsumer
 import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
 import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.polling.altinn
+package no.nav.melosys.soknadmottak.mottak.altinn
 
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.ws.STS_SAML_POLICY

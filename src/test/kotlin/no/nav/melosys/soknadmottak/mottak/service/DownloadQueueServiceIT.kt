@@ -1,12 +1,12 @@
-package no.nav.melosys.soknadmottak.polling.service
+package no.nav.melosys.soknadmottak.mottak.service
 
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
-import no.nav.melosys.soknadmottak.polling.DownloadQueueService
-import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.mottak.DownloadQueueService
+import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

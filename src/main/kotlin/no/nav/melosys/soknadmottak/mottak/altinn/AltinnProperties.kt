@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.polling.altinn
+package no.nav.melosys.soknadmottak.mottak.altinn
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

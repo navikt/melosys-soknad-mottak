@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.polling.service
+package no.nav.melosys.soknadmottak.mottak.service
 
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -13,15 +13,16 @@ import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.polling.DownloadQueueService
-import no.nav.melosys.soknadmottak.polling.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.mottak.DownloadQueueService
+import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.*
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.xml.datatype.DatatypeFactory
