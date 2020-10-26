@@ -57,8 +57,8 @@ class DownloadQueueService(
                         soknadService.lagre(søknad)
                         dokumentService.lagreDokument(Dokument(søknad,
                             "ref_$arkivRef.pdf", DokumentType.SOKNAD, soknadService.hentPdf(søknad)))
-                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
+                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "DownloadQueue: behandlet AR: '${arkivRef}' ('${index + 1} av ${elementer.size}') "
