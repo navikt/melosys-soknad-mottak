@@ -42,7 +42,7 @@
         <vault-jdbc.version>1.3.7</vault-jdbc.version>
 
         <!-- Transitive avhengiheter med konflikter -->
-        <asm.version>7.2</asm.version>
+        <asm.version>9.0</asm.version>
         <bcprov-jdk15on.version>1.66</bcprov-jdk15on.version>
         <github-classgraph.version>4.8.90</github-classgraph.version>
         <guava.version>24.1.1-jre</guava.version>
