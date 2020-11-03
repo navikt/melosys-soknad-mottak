@@ -91,8 +91,8 @@ class DownloadQueueService(
         try {
             if (mottakConfig.fjernFraDq) {
                 purgeItem(arkivRef)
+                logger.info { "DownloadQueue: fjernet arkiv '${arkivRef}'" }
             }
-            logger.info { "DownloadQueue: fjernet arkiv '${arkivRef}'" }
         } catch (e: Throwable) {
             logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${arkivRef}'" }
         }
