@@ -10,7 +10,7 @@ data class SoknadFelter(
     val erForetakSammeKonsern: Boolean,
     val erLoennHelePerioden: Boolean,
     val erUfakturertLoennUtland: Boolean,
-    val kontakperson: Kontakperson,
+    val kontakperson: Kontakperson?,
     val tidspunktMottatt: String,
     val utenlandsoppdrag: Utenlandsoppdrag,
     val virksomhetNorge: VirksomhetNorge

@@ -4,19 +4,19 @@ import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
 import java.time.Instant
 
 data class SoknadFelterBuilder(
-    val arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
-    val arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
-    val arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
-    val bruttoLoennPerMnd: String = "",
-    val bruttoLoennUtlandPerMnd: String = "",
-    val erArbeidsgiveravgiftHelePerioden: Boolean = false,
-    val erForetakSammeKonsern: Boolean = false,
-    val erLoennHelePerioden: Boolean = false,
-    val erUfakturertLoennUtland: Boolean = false,
-    val kontakperson: Kontakperson = KontakpersonBuilder().build(),
-    val tidspunktMottatt: String = Instant.now().toString(),
-    val utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
-    val virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build()
+    var arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
+    var arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
+    var arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
+    var bruttoLoennPerMnd: String = "",
+    var bruttoLoennUtlandPerMnd: String = "",
+    var erArbeidsgiveravgiftHelePerioden: Boolean = false,
+    var erForetakSammeKonsern: Boolean = false,
+    var erLoennHelePerioden: Boolean = false,
+    var erUfakturertLoennUtland: Boolean = false,
+    var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
+    var tidspunktMottatt: String = Instant.now().toString(),
+    var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
+    var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build()
 ) {
     fun build(): SoknadFelter {
         return SoknadFelter(
@@ -74,23 +74,25 @@ data class ArbeidstakerBuilder(
     val fnr: String = "",
     val foedeland: String = "",
     val foedsted: String = "",
-    val fornavn: String = ""
+    val utenlandskIDnummer: String = ""
 ) {
     fun build(): Arbeidstaker {
         return Arbeidstaker(
             barnMed = barnMed,
             erMedBarnUnder18 = erMedBarnUnder18,
-            etternavn = etternavn,
+            fulltNavn = etternavn,
             fnr = fnr,
             foedeland = foedeland,
-            foedsted = foedsted,
-            fornavn = fornavn
+            foedested = foedsted,
+            utenlandskIDnummer = utenlandskIDnummer
         )
     }
 }
 
 data class KontakpersonBuilder(
     val ansattHos: String = "",
+    val fullmektigVirksomhetsnummer: String = "",
+    val fullmektigVirksomhetsnavn: String = "",
     val harFullmakt: Boolean = false,
     val navn: String = "",
     val telefon: String = ""
@@ -100,7 +102,9 @@ data class KontakpersonBuilder(
             ansattHos = ansattHos,
             harFullmakt = harFullmakt,
             navn = navn,
-            telefon = telefon
+            telefon = telefon,
+            fullmektigVirksomhetsnummer = fullmektigVirksomhetsnummer,
+            fullmektigVirksomhetsnavn = fullmektigVirksomhetsnavn
         )
     }
 }
@@ -109,18 +113,23 @@ data class UtenlandsoppdragBuilder(
     val arbeidsland: String = "",
     val erAnsattHelePeriode: Boolean = false,
     val erAnsettelseForOpphold: Boolean = false,
+    val erDrattPaaEgetInitiativ: Boolean = false,
     val erErstatning: Boolean = false,
+    val erFortsattAnsattEtterOppdrag: Boolean = false,
     val erSendingForOppdrag: Boolean = false,
-    val periode: String = ""
+    val periode: String = "",
+    val samletUtsendingPeriode: String = ""
 ) {
     fun build(): Utenlandsoppdrag {
         return Utenlandsoppdrag(
             arbeidsland = arbeidsland,
-            erAnsattHelePeriode = erAnsattHelePeriode,
-            erAnsettelseForOpphold = erAnsettelseForOpphold,
+            periode = periode,
             erErstatning = erErstatning,
+            samletUtsendingPeriode = samletUtsendingPeriode,
             erSendingForOppdrag = erSendingForOppdrag,
-            periode = periode
+            erDrattPaaEgetInitiativ = erDrattPaaEgetInitiativ,
+            erAnsettelseForOpphold = erAnsettelseForOpphold,
+            erFortsattAnsattEtterOppdrag = erFortsattAnsattEtterOppdrag
         )
     }
 }

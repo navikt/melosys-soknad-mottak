@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.soknad.dokgen.modell
 
 data class Arbeidsgiver(
-    val adresse: String,
+    val orgnr: String,
     val navn: String,
-    val orgnr: String
+    val adresse: String
 )
