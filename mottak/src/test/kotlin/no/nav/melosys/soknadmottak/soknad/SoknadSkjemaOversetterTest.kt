@@ -65,15 +65,23 @@ internal class SoknadSkjemaOversetterTest {
     }
 
     @Test
+    fun `mapping lønn og godtgjørelser`() {
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+
+        assertThat(felter.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isTrue()
+        assertThat(felter.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
+        assertThat(felter.loennOgGodtgjoerelse.bruttoLoennPerMnd).isEqualTo("1000.00")
+        assertThat(felter.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")
+        assertThat(felter.loennOgGodtgjoerelse.mottarNaturalytelser).isTrue()
+        assertThat(felter.loennOgGodtgjoerelse.samletVerdiNaturalytelser).isEqualTo("9876.55")
+        assertThat(felter.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden).isTrue()
+        assertThat(felter.loennOgGodtgjoerelse.erTrukketTrygdeavgift).isFalse()
+    }
+
+    @Test
     fun `mapping andre felter`() {
         val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
 
         assertThat(felter.arbeidssted.type).isNotBlank() // FIXME
-        assertThat(felter.bruttoLoennPerMnd).isEqualTo("1000.00")
-        assertThat(felter.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")
-        assertThat(felter.erArbeidsgiveravgiftHelePerioden).isTrue()
-        assertThat(felter.erForetakSammeKonsern).isTrue()
-        //assertThat(felter.erLoennHelePerioden).isTrue() TODO finnes ikke i skjema?
-
     }
 }

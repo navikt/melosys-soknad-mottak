@@ -7,12 +7,7 @@ data class SoknadFelterBuilder(
     var arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
     var arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
     var arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
-    var bruttoLoennPerMnd: String = "",
-    var bruttoLoennUtlandPerMnd: String = "",
-    var erArbeidsgiveravgiftHelePerioden: Boolean = false,
-    var erForetakSammeKonsern: Boolean = false,
-    var erLoennHelePerioden: Boolean = false,
-    var erUfakturertLoennUtland: Boolean = false,
+    var loennOgGodtgjoerelse: LoennOgGodtgjoerelse = LoennOgGodtgjoerelseBuilder().build(),
     var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
     var tidspunktMottatt: String = Instant.now().toString(),
     var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
@@ -23,12 +18,7 @@ data class SoknadFelterBuilder(
             arbeidsgiver = arbeidsgiver,
             arbeidssted = arbeidssted,
             arbeidstaker = arbeidstaker,
-            bruttoLoennPerMnd = bruttoLoennPerMnd,
-            bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
-            erArbeidsgiveravgiftHelePerioden = erArbeidsgiveravgiftHelePerioden,
-            erForetakSammeKonsern = erForetakSammeKonsern,
-            erLoennHelePerioden = erLoennHelePerioden,
-            erUfakturertLoennUtland = erUfakturertLoennUtland,
+            loennOgGodtgjoerelse = loennOgGodtgjoerelse,
             kontakperson = kontakperson,
             tidspunktMottatt = tidspunktMottatt,
             utenlandsoppdrag = utenlandsoppdrag,
@@ -105,6 +95,30 @@ data class KontakpersonBuilder(
             telefon = telefon,
             fullmektigVirksomhetsnummer = fullmektigVirksomhetsnummer,
             fullmektigVirksomhetsnavn = fullmektigVirksomhetsnavn
+        )
+    }
+}
+
+data class LoennOgGodtgjoerelseBuilder(
+    val bruttoLoennPerMnd: String = "",
+    val bruttoLoennUtlandPerMnd: String = "",
+    val erArbeidsgiveravgiftHelePerioden: Boolean = false,
+    val erTrukketTrygdeavgift: Boolean = false,
+    val mottarNaturalytelser: Boolean = false,
+    val norskArbgUtbetalerLoenn: Boolean = false,
+    val samletVerdiNaturalytelser: String = "",
+    val utlArbgUtbetalerLoenn: Boolean = false
+) {
+    fun build(): LoennOgGodtgjoerelse {
+        return LoennOgGodtgjoerelse(
+            norskArbgUtbetalerLoenn = norskArbgUtbetalerLoenn,
+            utlArbgUtbetalerLoenn = utlArbgUtbetalerLoenn,
+            bruttoLoennPerMnd = bruttoLoennPerMnd,
+            bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
+            mottarNaturalytelser = mottarNaturalytelser,
+            samletVerdiNaturalytelser = samletVerdiNaturalytelser,
+            erArbeidsgiveravgiftHelePerioden = erArbeidsgiveravgiftHelePerioden,
+            erTrukketTrygdeavgift = erTrukketTrygdeavgift
         )
     }
 }

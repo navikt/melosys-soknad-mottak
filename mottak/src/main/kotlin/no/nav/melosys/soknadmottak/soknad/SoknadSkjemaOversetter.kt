@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
-import no.nav.melosys.altinn.soknad.Innhold
-import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
-import no.nav.melosys.altinn.soknad.Tidsrom
+import no.nav.melosys.altinn.soknad.*
 import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidsgiver
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidssted
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidstaker
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.LoennOgGodtgjoerelse
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
 
@@ -21,25 +22,36 @@ private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
 class SoknadSkjemaOversetter {
     fun tilSøknadFelter(søknad: Soknad): SoknadFelter {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
-        val loennOgGodtgjoerelse = innhold.midlertidigUtsendt.loennOgGodtgjoerelse
         val soknadFelterBuilder = SoknadFelterBuilder().apply {
             arbeidsgiver = oversettArbeidsgiver(innhold)
             arbeidstaker = oversettArbeidstaker(innhold)
             kontakperson = oversettKontaktperson(innhold)
-            arbeidssted = oversettArbeidssted(innhold)
             utenlandsoppdrag = oversettUtenlandsoppdrag(innhold)
+            arbeidssted = oversettArbeidssted(innhold)
+            loennOgGodtgjoerelse = oversettLoennOgGodtgjoerelse(innhold)
             virksomhetNorge = oversettVirksomhetNorge(innhold)
-            bruttoLoennPerMnd = loennOgGodtgjoerelse.loennNorskArbg.toPlainString()
-            bruttoLoennUtlandPerMnd = loennOgGodtgjoerelse.loennUtlArbg.toPlainString()
-            erArbeidsgiveravgiftHelePerioden = loennOgGodtgjoerelse.isBetalerArbeidsgiveravgift
-            erForetakSammeKonsern = loennOgGodtgjoerelse.isUtlArbTilhorerSammeKonsern
         }
 
         return soknadFelterBuilder.build()
     }
 
+    private fun oversettLoennOgGodtgjoerelse(innhold: Innhold): LoennOgGodtgjoerelse {
+        val lønn = innhold.midlertidigUtsendt.loennOgGodtgjoerelse
+        return LoennOgGodtgjoerelse(
+            norskArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
+            utlArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
+            bruttoLoennPerMnd = lønn.loennNorskArbg.toPlainString(),
+            bruttoLoennUtlandPerMnd = lønn.loennUtlArbg.toPlainString(),
+            mottarNaturalytelser = lønn.isUtlArbTilhorerSammeKonsern,
+            samletVerdiNaturalytelser = lønn.samletVerdiNaturalytelser.toPlainString(),
+            erArbeidsgiveravgiftHelePerioden = lønn.isBetalerArbeidsgiveravgift,
+            erTrukketTrygdeavgift = lønn.isTrukketTrygdeavgift
+        )
+    }
+
     private fun oversettArbeidsgiver(innhold: Innhold) =
-        Arbeidsgiver(innhold.arbeidsgiver.virksomhetsnummer,
+        Arbeidsgiver(
+            innhold.arbeidsgiver.virksomhetsnummer,
             innhold.arbeidsgiver.virksomhetsnavn,
             oversettAdresse(innhold.arbeidsgiver.adresse)
         )
