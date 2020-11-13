@@ -30,23 +30,10 @@ class SoknadSkjemaOversetter {
             arbeidssted = oversettArbeidssted(innhold)
             loennOgGodtgjoerelse = oversettLoennOgGodtgjoerelse(innhold)
             virksomhetNorge = oversettVirksomhetNorge(innhold)
+            arbeidssituasjon = oversettArbeidssituasjon(innhold)
         }
 
         return soknadFelterBuilder.build()
-    }
-
-    private fun oversettLoennOgGodtgjoerelse(innhold: Innhold): LoennOgGodtgjoerelse {
-        val lønn = innhold.midlertidigUtsendt.loennOgGodtgjoerelse
-        return LoennOgGodtgjoerelse(
-            norskArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
-            utlArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
-            bruttoLoennPerMnd = lønn.loennNorskArbg.toPlainString(),
-            bruttoLoennUtlandPerMnd = lønn.loennUtlArbg.toPlainString(),
-            mottarNaturalytelser = lønn.isUtlArbTilhorerSammeKonsern,
-            samletVerdiNaturalytelser = lønn.samletVerdiNaturalytelser.toPlainString(),
-            erArbeidsgiveravgiftHelePerioden = lønn.isBetalerArbeidsgiveravgift,
-            erTrukketTrygdeavgift = lønn.isTrukketTrygdeavgift
-        )
     }
 
     private fun oversettArbeidsgiver(innhold: Innhold) =
@@ -138,6 +125,20 @@ class SoknadSkjemaOversetter {
         return "${calendar.year}-${calendar.month}-${calendar.day}"
     }
 
+    private fun oversettLoennOgGodtgjoerelse(innhold: Innhold): LoennOgGodtgjoerelse {
+        val lønn = innhold.midlertidigUtsendt.loennOgGodtgjoerelse
+        return LoennOgGodtgjoerelse(
+            norskArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
+            utlArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
+            bruttoLoennPerMnd = lønn.loennNorskArbg.toPlainString(),
+            bruttoLoennUtlandPerMnd = lønn.loennUtlArbg.toPlainString(),
+            mottarNaturalytelser = lønn.isUtlArbTilhorerSammeKonsern,
+            samletVerdiNaturalytelser = lønn.samletVerdiNaturalytelser.toPlainString(),
+            erArbeidsgiveravgiftHelePerioden = lønn.isBetalerArbeidsgiveravgift,
+            erTrukketTrygdeavgift = lønn.isTrukketTrygdeavgift
+        )
+    }
+
     private fun oversettVirksomhetNorge(innhold: Innhold): VirksomhetNorge {
         val samletVirksomhetINorge = innhold.arbeidsgiver.samletVirksomhetINorge
         return VirksomhetNorge(
@@ -149,6 +150,19 @@ class SoknadSkjemaOversetter {
             samletVirksomhetINorge.andelRekrutteresINorge.toInt(),
             samletVirksomhetINorge.antallAnsatte.toInt(),
             samletVirksomhetINorge.antallUtsendte.toInt()
+        )
+    }
+
+    private fun oversettArbeidssituasjon(innhold: Innhold): Arbeidssituasjon {
+        val midlertidigUtsendt = innhold.midlertidigUtsendt
+        return Arbeidssituasjon(
+            midlertidigUtsendt.isAndreArbeidsgivereIUtsendingsperioden,
+            midlertidigUtsendt.beskrivArbeidSisteMnd,
+            midlertidigUtsendt.beskrivelseAnnetArbeid,
+            midlertidigUtsendt.isSkattepliktig,
+            midlertidigUtsendt.isLoennetArbeidMinstEnMnd,
+            midlertidigUtsendt.isMottaYtelserNorge,
+            midlertidigUtsendt.isMottaYtelserUtlandet
         )
     }
 

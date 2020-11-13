@@ -79,9 +79,22 @@ internal class SoknadSkjemaOversetterTest {
     }
 
     @Test
+    fun `mapping arbeidssituasjon`() {
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+
+        assertThat(felter.arbeidssituasjon.loennetArbeidMinstEnMnd).isFalse()
+        assertThat(felter.arbeidssituasjon.beskrivArbeidSisteMnd).isEqualTo("Universell konsulent")
+        assertThat(felter.arbeidssituasjon.andreArbeidsgivereIUtsendingsperioden).isTrue()
+        assertThat(felter.arbeidssituasjon.beskrivelseAnnetArbeid).isEqualTo("Tankeleser")
+        assertThat(felter.arbeidssituasjon.erSkattepliktig).isFalse()
+        assertThat(felter.arbeidssituasjon.mottaYtelserNorge).isTrue()
+        assertThat(felter.arbeidssituasjon.mottaYtelserUtlandet).isTrue()
+    }
+
+    @Test
     fun `mapping andre felter`() {
         val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
 
-        assertThat(felter.arbeidssted.type).isNotBlank() // FIXME
+        assertThat(felter.arbeidssted.type).isEqualTo("offshoreEnheter")
     }
 }

@@ -11,7 +11,8 @@ data class SoknadFelterBuilder(
     var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
     var tidspunktMottatt: String = Instant.now().toString(),
     var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
-    var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build()
+    var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build(),
+    var arbeidssituasjon: Arbeidssituasjon = ArbeidssituasjonBuilder().build()
 ) {
     fun build(): SoknadFelter {
         return SoknadFelter(
@@ -22,7 +23,8 @@ data class SoknadFelterBuilder(
             kontakperson = kontakperson,
             tidspunktMottatt = tidspunktMottatt,
             utenlandsoppdrag = utenlandsoppdrag,
-            virksomhetNorge = virksomhetNorge
+            virksomhetNorge = virksomhetNorge,
+            arbeidssituasjon = arbeidssituasjon
         )
     }
 }
@@ -168,6 +170,28 @@ data class VirksomhetNorgeBuilder(
             ansatte = ansatte,
             erOffenlig = erOffenlig,
             utsendteArbeidstakere = utsendteArbeidstakere
+        )
+    }
+}
+
+data class ArbeidssituasjonBuilder(
+    val andreArbeidsgivereIUtsendingsperioden: Boolean = false,
+    val beskrivArbeidSisteMnd: String = "",
+    val beskrivelseAnnetArbeid: String = "",
+    val erSkattepliktig: Boolean = false,
+    val loennetArbeidMinstEnMnd: Boolean = false,
+    val mottaYtelserNorge: Boolean = false,
+    val mottaYtelserUtlandet: Boolean = false
+) {
+    fun build(): Arbeidssituasjon {
+        return Arbeidssituasjon(
+            andreArbeidsgivereIUtsendingsperioden = andreArbeidsgivereIUtsendingsperioden,
+            beskrivArbeidSisteMnd =  beskrivArbeidSisteMnd,
+            beskrivelseAnnetArbeid = beskrivelseAnnetArbeid,
+            erSkattepliktig = erSkattepliktig,
+            loennetArbeidMinstEnMnd = loennetArbeidMinstEnMnd,
+            mottaYtelserNorge = mottaYtelserNorge,
+            mottaYtelserUtlandet = mottaYtelserUtlandet
         )
     }
 }

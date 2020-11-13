@@ -80,17 +80,17 @@
       <!--Optional:-->
       <andreArbeidsgivereIUtsendingsperioden>true</andreArbeidsgivereIUtsendingsperioden>
       <!--Optional:-->
-      <beskrivArbeidSisteMnd>string</beskrivArbeidSisteMnd>
+      <beskrivArbeidSisteMnd>Universell konsulent</beskrivArbeidSisteMnd>
       <!--Optional:-->
       <mottaYtelserNorge>true</mottaYtelserNorge>
       <!--Optional:-->
       <mottaYtelserUtlandet>true</mottaYtelserUtlandet>
       <!--Optional:-->
-      <loennetArbeidMinstEnMnd>true</loennetArbeidMinstEnMnd>
+      <loennetArbeidMinstEnMnd>false</loennetArbeidMinstEnMnd>
       <!--Optional:-->
       <skattepliktig>false</skattepliktig>
       <!--Optional:-->
-      <beskrivelseAnnetArbeid>string</beskrivelseAnnetArbeid>
+      <beskrivelseAnnetArbeid>Tankeleser</beskrivelseAnnetArbeid>
       <!--Optional:-->
       <utenlandsoppdraget>
         <!--Optional:-->
@@ -166,7 +166,7 @@
       <!--Optional:-->
       <arbeidssted>
         <!--Optional:-->
-        <typeArbeidssted>string</typeArbeidssted>
+        <typeArbeidssted>offshoreEnheter</typeArbeidssted>
         <!--Optional:-->
         <arbeidPaaLand>
           <!--Optional:-->
