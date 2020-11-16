@@ -7,8 +7,12 @@ object SoknadFactory {
         return Soknad("referanse", false, innhold, Instant.now(), Instant.MIN, id)
     }
 
-    fun lagSoknadFraXmlFil() : Soknad {
-        val søknadXML = javaClass.getResource("/NAV_MedlemskapArbeidEOS.xml").readText()
+    fun lagSoknadFraXmlFil(): Soknad {
+        return lagSoknadFraXmlFil("NAV_MedlemskapArbeidEOS.xml")
+    }
+
+    fun lagSoknadFraXmlFil(filNavn: String): Soknad {
+        val søknadXML = javaClass.getResource("/${filNavn}").readText()
         return lagSoknad(1, søknadXML)
     }
 }

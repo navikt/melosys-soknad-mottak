@@ -43,22 +43,6 @@ data class ArbeidsgiverBuilder(
     }
 }
 
-data class ArbeidsstedBuilder(
-    val innretningNavn: String = "",
-    val innretningType: String = "",
-    val sokkelLand: String = "",
-    val type: String = ""
-) {
-    fun build(): Arbeidssted {
-        return Arbeidssted(
-            innretningNavn = innretningNavn,
-            innretningType = innretningType,
-            sokkelLand = sokkelLand,
-            type = type
-        )
-    }
-}
-
 data class ArbeidstakerBuilder(
     val barnMed: List<BarnMed> = listOf(),
     val erMedBarnUnder18: Boolean = false,

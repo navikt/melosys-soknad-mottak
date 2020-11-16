@@ -4,19 +4,19 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.melosys.altinn.soknad.*
+import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
+import no.nav.melosys.altinn.soknad.Innhold
+import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
+import no.nav.melosys.altinn.soknad.Tidsrom
 import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidsgiver
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidssted
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidstaker
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.LoennOgGodtgjoerelse
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
 
 private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
     setDefaultUseWrapper(false)
 }).registerKotlinModule()
+    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
 class SoknadSkjemaOversetter {
@@ -50,13 +50,67 @@ class SoknadSkjemaOversetter {
 
     private fun oversettArbeidssted(innhold: Innhold): Arbeidssted {
         val arbeidssted = innhold.midlertidigUtsendt.arbeidssted
-        //FIXME
         return Arbeidssted(
             arbeidssted.typeArbeidssted,
-            "FIXME",
-            "FIXME",
-            "LAND"
+            oversettArbeidPaaLand(arbeidssted.arbeidPaaLand),
+            oversettOffshoreEnheter(arbeidssted.offshoreEnheter),
+            oversettSkipListe(arbeidssted.skipListe),
+            oversettLuftfart(arbeidssted.luftfart)
         )
+    }
+
+    private fun oversettArbeidPaaLand(arbeidPaaLand: no.nav.melosys.altinn.soknad.ArbeidPaaLand?): ArbeidPaaLand? {
+        if (arbeidPaaLand == null || arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted == null) return null
+        return ArbeidPaaLand(
+            arbeidPaaLand.isFastArbeidssted,
+            arbeidPaaLand.isHjemmekontor,
+            arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted
+                .map { fysiskArbeidssted ->
+                    FysiskArbeidssted(
+                        firmanavn = fysiskArbeidssted.firmanavn,
+                        gatenavn = fysiskArbeidssted.gatenavn,
+                        by = fysiskArbeidssted.by,
+                        postkode = fysiskArbeidssted.postkode,
+                        region = fysiskArbeidssted.region,
+                        land = fysiskArbeidssted.land
+                    )
+                }
+        )
+    }
+
+    private fun oversettOffshoreEnheter(offshoreEnheter: no.nav.melosys.altinn.soknad.OffshoreEnheter): OffshoreEnheter {
+        return OffshoreEnheter(
+            offshoreEnheter.offshoreEnhet.map { enhet ->
+                OffshoreEnhet(
+                    enhet.enhetsNavn,
+                    enhet.sokkelLand,
+                    enhet.enhetsType.value()
+                )
+            }
+        )
+    }
+
+    private fun oversettLuftfart(luftfart: no.nav.melosys.altinn.soknad.Luftfart?): Luftfart? {
+        if (luftfart == null) return null
+        return Luftfart(luftfart.luftfartBaser.luftfartbase.map { base ->
+            LuftfartBase(
+                base.hjemmebaseNavn,
+                base.hjemmebaseLand,
+                base.typeFlyvninger.value()
+            )
+        })
+    }
+
+    private fun oversettSkipListe(skipListe: no.nav.melosys.altinn.soknad.SkipListe?): SkipListe? {
+        if (skipListe == null) return null
+        return SkipListe(skipListe.skip.map { skip ->
+            Skip(
+                skip.fartsomraade.value(),
+                skip.skipNavn,
+                skip.flaggland,
+                skip.territorialEllerHavnLand
+            )
+        })
     }
 
     private fun oversettArbeidstaker(innhold: Innhold): Arbeidstaker {

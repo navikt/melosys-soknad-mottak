@@ -51,6 +51,64 @@ internal class SoknadSkjemaOversetterTest {
     }
 
     @Test
+    fun `mapping arbeidssted arbeidPaaLand`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_arbeidPaaLand.xml")
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+
+        assertThat(felter.arbeidssted.type).isEqualTo("arbeidPaaLand")
+        val arbeidPaaLand = felter.arbeidssted.arbeidPaaLand
+        assertThat(arbeidPaaLand).isNotNull()
+        assertThat(arbeidPaaLand!!.fastArbeidssted).isFalse()
+        assertThat(arbeidPaaLand.hjemmekontor).isTrue()
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder).isNotEmpty()
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].firmanavn).isEqualTo("firmanavn")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].gatenavn).isEqualTo("gatenavn")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].by).isEqualTo("by")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].postkode).isEqualTo("postkode")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].region).isEqualTo("region")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].land).isEqualTo("land")
+    }
+
+    @Test
+    fun `mapping arbeidssted offshoreEnheter`() {
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+
+        assertThat(felter.arbeidssted.type).isEqualTo("offshoreEnheter")
+        val offshoreEnheter = felter.arbeidssted.offshoreEnheter!!.offshoreEnheter
+        assertThat(offshoreEnheter).isNotEmpty()
+        assertThat(offshoreEnheter[0].enhetsNavn).isEqualTo("Askepott")
+        assertThat(offshoreEnheter[0].sokkelLand).isEqualTo("Polen")
+        assertThat(offshoreEnheter[0].enhetsType).isEqualTo("annenStasjonaerEnhet")
+    }
+
+    @Test
+    fun `mapping arbeidssted luftfart`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_luftfart.xml")
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+
+        assertThat(felter.arbeidssted.type).isEqualTo("luftfart")
+        val luftfartBaser = felter.arbeidssted.luftfart!!.luftfartBaser
+        assertThat(luftfartBaser).isNotEmpty()
+        assertThat(luftfartBaser[0].hjemmebaseNavn).isEqualTo("hjemmebaseNavn")
+        assertThat(luftfartBaser[0].hjemmebaseLand).isEqualTo("hjemmebaseLand")
+        assertThat(luftfartBaser[0].typeFlyvninger).isEqualTo("nasjonal")
+    }
+
+    @Test
+    fun `mapping arbeidssted skipsliste`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_skipListe.xml")
+        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+
+        assertThat(felter.arbeidssted.type).isEqualTo("skipListe")
+        val skipListe = felter.arbeidssted.skipListe!!.skipListe
+        assertThat(skipListe).isNotEmpty()
+        assertThat(skipListe[0].skipNavn).isEqualTo("skipNavn")
+        assertThat(skipListe[0].fartsomraade).isEqualTo("utenriks")
+        assertThat(skipListe[0].flaggland).isEqualTo("flaggland")
+        assertThat(skipListe[0].territorialEllerHavnLand).isEqualTo("havnLand")
+    }
+
+    @Test
     fun `mapping utenlandsk oppdrag`() {
         val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
 
@@ -89,12 +147,5 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(felter.arbeidssituasjon.erSkattepliktig).isFalse()
         assertThat(felter.arbeidssituasjon.mottaYtelserNorge).isTrue()
         assertThat(felter.arbeidssituasjon.mottaYtelserUtlandet).isTrue()
-    }
-
-    @Test
-    fun `mapping andre felter`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
-
-        assertThat(felter.arbeidssted.type).isEqualTo("offshoreEnheter")
     }
 }

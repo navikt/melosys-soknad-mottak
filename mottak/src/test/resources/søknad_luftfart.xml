@@ -166,7 +166,7 @@
       <!--Optional:-->
       <arbeidssted>
         <!--Optional:-->
-        <typeArbeidssted>offshoreEnheter</typeArbeidssted>
+        <typeArbeidssted>luftfart</typeArbeidssted>
         <!--Optional:-->
         <arbeidPaaLand>
           <!--Optional:-->
@@ -174,23 +174,23 @@
             <!--Zero or more repetitions:-->
             <fysiskArbeidssted>
               <!--Optional:-->
-              <gatenavn>string</gatenavn>
+              <gatenavn>gatenavn</gatenavn>
               <!--Optional:-->
-              <by>string</by>
+              <by>by</by>
               <!--Optional:-->
-              <postkode>string</postkode>
+              <postkode>postkode</postkode>
               <!--Optional:-->
-              <region>string</region>
+              <region>region</region>
               <!--Optional:-->
-              <land>string</land>
+              <land>land</land>
               <!--Optional:-->
-              <firmanavn>string</firmanavn>
+              <firmanavn>firmanavn</firmanavn>
             </fysiskArbeidssted>
           </fysiskeArbeidssteder>
           <!--Optional:-->
-          <hjemmekontor>false</hjemmekontor>
+          <hjemmekontor>true</hjemmekontor>
           <!--Optional:-->
-          <fastArbeidssted>true</fastArbeidssted>
+          <fastArbeidssted>false</fastArbeidssted>
         </arbeidPaaLand>
         <!--Optional:-->
         <offshoreEnheter>
@@ -211,9 +211,9 @@
             <!--Zero or more repetitions:-->
             <luftfartbase>
               <!--Optional:-->
-              <hjemmebaseNavn>string</hjemmebaseNavn>
+              <hjemmebaseNavn>hjemmebaseNavn</hjemmebaseNavn>
               <!--Optional:-->
-              <hjemmebaseLand>string</hjemmebaseLand>
+              <hjemmebaseLand>hjemmebaseLand</hjemmebaseLand>
               <!--Optional:-->
               <typeFlyvninger>NASJONAL</typeFlyvninger>
             </luftfartbase>
