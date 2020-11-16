@@ -197,7 +197,7 @@
           <!--Zero or more repetitions:-->
           <offshoreEnhet>
             <!--Optional:-->
-            <enhetsType>ANNEN_STASJONAER_ENHET</enhetsType>
+            <enhetsType>annenStasjonaerEnhet</enhetsType>
             <!--Optional:-->
             <enhetsNavn>Askepott</enhetsNavn>
             <!--Optional:-->
@@ -215,7 +215,7 @@
               <!--Optional:-->
               <hjemmebaseLand>string</hjemmebaseLand>
               <!--Optional:-->
-              <typeFlyvninger>NASJONAL</typeFlyvninger>
+              <typeFlyvninger>nasjonal</typeFlyvninger>
             </luftfartbase>
           </luftfartBaser>
         </luftfart>
@@ -226,7 +226,7 @@
             <!--Optional:-->
             <skipNavn>string</skipNavn>
             <!--Optional:-->
-            <fartsomraade>UTENRIKS</fartsomraade>
+            <fartsomraade>utenriks</fartsomraade>
             <!--Optional:-->
             <territorialEllerHavnLand>string</territorialEllerHavnLand>
             <!--Optional:-->

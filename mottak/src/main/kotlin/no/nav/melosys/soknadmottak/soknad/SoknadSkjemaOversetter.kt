@@ -3,6 +3,7 @@ package no.nav.melosys.soknadmottak.soknad
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
 import no.nav.melosys.altinn.soknad.Innhold
@@ -13,10 +14,12 @@ import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
 
-private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
-    setDefaultUseWrapper(false)
-}).registerKotlinModule()
-    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
+private val kotlinXmlMapper = XmlMapper(
+    JacksonXmlModule().apply {
+        setDefaultUseWrapper(false)
+    }
+).registerKotlinModule()
+    .registerModule(JaxbAnnotationModule())
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
 object SoknadSkjemaOversetter {
@@ -80,16 +83,18 @@ object SoknadSkjemaOversetter {
         }
     }
 
-    private fun oversettOffshoreEnheter(offshoreEnheter: no.nav.melosys.altinn.soknad.OffshoreEnheter): OffshoreEnheter {
-        return OffshoreEnheter(
-            offshoreEnheter.offshoreEnhet.map { enhet ->
-                OffshoreEnhet(
-                    enhet.enhetsNavn,
-                    enhet.sokkelLand,
-                    enhet.enhetsType.value()
-                )
-            }
-        )
+    private fun oversettOffshoreEnheter(offshoreEnheter: no.nav.melosys.altinn.soknad.OffshoreEnheter?): OffshoreEnheter? {
+        return offshoreEnheter?.let {
+            OffshoreEnheter(
+                offshoreEnheter.offshoreEnhet.map { enhet ->
+                    OffshoreEnhet(
+                        enhet.enhetsNavn,
+                        enhet.sokkelLand,
+                        enhet.enhetsType.value()
+                    )
+                }
+            )
+        }
     }
 
     private fun oversettLuftfart(luftfart: no.nav.melosys.altinn.soknad.Luftfart?): Luftfart? {

@@ -168,65 +168,13 @@
         <!--Optional:-->
         <typeArbeidssted>skipListe</typeArbeidssted>
         <!--Optional:-->
-        <arbeidPaaLand>
-          <!--Optional:-->
-          <fysiskeArbeidssteder>
-            <!--Zero or more repetitions:-->
-            <fysiskArbeidssted>
-              <!--Optional:-->
-              <gatenavn>gatenavn</gatenavn>
-              <!--Optional:-->
-              <by>by</by>
-              <!--Optional:-->
-              <postkode>postkode</postkode>
-              <!--Optional:-->
-              <region>region</region>
-              <!--Optional:-->
-              <land>land</land>
-              <!--Optional:-->
-              <firmanavn>firmanavn</firmanavn>
-            </fysiskArbeidssted>
-          </fysiskeArbeidssteder>
-          <!--Optional:-->
-          <hjemmekontor>true</hjemmekontor>
-          <!--Optional:-->
-          <fastArbeidssted>false</fastArbeidssted>
-        </arbeidPaaLand>
-        <!--Optional:-->
-        <offshoreEnheter>
-          <!--Zero or more repetitions:-->
-          <offshoreEnhet>
-            <!--Optional:-->
-            <enhetsType>ANNEN_STASJONAER_ENHET</enhetsType>
-            <!--Optional:-->
-            <enhetsNavn>Askepott</enhetsNavn>
-            <!--Optional:-->
-            <sokkelLand>Polen</sokkelLand>
-          </offshoreEnhet>
-        </offshoreEnheter>
-        <!--Optional:-->
-        <luftfart>
-          <!--Optional:-->
-          <luftfartBaser>
-            <!--Zero or more repetitions:-->
-            <luftfartbase>
-              <!--Optional:-->
-              <hjemmebaseNavn>string</hjemmebaseNavn>
-              <!--Optional:-->
-              <hjemmebaseLand>string</hjemmebaseLand>
-              <!--Optional:-->
-              <typeFlyvninger>NASJONAL</typeFlyvninger>
-            </luftfartbase>
-          </luftfartBaser>
-        </luftfart>
-        <!--Optional:-->
         <skipListe>
           <!--Zero or more repetitions:-->
           <skip>
             <!--Optional:-->
             <skipNavn>skipNavn</skipNavn>
             <!--Optional:-->
-            <fartsomraade>UTENRIKS</fartsomraade>
+            <fartsomraade>utenriks</fartsomraade>
             <!--Optional:-->
             <territorialEllerHavnLand>havnLand</territorialEllerHavnLand>
             <!--Optional:-->

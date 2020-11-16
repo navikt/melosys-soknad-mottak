@@ -193,18 +193,6 @@
           <fastArbeidssted>false</fastArbeidssted>
         </arbeidPaaLand>
         <!--Optional:-->
-        <offshoreEnheter>
-          <!--Zero or more repetitions:-->
-          <offshoreEnhet>
-            <!--Optional:-->
-            <enhetsType>ANNEN_STASJONAER_ENHET</enhetsType>
-            <!--Optional:-->
-            <enhetsNavn>Askepott</enhetsNavn>
-            <!--Optional:-->
-            <sokkelLand>Polen</sokkelLand>
-          </offshoreEnhet>
-        </offshoreEnheter>
-        <!--Optional:-->
         <luftfart>
           <!--Optional:-->
           <luftfartBaser>
@@ -215,24 +203,10 @@
               <!--Optional:-->
               <hjemmebaseLand>hjemmebaseLand</hjemmebaseLand>
               <!--Optional:-->
-              <typeFlyvninger>NASJONAL</typeFlyvninger>
+              <typeFlyvninger>nasjonal</typeFlyvninger>
             </luftfartbase>
           </luftfartBaser>
         </luftfart>
-        <!--Optional:-->
-        <skipListe>
-          <!--Zero or more repetitions:-->
-          <skip>
-            <!--Optional:-->
-            <skipNavn>string</skipNavn>
-            <!--Optional:-->
-            <fartsomraade>UTENRIKS</fartsomraade>
-            <!--Optional:-->
-            <territorialEllerHavnLand>string</territorialEllerHavnLand>
-            <!--Optional:-->
-            <flaggland>string</flaggland>
-          </skip>
-        </skipListe>
       </arbeidssted>
     </midlertidigUtsendt>
     <!--Optional:-->
