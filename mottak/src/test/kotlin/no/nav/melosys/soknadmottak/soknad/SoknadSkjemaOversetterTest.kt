@@ -8,7 +8,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping arbeidsgiver`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.arbeidsgiver.navn).isEqualTo("virksomhetsnavn")
         assertThat(felter.arbeidsgiver.adresse).isEqualTo("gate, 1234 poststed land")
@@ -25,7 +25,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping arbeidstaker`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.arbeidstaker.barnMed).isNotEmpty()
         assertThat(felter.arbeidstaker.barnMed[0].fnr).isEqualTo("barnFnr")
@@ -40,7 +40,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping kontakperson`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.kontakperson!!.navn).isEqualTo("kontaktpersonNavn")
         assertThat(felter.kontakperson!!.telefon).isEqualTo("kontaktpersonTelefon")
@@ -53,7 +53,7 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidssted arbeidPaaLand`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_arbeidPaaLand.xml")
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
 
         assertThat(felter.arbeidssted.type).isEqualTo("arbeidPaaLand")
         val arbeidPaaLand = felter.arbeidssted.arbeidPaaLand
@@ -71,7 +71,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping arbeidssted offshoreEnheter`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.arbeidssted.type).isEqualTo("offshoreEnheter")
         val offshoreEnheter = felter.arbeidssted.offshoreEnheter!!.offshoreEnheter
@@ -84,7 +84,7 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidssted luftfart`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_luftfart.xml")
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
 
         assertThat(felter.arbeidssted.type).isEqualTo("luftfart")
         val luftfartBaser = felter.arbeidssted.luftfart!!.luftfartBaser
@@ -97,7 +97,7 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidssted skipsliste`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_skipListe.xml")
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(soknadFraXmlFil)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
 
         assertThat(felter.arbeidssted.type).isEqualTo("skipListe")
         val skipListe = felter.arbeidssted.skipListe!!.skipListe
@@ -110,7 +110,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping utenlandsk oppdrag`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.utenlandsoppdrag.arbeidsland).isEqualTo("arbeidsland")
         assertThat(felter.utenlandsoppdrag.periode).isEqualTo("f.o.m. 2008-11-15 t.o.m. 2017-5-15")
@@ -124,7 +124,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping lønn og godtgjørelser`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isTrue()
         assertThat(felter.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
@@ -138,7 +138,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping arbeidssituasjon`() {
-        val felter = SoknadSkjemaOversetter().tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
 
         assertThat(felter.arbeidssituasjon.loennetArbeidMinstEnMnd).isFalse()
         assertThat(felter.arbeidssituasjon.beskrivArbeidSisteMnd).isEqualTo("Universell konsulent")

@@ -19,7 +19,7 @@ private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
-class SoknadSkjemaOversetter {
+object SoknadSkjemaOversetter {
     fun tilSøknadFelter(søknad: Soknad): SoknadFelter {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
         val soknadFelterBuilder = SoknadFelterBuilder().apply {
@@ -44,38 +44,40 @@ class SoknadSkjemaOversetter {
         )
 
     private fun oversettAdresse(adresse: ArbeidsgiverAdresse?): String {
-        if (adresse == null) return ""
-        return "${adresse.gate}, ${adresse.postkode} ${adresse.poststed} ${adresse.land}"
+        return adresse?.let {
+            "${it.gate}, ${it.postkode} ${it.poststed} ${it.land}"
+        } ?: ""
     }
 
     private fun oversettArbeidssted(innhold: Innhold): Arbeidssted {
-        val arbeidssted = innhold.midlertidigUtsendt.arbeidssted
-        return Arbeidssted(
-            arbeidssted.typeArbeidssted,
-            oversettArbeidPaaLand(arbeidssted.arbeidPaaLand),
-            oversettOffshoreEnheter(arbeidssted.offshoreEnheter),
-            oversettSkipListe(arbeidssted.skipListe),
-            oversettLuftfart(arbeidssted.luftfart)
-        )
+        return innhold.midlertidigUtsendt.arbeidssted.let {
+            Arbeidssted(
+                it.typeArbeidssted,
+                oversettArbeidPaaLand(it.arbeidPaaLand),
+                oversettOffshoreEnheter(it.offshoreEnheter),
+                oversettSkipListe(it.skipListe),
+                oversettLuftfart(it.luftfart)
+            )
+        }
     }
 
     private fun oversettArbeidPaaLand(arbeidPaaLand: no.nav.melosys.altinn.soknad.ArbeidPaaLand?): ArbeidPaaLand? {
-        if (arbeidPaaLand == null || arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted == null) return null
-        return ArbeidPaaLand(
-            arbeidPaaLand.isFastArbeidssted,
-            arbeidPaaLand.isHjemmekontor,
-            arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted
-                .map { fysiskArbeidssted ->
-                    FysiskArbeidssted(
-                        firmanavn = fysiskArbeidssted.firmanavn,
-                        gatenavn = fysiskArbeidssted.gatenavn,
-                        by = fysiskArbeidssted.by,
-                        postkode = fysiskArbeidssted.postkode,
-                        region = fysiskArbeidssted.region,
-                        land = fysiskArbeidssted.land
-                    )
-                }
-        )
+        return arbeidPaaLand?.fysiskeArbeidssteder?.fysiskArbeidssted?.let {
+            ArbeidPaaLand(
+                arbeidPaaLand.isFastArbeidssted,
+                arbeidPaaLand.isHjemmekontor,
+                arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted
+                    .map { fysiskArbeidssted ->
+                        FysiskArbeidssted(
+                            firmanavn = fysiskArbeidssted.firmanavn,
+                            gatenavn = fysiskArbeidssted.gatenavn,
+                            by = fysiskArbeidssted.by,
+                            postkode = fysiskArbeidssted.postkode,
+                            region = fysiskArbeidssted.region,
+                            land = fysiskArbeidssted.land
+                        )
+                    })
+        }
     }
 
     private fun oversettOffshoreEnheter(offshoreEnheter: no.nav.melosys.altinn.soknad.OffshoreEnheter): OffshoreEnheter {
@@ -91,57 +93,58 @@ class SoknadSkjemaOversetter {
     }
 
     private fun oversettLuftfart(luftfart: no.nav.melosys.altinn.soknad.Luftfart?): Luftfart? {
-        if (luftfart == null) return null
-        return Luftfart(luftfart.luftfartBaser.luftfartbase.map { base ->
-            LuftfartBase(
-                base.hjemmebaseNavn,
-                base.hjemmebaseLand,
-                base.typeFlyvninger.value()
-            )
-        })
+        return luftfart?.let {
+            Luftfart(luftfart.luftfartBaser.luftfartbase.map { base ->
+                LuftfartBase(
+                    base.hjemmebaseNavn,
+                    base.hjemmebaseLand,
+                    base.typeFlyvninger.value()
+                )
+            })
+        }
     }
 
     private fun oversettSkipListe(skipListe: no.nav.melosys.altinn.soknad.SkipListe?): SkipListe? {
-        if (skipListe == null) return null
-        return SkipListe(skipListe.skip.map { skip ->
-            Skip(
-                skip.fartsomraade.value(),
-                skip.skipNavn,
-                skip.flaggland,
-                skip.territorialEllerHavnLand
-            )
-        })
+        return skipListe?.let {
+            SkipListe(skipListe.skip.map { skip ->
+                Skip(
+                    skip.fartsomraade.value(),
+                    skip.skipNavn,
+                    skip.flaggland,
+                    skip.territorialEllerHavnLand
+                )
+            })
+        }
     }
 
-    private fun oversettArbeidstaker(innhold: Innhold): Arbeidstaker {
-        val arbeidstaker = innhold.arbeidstaker
-        return Arbeidstaker(
+    private fun oversettArbeidstaker(innhold: Innhold) =
+        Arbeidstaker(
             oversettMedfølgendeBarn(innhold),
-            arbeidstaker.isReiserMedBarnTilUtlandet,
-            arbeidstaker.fulltNavn,
-            arbeidstaker.foedselsnummer,
-            arbeidstaker.foedeland,
-            arbeidstaker.foedested,
-            arbeidstaker.utenlandskIDnummer
+            innhold.arbeidstaker.isReiserMedBarnTilUtlandet,
+            innhold.arbeidstaker.fulltNavn,
+            innhold.arbeidstaker.foedselsnummer,
+            innhold.arbeidstaker.foedeland,
+            innhold.arbeidstaker.foedested,
+            innhold.arbeidstaker.utenlandskIDnummer
         )
-    }
 
     private fun oversettMedfølgendeBarn(innhold: Innhold): List<BarnMed> {
-        val barn = innhold.arbeidstaker.barn
-        if (barn == null || barn.barnet == null) return emptyList()
-        return barn.barnet.map { b -> BarnMed(b.foedselsnummer, b.navn) }
+        return innhold.arbeidstaker.barn?.barnet
+            ?.map { barnet -> BarnMed(barnet.foedselsnummer, barnet.navn) }
+            ?: emptyList()
     }
 
     private fun oversettKontaktperson(innhold: Innhold): Kontakperson? {
-        val kontaktperson = innhold.arbeidsgiver.kontaktperson ?: return null
-        return Kontakperson(
-            kontaktperson.kontaktpersonNavn,
-            kontaktperson.kontaktpersonTelefon,
-            oversettAnsattHos(innhold),
-            arbeidstakerHarGittFullmakt(innhold),
-            hentKontaktVirksomhetsnummer(innhold),
-            hentKontaktVirksomhetsnavn(innhold)
-        )
+        return innhold.arbeidsgiver.kontaktperson?.let {
+            Kontakperson(
+                it.kontaktpersonNavn,
+                it.kontaktpersonTelefon,
+                oversettAnsattHos(innhold),
+                arbeidstakerHarGittFullmakt(innhold),
+                hentKontaktVirksomhetsnummer(innhold),
+                hentKontaktVirksomhetsnavn(innhold)
+            )
+        }
     }
 
     private fun oversettAnsattHos(innhold: Innhold): String {
@@ -168,57 +171,59 @@ class SoknadSkjemaOversetter {
     }
 
     private fun oversettTidsrom(tidsrom: Tidsrom?): String {
-        if (tidsrom == null) return ""
-        val fom = oversettDato(tidsrom.periodeFra)
-        val tom = oversettDato(tidsrom.periodeTil)
-        return "f.o.m. $fom t.o.m. $tom"
+        return tidsrom?.let {
+            val fom = oversettDato(it.periodeFra)
+            val tom = oversettDato(it.periodeTil)
+            "f.o.m. $fom t.o.m. $tom"
+        } ?: ""
     }
 
     private fun oversettDato(calendar: XMLGregorianCalendar?): String {
-        if (calendar == null) return ""
-        return "${calendar.year}-${calendar.month}-${calendar.day}"
+        return calendar?.let {
+            "${it.year}-${it.month}-${it.day}"
+        } ?: ""
     }
 
     private fun oversettLoennOgGodtgjoerelse(innhold: Innhold): LoennOgGodtgjoerelse {
-        val lønn = innhold.midlertidigUtsendt.loennOgGodtgjoerelse
-        return LoennOgGodtgjoerelse(
-            norskArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
-            utlArbgUtbetalerLoenn = lønn.isNorskArbgUtbetalerLoenn,
-            bruttoLoennPerMnd = lønn.loennNorskArbg.toPlainString(),
-            bruttoLoennUtlandPerMnd = lønn.loennUtlArbg.toPlainString(),
-            mottarNaturalytelser = lønn.isUtlArbTilhorerSammeKonsern,
-            samletVerdiNaturalytelser = lønn.samletVerdiNaturalytelser.toPlainString(),
-            erArbeidsgiveravgiftHelePerioden = lønn.isBetalerArbeidsgiveravgift,
-            erTrukketTrygdeavgift = lønn.isTrukketTrygdeavgift
-        )
+        return innhold.midlertidigUtsendt.loennOgGodtgjoerelse.let {
+            LoennOgGodtgjoerelse(
+                norskArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
+                utlArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
+                bruttoLoennPerMnd = it.loennNorskArbg.toPlainString(),
+                bruttoLoennUtlandPerMnd = it.loennUtlArbg.toPlainString(),
+                mottarNaturalytelser = it.isUtlArbTilhorerSammeKonsern,
+                samletVerdiNaturalytelser = it.samletVerdiNaturalytelser.toPlainString(),
+                erArbeidsgiveravgiftHelePerioden = it.isBetalerArbeidsgiveravgift,
+                erTrukketTrygdeavgift = it.isTrukketTrygdeavgift
+            )
+        }
     }
 
     private fun oversettVirksomhetNorge(innhold: Innhold): VirksomhetNorge {
-        val samletVirksomhetINorge = innhold.arbeidsgiver.samletVirksomhetINorge
-        return VirksomhetNorge(
-            innhold.arbeidsgiver.isOffentligVirksomhet,
-            samletVirksomhetINorge.antallAdministrativeAnsatteINorge.toInt(),
-            samletVirksomhetINorge.andelOppdragINorge.toInt(),
-            samletVirksomhetINorge.andelKontrakterInngaasINorge.toInt(),
-            samletVirksomhetINorge.andelOmsetningINorge.toInt(),
-            samletVirksomhetINorge.andelRekrutteresINorge.toInt(),
-            samletVirksomhetINorge.antallAnsatte.toInt(),
-            samletVirksomhetINorge.antallUtsendte.toInt()
-        )
+        return innhold.arbeidsgiver.samletVirksomhetINorge.let {
+            VirksomhetNorge(
+                innhold.arbeidsgiver.isOffentligVirksomhet,
+                it.antallAdministrativeAnsatteINorge.toInt(),
+                it.andelOppdragINorge.toInt(),
+                it.andelKontrakterInngaasINorge.toInt(),
+                it.andelOmsetningINorge.toInt(),
+                it.andelRekrutteresINorge.toInt(),
+                it.antallAnsatte.toInt(),
+                it.antallUtsendte.toInt()
+            )
+        }
     }
 
-    private fun oversettArbeidssituasjon(innhold: Innhold): Arbeidssituasjon {
-        val midlertidigUtsendt = innhold.midlertidigUtsendt
-        return Arbeidssituasjon(
-            midlertidigUtsendt.isAndreArbeidsgivereIUtsendingsperioden,
-            midlertidigUtsendt.beskrivArbeidSisteMnd,
-            midlertidigUtsendt.beskrivelseAnnetArbeid,
-            midlertidigUtsendt.isSkattepliktig,
-            midlertidigUtsendt.isLoennetArbeidMinstEnMnd,
-            midlertidigUtsendt.isMottaYtelserNorge,
-            midlertidigUtsendt.isMottaYtelserUtlandet
+    private fun oversettArbeidssituasjon(innhold: Innhold) =
+        Arbeidssituasjon(
+            innhold.midlertidigUtsendt.isAndreArbeidsgivereIUtsendingsperioden,
+            innhold.midlertidigUtsendt.beskrivArbeidSisteMnd,
+            innhold.midlertidigUtsendt.beskrivelseAnnetArbeid,
+            innhold.midlertidigUtsendt.isSkattepliktig,
+            innhold.midlertidigUtsendt.isLoennetArbeidMinstEnMnd,
+            innhold.midlertidigUtsendt.isMottaYtelserNorge,
+            innhold.midlertidigUtsendt.isMottaYtelserUtlandet
         )
-    }
 
     private fun arbeidstakerHarGittFullmakt(innhold: Innhold): Boolean {
         return java.lang.Boolean.TRUE == innhold.fullmakt.isFullmaktFraArbeidstaker
