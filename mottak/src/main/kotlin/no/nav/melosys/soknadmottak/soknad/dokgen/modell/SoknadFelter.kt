@@ -4,14 +4,10 @@ data class SoknadFelter(
     val arbeidsgiver: Arbeidsgiver,
     val arbeidssted: Arbeidssted,
     val arbeidstaker: Arbeidstaker,
-    val bruttoLoennPerMnd: String,
-    val bruttoLoennUtlandPerMnd: String,
-    val erArbeidsgiveravgiftHelePerioden: Boolean,
-    val erForetakSammeKonsern: Boolean,
-    val erLoennHelePerioden: Boolean,
-    val erUfakturertLoennUtland: Boolean,
-    val kontakperson: Kontakperson,
+    val loennOgGodtgjoerelse: LoennOgGodtgjoerelse,
+    val kontakperson: Kontakperson?,
     val tidspunktMottatt: String,
     val utenlandsoppdrag: Utenlandsoppdrag,
-    val virksomhetNorge: VirksomhetNorge
+    val virksomhetNorge: VirksomhetNorge,
+    val arbeidssituasjon: Arbeidssituasjon
 )

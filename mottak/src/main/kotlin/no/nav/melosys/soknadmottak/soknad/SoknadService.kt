@@ -3,7 +3,6 @@ package no.nav.melosys.soknadmottak.soknad
 import mu.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
-import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -20,13 +19,11 @@ class SoknadService @Autowired constructor(
     }
 
     fun hentPdf(søknad: Soknad): ByteArray {
-        // TODO mapping fra søknad.innhold til soknadFelter
-        val soknadFelter = SoknadFelterBuilder().build()
-        return dokgenService.lagSøknadPDF(soknadFelter)
+        return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilSøknadFelter(søknad))
     }
 
     fun hentSøknad(soknadID: String): Soknad {
-        logger.debug{ "Henter søknad med ID $soknadID" }
+        logger.debug { "Henter søknad med ID $soknadID" }
         return soknadRepository.findBySoknadID(UUID.fromString(soknadID))
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }

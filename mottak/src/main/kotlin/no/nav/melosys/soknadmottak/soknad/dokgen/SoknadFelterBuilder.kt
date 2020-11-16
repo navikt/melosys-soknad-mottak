@@ -4,35 +4,27 @@ import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
 import java.time.Instant
 
 data class SoknadFelterBuilder(
-    val arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
-    val arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
-    val arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
-    val bruttoLoennPerMnd: String = "",
-    val bruttoLoennUtlandPerMnd: String = "",
-    val erArbeidsgiveravgiftHelePerioden: Boolean = false,
-    val erForetakSammeKonsern: Boolean = false,
-    val erLoennHelePerioden: Boolean = false,
-    val erUfakturertLoennUtland: Boolean = false,
-    val kontakperson: Kontakperson = KontakpersonBuilder().build(),
-    val tidspunktMottatt: String = Instant.now().toString(),
-    val utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
-    val virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build()
+    var arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
+    var arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
+    var arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
+    var loennOgGodtgjoerelse: LoennOgGodtgjoerelse = LoennOgGodtgjoerelseBuilder().build(),
+    var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
+    var tidspunktMottatt: String = Instant.now().toString(),
+    var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
+    var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build(),
+    var arbeidssituasjon: Arbeidssituasjon = ArbeidssituasjonBuilder().build()
 ) {
     fun build(): SoknadFelter {
         return SoknadFelter(
             arbeidsgiver = arbeidsgiver,
             arbeidssted = arbeidssted,
             arbeidstaker = arbeidstaker,
-            bruttoLoennPerMnd = bruttoLoennPerMnd,
-            bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
-            erArbeidsgiveravgiftHelePerioden = erArbeidsgiveravgiftHelePerioden,
-            erForetakSammeKonsern = erForetakSammeKonsern,
-            erLoennHelePerioden = erLoennHelePerioden,
-            erUfakturertLoennUtland = erUfakturertLoennUtland,
+            loennOgGodtgjoerelse = loennOgGodtgjoerelse,
             kontakperson = kontakperson,
             tidspunktMottatt = tidspunktMottatt,
             utenlandsoppdrag = utenlandsoppdrag,
-            virksomhetNorge = virksomhetNorge
+            virksomhetNorge = virksomhetNorge,
+            arbeidssituasjon = arbeidssituasjon
         )
     }
 }
@@ -51,22 +43,6 @@ data class ArbeidsgiverBuilder(
     }
 }
 
-data class ArbeidsstedBuilder(
-    val innretningNavn: String = "",
-    val innretningType: String = "",
-    val sokkelLand: String = "",
-    val type: String = ""
-) {
-    fun build(): Arbeidssted {
-        return Arbeidssted(
-            innretningNavn = innretningNavn,
-            innretningType = innretningType,
-            sokkelLand = sokkelLand,
-            type = type
-        )
-    }
-}
-
 data class ArbeidstakerBuilder(
     val barnMed: List<BarnMed> = listOf(),
     val erMedBarnUnder18: Boolean = false,
@@ -74,23 +50,25 @@ data class ArbeidstakerBuilder(
     val fnr: String = "",
     val foedeland: String = "",
     val foedsted: String = "",
-    val fornavn: String = ""
+    val utenlandskIDnummer: String = ""
 ) {
     fun build(): Arbeidstaker {
         return Arbeidstaker(
             barnMed = barnMed,
             erMedBarnUnder18 = erMedBarnUnder18,
-            etternavn = etternavn,
+            fulltNavn = etternavn,
             fnr = fnr,
             foedeland = foedeland,
-            foedsted = foedsted,
-            fornavn = fornavn
+            foedested = foedsted,
+            utenlandskIDnummer = utenlandskIDnummer
         )
     }
 }
 
 data class KontakpersonBuilder(
     val ansattHos: String = "",
+    val fullmektigVirksomhetsnummer: String = "",
+    val fullmektigVirksomhetsnavn: String = "",
     val harFullmakt: Boolean = false,
     val navn: String = "",
     val telefon: String = ""
@@ -100,7 +78,33 @@ data class KontakpersonBuilder(
             ansattHos = ansattHos,
             harFullmakt = harFullmakt,
             navn = navn,
-            telefon = telefon
+            telefon = telefon,
+            fullmektigVirksomhetsnummer = fullmektigVirksomhetsnummer,
+            fullmektigVirksomhetsnavn = fullmektigVirksomhetsnavn
+        )
+    }
+}
+
+data class LoennOgGodtgjoerelseBuilder(
+    val bruttoLoennPerMnd: String = "",
+    val bruttoLoennUtlandPerMnd: String = "",
+    val erArbeidsgiveravgiftHelePerioden: Boolean = false,
+    val erTrukketTrygdeavgift: Boolean = false,
+    val mottarNaturalytelser: Boolean = false,
+    val norskArbgUtbetalerLoenn: Boolean = false,
+    val samletVerdiNaturalytelser: String = "",
+    val utlArbgUtbetalerLoenn: Boolean = false
+) {
+    fun build(): LoennOgGodtgjoerelse {
+        return LoennOgGodtgjoerelse(
+            norskArbgUtbetalerLoenn = norskArbgUtbetalerLoenn,
+            utlArbgUtbetalerLoenn = utlArbgUtbetalerLoenn,
+            bruttoLoennPerMnd = bruttoLoennPerMnd,
+            bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
+            mottarNaturalytelser = mottarNaturalytelser,
+            samletVerdiNaturalytelser = samletVerdiNaturalytelser,
+            erArbeidsgiveravgiftHelePerioden = erArbeidsgiveravgiftHelePerioden,
+            erTrukketTrygdeavgift = erTrukketTrygdeavgift
         )
     }
 }
@@ -109,18 +113,23 @@ data class UtenlandsoppdragBuilder(
     val arbeidsland: String = "",
     val erAnsattHelePeriode: Boolean = false,
     val erAnsettelseForOpphold: Boolean = false,
+    val erDrattPaaEgetInitiativ: Boolean = false,
     val erErstatning: Boolean = false,
+    val erFortsattAnsattEtterOppdrag: Boolean = false,
     val erSendingForOppdrag: Boolean = false,
-    val periode: String = ""
+    val periode: String = "",
+    val samletUtsendingPeriode: String = ""
 ) {
     fun build(): Utenlandsoppdrag {
         return Utenlandsoppdrag(
             arbeidsland = arbeidsland,
-            erAnsattHelePeriode = erAnsattHelePeriode,
-            erAnsettelseForOpphold = erAnsettelseForOpphold,
+            periode = periode,
             erErstatning = erErstatning,
+            samletUtsendingPeriode = samletUtsendingPeriode,
             erSendingForOppdrag = erSendingForOppdrag,
-            periode = periode
+            erDrattPaaEgetInitiativ = erDrattPaaEgetInitiativ,
+            erAnsettelseForOpphold = erAnsettelseForOpphold,
+            erFortsattAnsattEtterOppdrag = erFortsattAnsattEtterOppdrag
         )
     }
 }
@@ -145,6 +154,28 @@ data class VirksomhetNorgeBuilder(
             ansatte = ansatte,
             erOffenlig = erOffenlig,
             utsendteArbeidstakere = utsendteArbeidstakere
+        )
+    }
+}
+
+data class ArbeidssituasjonBuilder(
+    val andreArbeidsgivereIUtsendingsperioden: Boolean = false,
+    val beskrivArbeidSisteMnd: String = "",
+    val beskrivelseAnnetArbeid: String = "",
+    val erSkattepliktig: Boolean = false,
+    val loennetArbeidMinstEnMnd: Boolean = false,
+    val mottaYtelserNorge: Boolean = false,
+    val mottaYtelserUtlandet: Boolean = false
+) {
+    fun build(): Arbeidssituasjon {
+        return Arbeidssituasjon(
+            andreArbeidsgivereIUtsendingsperioden = andreArbeidsgivereIUtsendingsperioden,
+            beskrivArbeidSisteMnd =  beskrivArbeidSisteMnd,
+            beskrivelseAnnetArbeid = beskrivelseAnnetArbeid,
+            erSkattepliktig = erSkattepliktig,
+            loennetArbeidMinstEnMnd = loennetArbeidMinstEnMnd,
+            mottaYtelserNorge = mottaYtelserNorge,
+            mottaYtelserUtlandet = mottaYtelserUtlandet
         )
     }
 }
