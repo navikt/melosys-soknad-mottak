@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.soknad.dokgen.modell
 
-data class SoknadFelter(
+data class SoknadFlettedata(
     val arbeidsgiver: Arbeidsgiver,
     val arbeidssted: Arbeidssted,
     val arbeidstaker: Arbeidstaker,

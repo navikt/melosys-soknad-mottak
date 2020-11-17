@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.soknad.dokgen
 
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFelter
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFlettedata
 
 interface DokgenConsumer {
-    fun lagPDF(malNavn: String, soknadFelter: SoknadFelter): ByteArray
+    fun lagPDF(malNavn: String, soknadFlettedata: SoknadFlettedata): ByteArray
 }

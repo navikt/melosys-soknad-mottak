@@ -1,16 +1,16 @@
 package no.nav.melosys.soknadmottak.soknad.dokgen
 
 import no.nav.melosys.soknadmottak.common.IntegrasjonException
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFelter
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFlettedata
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 
 class DokgenConsumerImpl(private val webClient: WebClient) : DokgenConsumer {
 
-    override fun lagPDF(malNavn: String, soknadFelter: SoknadFelter): ByteArray {
+    override fun lagPDF(malNavn: String, soknadFlettedata: SoknadFlettedata): ByteArray {
         return webClient.post().uri("/api/v1/mal/$malNavn/lag-pdf")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(soknadFelter)
+            .bodyValue(soknadFlettedata)
             .retrieve()
             .bodyToMono(ByteArray::class.java)
             .block() ?: throw IntegrasjonException("Henting av PDF $malNavn feilet.")

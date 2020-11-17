@@ -9,7 +9,7 @@ import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
 import no.nav.melosys.altinn.soknad.Innhold
 import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
 import no.nav.melosys.altinn.soknad.Tidsrom
-import no.nav.melosys.soknadmottak.soknad.dokgen.SoknadFelterBuilder
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFlettedataBuilder
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
@@ -23,9 +23,9 @@ private val kotlinXmlMapper = XmlMapper(
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
 object SoknadSkjemaOversetter {
-    fun tilSøknadFelter(søknad: Soknad): SoknadFelter {
+    fun tilSøknadFelter(søknad: Soknad): SoknadFlettedata {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
-        val soknadFelterBuilder = SoknadFelterBuilder().apply {
+        val soknadFelterBuilder = SoknadFlettedataBuilder().apply {
             arbeidsgiver = oversettArbeidsgiver(innhold)
             arbeidstaker = oversettArbeidstaker(innhold)
             kontakperson = oversettKontaktperson(innhold)
