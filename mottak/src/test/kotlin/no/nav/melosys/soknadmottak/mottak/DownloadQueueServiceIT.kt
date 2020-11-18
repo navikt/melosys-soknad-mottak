@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.mottak.service
+package no.nav.melosys.soknadmottak.mottak
 
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic

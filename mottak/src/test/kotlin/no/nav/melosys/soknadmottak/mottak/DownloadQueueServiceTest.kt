@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.mottak.service
+package no.nav.melosys.soknadmottak.mottak
 
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
