@@ -122,6 +122,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>altinn-correspondence-agency-external-basic</artifactId>
+            <version>${tjenestespesifikasjoner.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>altinn-download-queue-external</artifactId>
             <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
