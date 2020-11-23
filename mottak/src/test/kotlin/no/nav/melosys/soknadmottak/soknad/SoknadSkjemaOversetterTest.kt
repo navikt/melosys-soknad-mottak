@@ -7,56 +7,63 @@ internal class SoknadSkjemaOversetterTest {
     private val søknad = SoknadFactory.lagSoknadFraXmlFil()
 
     @Test
+    fun `mapping tidspunktMottatt `() {
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
+
+        assertThat(flettedata.tidspunktMottatt).isEqualTo(søknad.innsendtTidspunkt.toString())
+    }
+
+    @Test
     fun `mapping arbeidsgiver`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.arbeidsgiver.navn).isEqualTo("virksomhetsnavn")
-        assertThat(felter.arbeidsgiver.adresse).isEqualTo("gate, 1234 poststed land")
-        assertThat(felter.arbeidsgiver.orgnr).isEqualTo("virksomhetsnummer")
+        assertThat(flettedata.arbeidsgiver.navn).isEqualTo("virksomhetsnavn")
+        assertThat(flettedata.arbeidsgiver.adresse).isEqualTo("gate, 1234 poststed land")
+        assertThat(flettedata.arbeidsgiver.orgnr).isEqualTo("virksomhetsnummer")
 
-        assertThat(felter.virksomhetNorge.ansatte).isEqualTo(99)
-        assertThat(felter.virksomhetNorge.administrativtAnsatte).isEqualTo(98)
-        assertThat(felter.virksomhetNorge.utsendteArbeidstakere).isEqualTo(97)
-        assertThat(felter.virksomhetNorge.andelOpptjent).isEqualTo(96)
-        assertThat(felter.virksomhetNorge.andelOppdragskontrakter).isEqualTo(95)
-        assertThat(felter.virksomhetNorge.andelOppdrag).isEqualTo(94)
-        assertThat(felter.virksomhetNorge.andelRekruttert).isEqualTo(93)
+        assertThat(flettedata.virksomhetNorge.ansatte).isEqualTo(99)
+        assertThat(flettedata.virksomhetNorge.administrativtAnsatte).isEqualTo(98)
+        assertThat(flettedata.virksomhetNorge.utsendteArbeidstakere).isEqualTo(97)
+        assertThat(flettedata.virksomhetNorge.andelOpptjent).isEqualTo(96)
+        assertThat(flettedata.virksomhetNorge.andelOppdragskontrakter).isEqualTo(95)
+        assertThat(flettedata.virksomhetNorge.andelOppdrag).isEqualTo(94)
+        assertThat(flettedata.virksomhetNorge.andelRekruttert).isEqualTo(93)
     }
 
     @Test
     fun `mapping arbeidstaker`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.arbeidstaker.barnMed).isNotEmpty()
-        assertThat(felter.arbeidstaker.barnMed[0].fnr).isEqualTo("barnFnr")
-        assertThat(felter.arbeidstaker.barnMed[0].navn).isEqualTo("barnNavn")
-        assertThat(felter.arbeidstaker.erMedBarnUnder18).isTrue()
-        assertThat(felter.arbeidstaker.fulltNavn).isEqualTo("Fullt Navn")
-        assertThat(felter.arbeidstaker.fnr).isEqualTo("foedselsnummer")
-        assertThat(felter.arbeidstaker.foedeland).isEqualTo("foedeland")
-        assertThat(felter.arbeidstaker.foedested).isEqualTo("foedested")
-        assertThat(felter.arbeidstaker.utenlandskIDnummer).isEqualTo("utenlandskIDnummer")
+        assertThat(flettedata.arbeidstaker.barnMed).isNotEmpty()
+        assertThat(flettedata.arbeidstaker.barnMed[0].fnr).isEqualTo("barnFnr")
+        assertThat(flettedata.arbeidstaker.barnMed[0].navn).isEqualTo("barnNavn")
+        assertThat(flettedata.arbeidstaker.erMedBarnUnder18).isTrue()
+        assertThat(flettedata.arbeidstaker.fulltNavn).isEqualTo("Fullt Navn")
+        assertThat(flettedata.arbeidstaker.fnr).isEqualTo("foedselsnummer")
+        assertThat(flettedata.arbeidstaker.foedeland).isEqualTo("foedeland")
+        assertThat(flettedata.arbeidstaker.foedested).isEqualTo("foedested")
+        assertThat(flettedata.arbeidstaker.utenlandskIDnummer).isEqualTo("utenlandskIDnummer")
     }
 
     @Test
     fun `mapping kontakperson`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.kontakperson!!.navn).isEqualTo("kontaktpersonNavn")
-        assertThat(felter.kontakperson!!.telefon).isEqualTo("kontaktpersonTelefon")
-        assertThat(felter.kontakperson!!.ansattHos).isEqualTo("I et rådgivningsfirma")
-        assertThat(felter.kontakperson!!.fullmektigVirksomhetsnummer).isEqualTo("fullmektigVirksomhetsnummer")
-        assertThat(felter.kontakperson!!.fullmektigVirksomhetsnavn).isEqualTo("fullmektigVirksomhetsnavn")
-        assertThat(felter.kontakperson!!.harFullmakt).isTrue()
+        assertThat(flettedata.kontakperson!!.navn).isEqualTo("kontaktpersonNavn")
+        assertThat(flettedata.kontakperson!!.telefon).isEqualTo("kontaktpersonTelefon")
+        assertThat(flettedata.kontakperson!!.ansattHos).isEqualTo("I et rådgivningsfirma")
+        assertThat(flettedata.kontakperson!!.fullmektigVirksomhetsnummer).isEqualTo("fullmektigVirksomhetsnummer")
+        assertThat(flettedata.kontakperson!!.fullmektigVirksomhetsnavn).isEqualTo("fullmektigVirksomhetsnavn")
+        assertThat(flettedata.kontakperson!!.harFullmakt).isTrue()
     }
 
     @Test
     fun `mapping arbeidssted arbeidPaaLand`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_arbeidPaaLand.xml")
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(soknadFraXmlFil)
 
-        assertThat(felter.arbeidssted.type).isEqualTo("arbeidPaaLand")
-        val arbeidPaaLand = felter.arbeidssted.arbeidPaaLand
+        assertThat(flettedata.arbeidssted.type).isEqualTo("arbeidPaaLand")
+        val arbeidPaaLand = flettedata.arbeidssted.arbeidPaaLand
         assertThat(arbeidPaaLand).isNotNull()
         assertThat(arbeidPaaLand!!.fastArbeidssted).isFalse()
         assertThat(arbeidPaaLand.hjemmekontor).isTrue()
@@ -71,10 +78,10 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping arbeidssted offshoreEnheter`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.arbeidssted.type).isEqualTo("offshoreEnheter")
-        val offshoreEnheter = felter.arbeidssted.offshoreEnheter!!.offshoreEnheter
+        assertThat(flettedata.arbeidssted.type).isEqualTo("offshoreEnheter")
+        val offshoreEnheter = flettedata.arbeidssted.offshoreEnheter!!.offshoreEnheter
         assertThat(offshoreEnheter).isNotEmpty()
         assertThat(offshoreEnheter[0].enhetsNavn).isEqualTo("Askepott")
         assertThat(offshoreEnheter[0].sokkelLand).isEqualTo("Polen")
@@ -84,10 +91,10 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidssted luftfart`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_luftfart.xml")
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(soknadFraXmlFil)
 
-        assertThat(felter.arbeidssted.type).isEqualTo("luftfart")
-        val luftfartBaser = felter.arbeidssted.luftfart!!.luftfartBaser
+        assertThat(flettedata.arbeidssted.type).isEqualTo("luftfart")
+        val luftfartBaser = flettedata.arbeidssted.luftfart!!.luftfartBaser
         assertThat(luftfartBaser).isNotEmpty()
         assertThat(luftfartBaser[0].hjemmebaseNavn).isEqualTo("hjemmebaseNavn")
         assertThat(luftfartBaser[0].hjemmebaseLand).isEqualTo("hjemmebaseLand")
@@ -97,10 +104,10 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidssted skipsliste`() {
         val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_skipListe.xml")
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(soknadFraXmlFil)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(soknadFraXmlFil)
 
-        assertThat(felter.arbeidssted.type).isEqualTo("skipListe")
-        val skipListe = felter.arbeidssted.skipListe!!.skipListe
+        assertThat(flettedata.arbeidssted.type).isEqualTo("skipListe")
+        val skipListe = flettedata.arbeidssted.skipListe!!.skipListe
         assertThat(skipListe).isNotEmpty()
         assertThat(skipListe[0].skipNavn).isEqualTo("skipNavn")
         assertThat(skipListe[0].fartsomraade).isEqualTo("utenriks")
@@ -110,42 +117,42 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping utenlandsk oppdrag`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.utenlandsoppdrag.arbeidsland).isEqualTo("arbeidsland")
-        assertThat(felter.utenlandsoppdrag.periode).isEqualTo("f.o.m. 2008-11-15 t.o.m. 2017-5-15")
-        assertThat(felter.utenlandsoppdrag.erErstatning).isTrue()
-        assertThat(felter.utenlandsoppdrag.samletUtsendingPeriode).isEqualTo("f.o.m. 2013-12-21 t.o.m. 2016-1-1")
-        assertThat(felter.utenlandsoppdrag.erSendingForOppdrag).isFalse()
-        assertThat(felter.utenlandsoppdrag.erDrattPaaEgetInitiativ).isFalse()
-        assertThat(felter.utenlandsoppdrag.erAnsettelseForOpphold).isTrue()
-        assertThat(felter.utenlandsoppdrag.erFortsattAnsattEtterOppdrag).isFalse()
+        assertThat(flettedata.utenlandsoppdrag.arbeidsland).isEqualTo("arbeidsland")
+        assertThat(flettedata.utenlandsoppdrag.periode).isEqualTo("f.o.m. 2008-11-15 t.o.m. 2017-5-15")
+        assertThat(flettedata.utenlandsoppdrag.erErstatning).isTrue()
+        assertThat(flettedata.utenlandsoppdrag.samletUtsendingPeriode).isEqualTo("f.o.m. 2013-12-21 t.o.m. 2016-1-1")
+        assertThat(flettedata.utenlandsoppdrag.erSendingForOppdrag).isFalse()
+        assertThat(flettedata.utenlandsoppdrag.erDrattPaaEgetInitiativ).isFalse()
+        assertThat(flettedata.utenlandsoppdrag.erAnsettelseForOpphold).isTrue()
+        assertThat(flettedata.utenlandsoppdrag.erFortsattAnsattEtterOppdrag).isFalse()
     }
 
     @Test
     fun `mapping lønn og godtgjørelser`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isTrue()
-        assertThat(felter.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
-        assertThat(felter.loennOgGodtgjoerelse.bruttoLoennPerMnd).isEqualTo("1000.00")
-        assertThat(felter.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")
-        assertThat(felter.loennOgGodtgjoerelse.mottarNaturalytelser).isTrue()
-        assertThat(felter.loennOgGodtgjoerelse.samletVerdiNaturalytelser).isEqualTo("9876.55")
-        assertThat(felter.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden).isTrue()
-        assertThat(felter.loennOgGodtgjoerelse.erTrukketTrygdeavgift).isFalse()
+        assertThat(flettedata.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isTrue()
+        assertThat(flettedata.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
+        assertThat(flettedata.loennOgGodtgjoerelse.bruttoLoennPerMnd).isEqualTo("1000.00")
+        assertThat(flettedata.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")
+        assertThat(flettedata.loennOgGodtgjoerelse.mottarNaturalytelser).isTrue()
+        assertThat(flettedata.loennOgGodtgjoerelse.samletVerdiNaturalytelser).isEqualTo("9876.55")
+        assertThat(flettedata.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden).isTrue()
+        assertThat(flettedata.loennOgGodtgjoerelse.erTrukketTrygdeavgift).isFalse()
     }
 
     @Test
     fun `mapping arbeidssituasjon`() {
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val flettedata = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
-        assertThat(felter.arbeidssituasjon.loennetArbeidMinstEnMnd).isFalse()
-        assertThat(felter.arbeidssituasjon.beskrivArbeidSisteMnd).isEqualTo("Universell konsulent")
-        assertThat(felter.arbeidssituasjon.andreArbeidsgivereIUtsendingsperioden).isTrue()
-        assertThat(felter.arbeidssituasjon.beskrivelseAnnetArbeid).isEqualTo("Tankeleser")
-        assertThat(felter.arbeidssituasjon.erSkattepliktig).isFalse()
-        assertThat(felter.arbeidssituasjon.mottaYtelserNorge).isTrue()
-        assertThat(felter.arbeidssituasjon.mottaYtelserUtlandet).isTrue()
+        assertThat(flettedata.arbeidssituasjon.loennetArbeidMinstEnMnd).isFalse()
+        assertThat(flettedata.arbeidssituasjon.beskrivArbeidSisteMnd).isEqualTo("Universell konsulent")
+        assertThat(flettedata.arbeidssituasjon.andreArbeidsgivereIUtsendingsperioden).isTrue()
+        assertThat(flettedata.arbeidssituasjon.beskrivelseAnnetArbeid).isEqualTo("Tankeleser")
+        assertThat(flettedata.arbeidssituasjon.erSkattepliktig).isFalse()
+        assertThat(flettedata.arbeidssituasjon.mottaYtelserNorge).isTrue()
+        assertThat(flettedata.arbeidssituasjon.mottaYtelserUtlandet).isTrue()
     }
 }
