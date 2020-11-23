@@ -12,7 +12,7 @@ import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
@@ -29,17 +29,17 @@ class MottakService(
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
     private val mottakConfig: MottakConfig,
-    private val altinn: AltinnProperties,
+    private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
-    private val brukernavn = altinn.username
-    private val passord = altinn.password
+    private val brukernavn = altinnConfig.username
+    private val passord = altinnConfig.password
 
     @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
     fun pollDokumentKø() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                val elementer = getDownloadQueueItems(altinn.service.code).downloadQueueItemBE
+                val elementer = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
                 logger.debug { "DownloadQueue: behandler '${elementer.size}' elementer" }
                 elementer.forEachIndexed { index, item ->
                     val arkivRef = item.archiveReference

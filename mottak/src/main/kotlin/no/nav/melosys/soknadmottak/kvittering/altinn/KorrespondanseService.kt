@@ -2,7 +2,7 @@ package no.nav.melosys.soknadmottak.kvittering.altinn
 
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
-import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.config.AltinnConfig
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -10,7 +10,7 @@ private const val SYSTEM_USERCODE = "NAV_MELO"
 
 @Service
 class KorrespondanseService(
-    private val altinnProperties: AltinnProperties,
+    private val altinnConfig: AltinnConfig,
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic
 ) {
     fun sendMelding(insertCorrespondence: InsertCorrespondenceBasicV2) {
@@ -31,12 +31,14 @@ class KorrespondanseService(
         varighetÅr: Long
     ): InsertCorrespondenceBasicV2 {
         return InsertCorrespondenceBasicV2()
-            .withSystemUserName(altinnProperties.username)
-            .withSystemPassword(altinnProperties.password)
+            .withSystemUserName(altinnConfig.username)
+            .withSystemPassword(altinnConfig.password)
             .withSystemUserCode(SYSTEM_USERCODE)
             .withExternalShipmentReference(UUID.randomUUID().toString())
             .withCorrespondence(
                 CorrespondenceFactory.insertCorrespondence(
+                    altinnConfig.correspondence.code,
+                    altinnConfig.correspondence.editionCode,
                     mottakerID,
                     arkivRef,
                     avsender,

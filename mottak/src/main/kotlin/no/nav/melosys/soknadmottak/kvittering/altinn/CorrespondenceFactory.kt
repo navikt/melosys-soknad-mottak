@@ -10,12 +10,12 @@ import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
 
 object CorrespondenceFactory {
-    private const val TJENESTE_CODE = "5644"
-    private const val TJENESTEUTGAVE_KODE = "1"
     private const val SPRÅK_KODE = "1044" // Bokmål
     private const val FIL_EXT = ".pdf"
 
     fun insertCorrespondence(
+        tjenesteKode: String,
+        tjenesteutgaveKode: String,
         mottakerID: String,
         arkivRef: String,
         avsender: String,
@@ -23,8 +23,8 @@ object CorrespondenceFactory {
         varighetÅr: Long
     ): InsertCorrespondenceV2 {
         return InsertCorrespondenceV2()
-            .withServiceCode(TJENESTE_CODE)
-            .withServiceEdition(TJENESTEUTGAVE_KODE)
+            .withServiceCode(tjenesteKode)
+            .withServiceEdition(tjenesteutgaveKode)
             .withReportee(mottakerID)
             .withVisibleDateTime(tilXMLCalendar(LocalDateTime.now()))
             .withAllowSystemDeleteDateTime(tilXMLCalendar(LocalDateTime.now().plusYears(varighetÅr)))
