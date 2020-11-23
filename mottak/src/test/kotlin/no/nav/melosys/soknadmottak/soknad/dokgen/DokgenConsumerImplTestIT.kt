@@ -17,7 +17,7 @@ internal class DokgenConsumerImplTestIT @Autowired constructor(
     @Test
     fun `hent søknad-PDF fra dokgen`() {
         val søknad = SoknadFactory.lagSoknadFraXmlFil()
-        val felter = SoknadSkjemaOversetter.tilSøknadFelter(søknad)
+        val felter = SoknadSkjemaOversetter.tilFlettedata(søknad)
 
         val doc = PDDocument.load(dokgenConsumer.lagPDF("soeknad", felter))
         assertThat(doc.numberOfPages).isGreaterThan(0)

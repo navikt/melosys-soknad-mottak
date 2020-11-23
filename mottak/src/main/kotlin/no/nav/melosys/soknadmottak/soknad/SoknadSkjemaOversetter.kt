@@ -23,9 +23,10 @@ private val kotlinXmlMapper = XmlMapper(
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
 object SoknadSkjemaOversetter {
-    fun tilSøknadFelter(søknad: Soknad): SoknadFlettedata {
+    fun tilFlettedata(søknad: Soknad): SoknadFlettedata {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
-        val soknadFelterBuilder = SoknadFlettedataBuilder().apply {
+        val soknadFlettedataBuilder = SoknadFlettedataBuilder().apply {
+            tidspunktMottatt = søknad.innsendtTidspunkt.toString()
             arbeidsgiver = oversettArbeidsgiver(innhold)
             arbeidstaker = oversettArbeidstaker(innhold)
             kontakperson = oversettKontaktperson(innhold)
@@ -36,7 +37,7 @@ object SoknadSkjemaOversetter {
             arbeidssituasjon = oversettArbeidssituasjon(innhold)
         }
 
-        return soknadFelterBuilder.build()
+        return soknadFlettedataBuilder.build()
     }
 
     private fun oversettArbeidsgiver(innhold: Innhold) =

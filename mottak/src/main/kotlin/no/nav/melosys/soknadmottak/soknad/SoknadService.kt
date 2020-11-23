@@ -19,7 +19,7 @@ class SoknadService @Autowired constructor(
     }
 
     fun hentPdf(søknad: Soknad): ByteArray {
-        return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilSøknadFelter(søknad))
+        return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilFlettedata(søknad))
     }
 
     fun hentSøknad(soknadID: String): Soknad {
