@@ -13,6 +13,7 @@ import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.config.AltinnConfig
+import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
@@ -28,6 +29,7 @@ class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
+    private val kvitteringService: KvitteringService,
     private val mottakConfig: MottakConfig,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
@@ -55,10 +57,12 @@ class MottakService(
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
                         soknadService.lagre(søknad)
+                        val søknadPDF = soknadService.lagPdf(søknad)
                         dokumentService.lagreDokument(Dokument(søknad,
-                            "ref_$arkivRef.pdf", DokumentType.SOKNAD, soknadService.hentPdf(søknad)))
+                            "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
+                        kvitteringService.sendKvittering(søknad.hentKitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "DownloadQueue: behandlet AR: '${arkivRef}' ('${index + 1} av ${elementer.size}') "

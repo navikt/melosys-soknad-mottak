@@ -9,7 +9,7 @@ import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
 import no.nav.melosys.altinn.soknad.Innhold
 import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
 import no.nav.melosys.altinn.soknad.Tidsrom
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadFlettedataBuilder
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadsdataBuilder
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
@@ -23,9 +23,9 @@ private val kotlinXmlMapper = XmlMapper(
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 
 object SoknadSkjemaOversetter {
-    fun tilFlettedata(søknad: Soknad): SoknadFlettedata {
+    fun tilSøknadsdata(søknad: Soknad): Soknadsdata {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
-        val soknadFlettedataBuilder = SoknadFlettedataBuilder().apply {
+        val søknadsdataBuilder = SoknadsdataBuilder().apply {
             tidspunktMottatt = søknad.innsendtTidspunkt.toString()
             arbeidsgiver = oversettArbeidsgiver(innhold)
             arbeidstaker = oversettArbeidstaker(innhold)
@@ -37,7 +37,7 @@ object SoknadSkjemaOversetter {
             arbeidssituasjon = oversettArbeidssituasjon(innhold)
         }
 
-        return soknadFlettedataBuilder.build()
+        return søknadsdataBuilder.build()
     }
 
     private fun oversettArbeidsgiver(innhold: Innhold) =
@@ -247,5 +247,14 @@ object SoknadSkjemaOversetter {
     private fun hentKontaktVirksomhetsnavn(innhold: Innhold): String {
         return if (erRådgivningsfirmaFullmektig(innhold)) innhold.fullmakt.fullmektigVirksomhetsnavn
         else innhold.arbeidsgiver.virksomhetsnavn
+    }
+
+    fun avklarKitteringMottaker(søknad: Soknad): String {
+        val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
+        if (arbeidstakerHarGittFullmakt(innhold)) {
+            return innhold.fullmakt.fullmektigVirksomhetsnummer
+        } else {
+            return innhold.arbeidstaker.foedselsnummer
+        }
     }
 }

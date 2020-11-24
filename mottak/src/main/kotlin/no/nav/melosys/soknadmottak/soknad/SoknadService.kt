@@ -18,14 +18,14 @@ class SoknadService @Autowired constructor(
         return soknadRepository.findByArkivReferanse(arkivRef).count() == 0
     }
 
-    fun hentPdf(søknad: Soknad): ByteArray {
-        return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilFlettedata(søknad))
-    }
-
     fun hentSøknad(soknadID: String): Soknad {
         logger.debug { "Henter søknad med ID $soknadID" }
         return soknadRepository.findBySoknadID(UUID.fromString(soknadID))
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
+    }
+
+    fun lagPdf(søknad: Soknad): ByteArray {
+        return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilSøknadsdata(søknad))
     }
 
     fun lagre(soknad: Soknad): Soknad {
