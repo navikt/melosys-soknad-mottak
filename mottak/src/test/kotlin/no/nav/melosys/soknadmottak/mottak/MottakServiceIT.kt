@@ -5,7 +5,6 @@ import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternal
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
-import no.nav.melosys.soknadmottak.mottak.DownloadQueueService
 import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.junit.jupiter.api.Test
@@ -15,19 +14,19 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [SoknadMottakTestConfiguration::class])
 @ActiveProfiles("test")
-internal class DownloadQueueServiceIT(
+internal class MottakServiceIT(
     @Autowired val soknadService: SoknadService,
     @Autowired val dokumentService: DokumentService,
     @Autowired val mottakConfig: MottakConfig,
     @Autowired val altinnProperties: AltinnProperties,
     @Autowired val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
-    private var downloadQueueService = DownloadQueueService(
+    private var mottakService = MottakService(
         soknadService, dokumentService, mockk(), mottakConfig, altinnProperties, iDownloadQueueExternalBasic
     )
 
     @Test
     fun getDownloadQueueItems() {
-        downloadQueueService.getDownloadQueueItems(altinnProperties.service.code)
+        mottakService.getDownloadQueueItems(altinnProperties.service.code)
     }
 }

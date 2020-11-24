@@ -24,7 +24,7 @@ private val logger = KotlinLogging.logger { }
 private const val ETT_SEKUND_MILLI = 30 * 1000L
 
 @Service
-class DownloadQueueService(
+class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,

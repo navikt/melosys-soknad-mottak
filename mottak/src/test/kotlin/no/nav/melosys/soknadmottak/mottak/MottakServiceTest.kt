@@ -13,7 +13,6 @@ import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.mottak.DownloadQueueService
 import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
@@ -28,7 +27,7 @@ import java.time.temporal.ChronoUnit
 import javax.xml.datatype.DatatypeFactory
 
 @ExtendWith(MockKExtension::class)
-class DownloadQueueServiceTest {
+class MottakServiceTest {
     @RelaxedMockK
     lateinit var soknadService: SoknadService
     @RelaxedMockK
@@ -56,8 +55,8 @@ class DownloadQueueServiceTest {
             archiveReference = "ref"
         }
         itemList.downloadQueueItemBE.add(item)
-        val downloadQueueService =
-            DownloadQueueService(
+        val mottakService =
+            MottakService(
                 soknadService,
                 dokumentService,
                 kafkaProducer,
@@ -94,7 +93,7 @@ class DownloadQueueServiceTest {
         every { soknadService.lagre(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
-        downloadQueueService.pollDokumentKø()
+        mottakService.pollDokumentKø()
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
         verify { soknadService.lagre(any()) }
