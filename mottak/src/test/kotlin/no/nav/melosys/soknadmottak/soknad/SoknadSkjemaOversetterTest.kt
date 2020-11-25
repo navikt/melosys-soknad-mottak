@@ -143,7 +143,7 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `avklar hvem skal motta kvittering`() {
-        val mottaker = SoknadSkjemaOversetter.avklarKitteringMottaker(søknad)
+        val mottaker = SoknadSkjemaOversetter.avklarKvitteringMottaker(søknad)
         assertThat(mottaker).isEqualTo("fullmektigVirksomhetsnummer")
     }
 }

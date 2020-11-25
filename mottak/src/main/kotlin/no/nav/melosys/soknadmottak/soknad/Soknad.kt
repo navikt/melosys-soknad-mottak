@@ -37,7 +37,7 @@ class Soknad(
     @Column(name = "soknad_id", nullable = false, updatable = false)
     var soknadID: UUID = UUID.randomUUID()
 ) {
-    fun hentKitteringMottakerID() = SoknadSkjemaOversetter.avklarKitteringMottaker(this)
+    fun hentKvitteringMottakerID() = SoknadSkjemaOversetter.avklarKvitteringMottaker(this)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

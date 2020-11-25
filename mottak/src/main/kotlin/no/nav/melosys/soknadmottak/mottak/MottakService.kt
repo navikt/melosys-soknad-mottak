@@ -62,7 +62,7 @@ class MottakService(
                             "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF))
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                        kvitteringService.sendKvittering(søknad.hentKitteringMottakerID(), arkivRef, søknadPDF)
+                        kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "DownloadQueue: behandlet AR: '${arkivRef}' ('${index + 1} av ${elementer.size}') "
