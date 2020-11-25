@@ -35,7 +35,7 @@ internal class SoknadServiceTest {
         val søknad = SoknadFactory.lagSoknadFraXmlFil()
         every { dokgenService.lagSøknadPDF(any()) } returns ByteArray(8)
 
-        val pdf = soknadService.hentPdf(søknad)
+        val pdf = soknadService.lagPdf(søknad)
         assertThat(pdf).hasSize(8)
     }
 

@@ -9,11 +9,12 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.mottak.altinn.AltinnProperties
+import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
@@ -29,23 +30,20 @@ import javax.xml.datatype.DatatypeFactory
 @ExtendWith(MockKExtension::class)
 class MottakServiceTest {
     @RelaxedMockK
+    lateinit var altinnConfig: AltinnConfig
+    @RelaxedMockK
     lateinit var soknadService: SoknadService
     @RelaxedMockK
     lateinit var dokumentService: DokumentService
     @RelaxedMockK
     lateinit var kafkaProducer: KafkaProducer
     @RelaxedMockK
+    lateinit var kvitteringService: KvitteringService
+    @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
     private val mottakConfig = MottakConfig(
         true
-    )
-
-    private val altinnProperties = AltinnProperties(
-        AltinnProperties.Informasjon("url"),
-        "user",
-        "pass",
-        AltinnProperties.Service("code")
     )
 
     @Test
@@ -60,11 +58,12 @@ class MottakServiceTest {
                 soknadService,
                 dokumentService,
                 kafkaProducer,
+                kvitteringService,
                 mottakConfig,
-                altinnProperties,
+                altinnConfig,
                 downloadQueue
             )
-        every { downloadQueue.getDownloadQueueItems("user", "pass", "code") } returns itemList
+        every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
 
         val vedlegg1 = ArchivedAttachmentDQBE().apply {
             attachmentData = ByteArray(8)
@@ -73,12 +72,7 @@ class MottakServiceTest {
         }
         val vedleggListe = ArchivedAttachmentExternalListDQBE().withArchivedAttachmentDQBE(vedlegg1)
 
-        val søknadXML = "<note>\n" +
-                "<to>Tove</to>\n" +
-                "<from>Jani</from>\n" +
-                "<heading>Reminder</heading>\n" +
-                "<body>Don't forget me this weekend!</body>\n" +
-                "</note>"
+        val søknadXML = SoknadFactory.lagSoknadFraXmlFil().innhold
         val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
 
         val archivedForms = ArchivedFormTaskDQBE().apply {
@@ -86,8 +80,9 @@ class MottakServiceTest {
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = vedleggListe
             archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
+            reportee = "reportee"
         }
-        every { downloadQueue.getArchivedFormTaskBasicDQ("user", "pass", "ref", null, false) } returns archivedForms
+        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
         every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
         val soknadSlot = slot<Soknad>()
         every { soknadService.lagre(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
@@ -97,11 +92,12 @@ class MottakServiceTest {
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
         verify { soknadService.lagre(any()) }
-        verify { soknadService.hentPdf(any()) }
+        verify { soknadService.lagPdf(any()) }
         val dokumentSlot = slot<Dokument>()
         verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
         assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
         verify { kafkaProducer.publiserMelding(any()) }
+        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 }

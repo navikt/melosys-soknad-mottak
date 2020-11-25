@@ -19,6 +19,13 @@ const val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:sts/policies/untPolicy.x
 const val STS_SAML_POLICY = "classpath:sts/policies/requestSamlPolicy.xml"
 const val STS_SAML_POLICY_NO_TRANSPORT_BINDING = "classpath:sts/policies/requestSamlPolicyNoTransportBinding.xml"
 
+fun stsClient(stsProps: StsProperties): STSClient {
+    return stsClient(
+        stsUrl = stsProps.url,
+        credentials = stsProps.username to stsProps.password
+    )
+}
+
 fun stsClient(stsUrl: String, credentials: Pair<String, String>): STSClient {
     val bus = BusFactory.getDefaultBus()
     return STSClient(bus).apply {

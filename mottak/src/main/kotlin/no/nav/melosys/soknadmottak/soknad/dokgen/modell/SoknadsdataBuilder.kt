@@ -2,7 +2,7 @@ package no.nav.melosys.soknadmottak.soknad.dokgen.modell
 
 import java.time.Instant
 
-data class SoknadFlettedataBuilder(
+data class SoknadsdataBuilder(
     var arbeidsgiver: Arbeidsgiver = ArbeidsgiverBuilder().build(),
     var arbeidssted: Arbeidssted = ArbeidsstedBuilder().build(),
     var arbeidstaker: Arbeidstaker = ArbeidstakerBuilder().build(),
@@ -13,8 +13,8 @@ data class SoknadFlettedataBuilder(
     var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build(),
     var arbeidssituasjon: Arbeidssituasjon = ArbeidssituasjonBuilder().build()
 ) {
-    fun build(): SoknadFlettedata {
-        return SoknadFlettedata(
+    fun build(): Soknadsdata {
+        return Soknadsdata(
             arbeidsgiver = arbeidsgiver,
             arbeidssted = arbeidssted,
             arbeidstaker = arbeidstaker,

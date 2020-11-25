@@ -38,10 +38,16 @@ melosys:
     password: ${SRV_PASSWORD}
 
 altinn:
+  behandle-melding:
+    url: ${ALTINN_BEHANDLE_MELDING_URL}
   informasjon:
     url: ${ALTINN_INFORMASJON_URL}
-  service:
-    code: ${ALTINN_SERVICE_CODE}
+  download-queue:
+    code: ${ALTINN_DQ_CODE}
+    edition-code: ${ALTINN_DQ_EDITION_CODE}
+  correspondence:
+    code: ${ALTINN_CORRESPONDENCE_CODE}
+    edition-code: ${ALTINN_CORRESPONDENCE_EDITION_CODE}
   username: ${ALTINN_USERNAME}
   password: ${ALTINN_PASSWORD}
 
