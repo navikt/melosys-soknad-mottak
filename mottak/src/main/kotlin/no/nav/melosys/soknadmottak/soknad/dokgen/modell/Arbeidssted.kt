@@ -11,7 +11,7 @@ data class Arbeidssted(
 data class ArbeidPaaLand(
     val fastArbeidssted: Boolean,
     val hjemmekontor: Boolean,
-    val fysiskeArbeidssteder: List<FysiskArbeidssted>
+    val fysiskeArbeidssteder: List<FysiskArbeidssted>?
 )
 
 data class FysiskArbeidssted(
@@ -45,7 +45,7 @@ data class Skip(
 )
 
 data class Luftfart(
-    val luftfartBaser: List<LuftfartBase>
+    val luftfartBaser: List<LuftfartBase>?
 )
 
 data class LuftfartBase(

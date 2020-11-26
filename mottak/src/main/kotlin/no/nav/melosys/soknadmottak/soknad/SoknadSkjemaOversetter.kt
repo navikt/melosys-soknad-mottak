@@ -66,12 +66,12 @@ object SoknadSkjemaOversetter {
     }
 
     private fun oversettArbeidPaaLand(arbeidPaaLand: no.nav.melosys.altinn.soknad.ArbeidPaaLand?): ArbeidPaaLand? {
-        return arbeidPaaLand?.fysiskeArbeidssteder?.fysiskArbeidssted?.let {
+        return arbeidPaaLand?.let {
             ArbeidPaaLand(
                 arbeidPaaLand.isFastArbeidssted,
                 arbeidPaaLand.isHjemmekontor,
-                arbeidPaaLand.fysiskeArbeidssteder.fysiskArbeidssted
-                    .map { fysiskArbeidssted ->
+                arbeidPaaLand.fysiskeArbeidssteder?.let {
+                    it.fysiskArbeidssted.map { fysiskArbeidssted ->
                         FysiskArbeidssted(
                             firmanavn = fysiskArbeidssted.firmanavn,
                             gatenavn = fysiskArbeidssted.gatenavn,
@@ -80,7 +80,9 @@ object SoknadSkjemaOversetter {
                             region = fysiskArbeidssted.region,
                             land = fysiskArbeidssted.land
                         )
-                    })
+                    }
+                }
+            )
         }
     }
 
@@ -100,7 +102,7 @@ object SoknadSkjemaOversetter {
 
     private fun oversettLuftfart(luftfart: no.nav.melosys.altinn.soknad.Luftfart?): Luftfart? {
         return luftfart?.let {
-            Luftfart(luftfart.luftfartBaser.luftfartbase.map { base ->
+            Luftfart(luftfart.luftfartBaser?.luftfartbase?.map { base ->
                 LuftfartBase(
                     base.hjemmebaseNavn,
                     base.hjemmebaseLand,
@@ -195,10 +197,10 @@ object SoknadSkjemaOversetter {
             LoennOgGodtgjoerelse(
                 norskArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
                 utlArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
-                bruttoLoennPerMnd = it.loennNorskArbg.toPlainString(),
-                bruttoLoennUtlandPerMnd = it.loennUtlArbg.toPlainString(),
+                bruttoLoennPerMnd = it.loennNorskArbg?.toPlainString(),
+                bruttoLoennUtlandPerMnd = it.loennUtlArbg?.toPlainString(),
                 mottarNaturalytelser = it.isUtlArbTilhorerSammeKonsern,
-                samletVerdiNaturalytelser = it.samletVerdiNaturalytelser.toPlainString(),
+                samletVerdiNaturalytelser = it.samletVerdiNaturalytelser?.toPlainString(),
                 erArbeidsgiveravgiftHelePerioden = it.isBetalerArbeidsgiveravgift,
                 erTrukketTrygdeavgift = it.isTrukketTrygdeavgift
             )

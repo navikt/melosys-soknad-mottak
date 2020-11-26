@@ -61,12 +61,12 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(arbeidPaaLand!!.fastArbeidssted).isFalse()
         assertThat(arbeidPaaLand.hjemmekontor).isTrue()
         assertThat(arbeidPaaLand.fysiskeArbeidssteder).isNotEmpty()
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].firmanavn).isEqualTo("firmanavn")
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].gatenavn).isEqualTo("gatenavn")
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].by).isEqualTo("by")
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].postkode).isEqualTo("postkode")
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].region).isEqualTo("region")
-        assertThat(arbeidPaaLand.fysiskeArbeidssteder[0].land).isEqualTo("land")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].firmanavn).isEqualTo("firmanavn")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].gatenavn).isEqualTo("gatenavn")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].by).isEqualTo("by")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].postkode).isEqualTo("postkode")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].region).isEqualTo("region")
+        assertThat(arbeidPaaLand.fysiskeArbeidssteder!![0].land).isEqualTo("land")
     }
 
     @Test
@@ -86,7 +86,7 @@ internal class SoknadSkjemaOversetterTest {
 
         assertThat(søknadsdata.arbeidssted.type).isEqualTo("luftfart")
         val luftfartBaser = søknadsdata.arbeidssted.luftfart!!.luftfartBaser
-        assertThat(luftfartBaser).isNotEmpty()
+        assertThat(luftfartBaser!!).isNotEmpty()
         assertThat(luftfartBaser[0].hjemmebaseNavn).isEqualTo("hjemmebaseNavn")
         assertThat(luftfartBaser[0].hjemmebaseLand).isEqualTo("hjemmebaseLand")
         assertThat(luftfartBaser[0].typeFlyvninger).isEqualTo("nasjonal")

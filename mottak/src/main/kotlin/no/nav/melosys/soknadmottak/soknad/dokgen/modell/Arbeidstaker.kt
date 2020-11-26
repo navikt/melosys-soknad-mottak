@@ -7,5 +7,5 @@ data class Arbeidstaker(
     val fnr: String,
     val foedeland: String,
     val foedested: String,
-    val utenlandskIDnummer: String
+    val utenlandskIDnummer: String?
 )

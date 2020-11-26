@@ -6,7 +6,7 @@ data class Utenlandsoppdrag(
     val erErstatning: Boolean,
     val samletUtsendingPeriode: String,
     val erSendingForOppdrag: Boolean,
-    val erDrattPaaEgetInitiativ: Boolean,
+    val erDrattPaaEgetInitiativ: Boolean?,
     val erAnsettelseForOpphold: Boolean,
-    val erFortsattAnsattEtterOppdrag: Boolean
+    val erFortsattAnsattEtterOppdrag: Boolean?
 )
