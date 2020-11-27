@@ -241,6 +241,11 @@ object SoknadSkjemaOversetter {
         return StringUtils.isNotBlank(innhold.fullmakt.fullmektigVirksomhetsnummer)
     }
 
+    private fun hentFullmektigVirksomhetsnummer(innhold: Innhold): String {
+        return if (erRådgivningsfirmaFullmektig(innhold)) innhold.fullmakt.fullmektigVirksomhetsnummer
+        else innhold.arbeidsgiver.virksomhetsnummer
+    }
+
     private fun hentKontaktVirksomhetsnummer(innhold: Innhold): String {
         return if (erRådgivningsfirmaFullmektig(innhold)) innhold.fullmakt.fullmektigVirksomhetsnummer
         else innhold.arbeidsgiver.virksomhetsnummer
@@ -254,7 +259,7 @@ object SoknadSkjemaOversetter {
     fun avklarKvitteringMottaker(søknad: Soknad): String {
         val innhold = kotlinXmlMapper.readValue(søknad.innhold, MedlemskapArbeidEOSM::class.java).innhold
         return if (arbeidstakerHarGittFullmakt(innhold)) {
-            innhold.fullmakt.fullmektigVirksomhetsnummer
+            hentFullmektigVirksomhetsnummer(innhold)
         } else {
             innhold.arbeidstaker.foedselsnummer
         }
