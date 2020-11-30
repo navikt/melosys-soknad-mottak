@@ -6,7 +6,6 @@ import no.nav.melosys.soknadmottak.kvittering.altinn.Melding
 import no.nav.melosys.soknadmottak.kvittering.altinn.Vedlegg
 import org.springframework.stereotype.Service
 
-
 @Service
 class KvitteringService(private val korrespondanseService: KorrespondanseService) {
     companion object {

@@ -45,13 +45,15 @@ internal class KorrespondanseServiceTest {
     fun sendMelding() {
         korrespondanseService.sendMelding(insertCorrespondenceBasicV2)
 
-        verify { iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
-            eq(insertCorrespondenceBasicV2.systemUserName),
-            eq(insertCorrespondenceBasicV2.systemPassword),
-            eq(insertCorrespondenceBasicV2.systemUserCode),
-            eq(insertCorrespondenceBasicV2.externalShipmentReference),
-            eq(insertCorrespondenceBasicV2.correspondence)
-        ) }
+        verify {
+            iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
+                eq(insertCorrespondenceBasicV2.systemUserName),
+                eq(insertCorrespondenceBasicV2.systemPassword),
+                eq(insertCorrespondenceBasicV2.systemUserCode),
+                eq(insertCorrespondenceBasicV2.externalShipmentReference),
+                eq(insertCorrespondenceBasicV2.correspondence)
+            )
+        }
     }
 
     @Test

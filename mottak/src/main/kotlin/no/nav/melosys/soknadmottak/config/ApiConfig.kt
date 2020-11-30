@@ -35,8 +35,8 @@ class ApiConfig : WebMvcConfigurer {
     }
 
     private fun erApiTjeneste(clazz: Class<*>): Boolean =
-        clazz.packageName.startsWith(API_PAKKE)
-                && clazz.isAnnotationPresent(RestController::class.java)
+        clazz.packageName.startsWith(API_PAKKE) &&
+            clazz.isAnnotationPresent(RestController::class.java)
 }
 
 @Configuration

@@ -7,4 +7,3 @@ interface DokumentRepository : JpaRepository<Dokument, Long> {
     fun findByDokumentID(dokID: String): Dokument?
     fun findBySoknadSoknadID(soknadID: UUID): Iterable<Dokument>
 }
-

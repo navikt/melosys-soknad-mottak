@@ -12,7 +12,7 @@ object SoknadFactory {
     }
 
     fun lagSoknadFraXmlFil(filNavn: String): Soknad {
-        val søknadXML = javaClass.getResource("/${filNavn}").readText()
+        val søknadXML = javaClass.getResource("/$filNavn").readText()
         return lagSoknad(1, søknadXML)
     }
 }

@@ -8,4 +8,3 @@ interface SoknadRepository : JpaRepository<Soknad, Long> {
 
     fun findBySoknadID(soknadID: UUID): Soknad?
 }
-

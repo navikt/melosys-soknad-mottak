@@ -33,8 +33,10 @@ class SoknadService @Autowired constructor(
     }
 
     fun oppdaterLeveringsstatus(soknadID: String) {
-        soknadRepository.save(hentSøknad(soknadID).apply {
-            levert = true
-        })
+        soknadRepository.save(
+            hentSøknad(soknadID).apply {
+                levert = true
+            }
+        )
     }
 }

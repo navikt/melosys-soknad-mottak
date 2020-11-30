@@ -9,4 +9,3 @@ data class Arbeidssituasjon(
     val mottaYtelserNorge: Boolean,
     val mottaYtelserUtlandet: Boolean
 )
-

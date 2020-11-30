@@ -18,4 +18,3 @@ fun <PORT_TYPE : Any> createServicePort(
     .apply {
         stsClient(stsProperties).configureFor(this, STS_SAML_POLICY)
     }
-

@@ -15,7 +15,7 @@ class DokumentService @Autowired constructor(
     private val dokumentRepository: DokumentRepository
 ) {
     fun hentDokument(dokumentID: String): Dokument {
-        logger.debug{ "Henter dokument med ID $dokumentID" }
+        logger.debug { "Henter dokument med ID $dokumentID" }
         return dokumentRepository.findByDokumentID(dokumentID)
             ?: throw IkkeFunnetException("Finner ikke dokument med ID $dokumentID")
     }
@@ -26,7 +26,7 @@ class DokumentService @Autowired constructor(
 
     fun lagreDokument(dokument: Dokument): String {
         val dokID = ulidGenerator.nextULID()
-        dokumentRepository.save(dokument.apply{dokumentID = dokID})
+        dokumentRepository.save(dokument.apply { dokumentID = dokID })
         return dokID
     }
 }

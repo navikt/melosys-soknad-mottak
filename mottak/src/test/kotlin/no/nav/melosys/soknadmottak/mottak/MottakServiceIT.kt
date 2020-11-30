@@ -3,9 +3,9 @@ package no.nav.melosys.soknadmottak.mottak
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
+import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
-import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.junit.jupiter.api.Test

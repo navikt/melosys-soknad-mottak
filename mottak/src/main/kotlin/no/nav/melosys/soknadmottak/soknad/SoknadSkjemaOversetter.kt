@@ -9,8 +9,8 @@ import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
 import no.nav.melosys.altinn.soknad.Innhold
 import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
 import no.nav.melosys.altinn.soknad.Tidsrom
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadsdataBuilder
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadsdataBuilder
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
 
@@ -102,26 +102,30 @@ object SoknadSkjemaOversetter {
 
     private fun oversettLuftfart(luftfart: no.nav.melosys.altinn.soknad.Luftfart?): Luftfart? {
         return luftfart?.let {
-            Luftfart(luftfart.luftfartBaser?.luftfartbase?.map { base ->
-                LuftfartBase(
-                    base.hjemmebaseNavn,
-                    base.hjemmebaseLand,
-                    base.typeFlyvninger.value()
-                )
-            })
+            Luftfart(
+                luftfart.luftfartBaser?.luftfartbase?.map { base ->
+                    LuftfartBase(
+                        base.hjemmebaseNavn,
+                        base.hjemmebaseLand,
+                        base.typeFlyvninger.value()
+                    )
+                }
+            )
         }
     }
 
     private fun oversettSkipListe(skipListe: no.nav.melosys.altinn.soknad.SkipListe?): SkipListe? {
         return skipListe?.let {
-            SkipListe(skipListe.skip.map { skip ->
-                Skip(
-                    skip.fartsomraade.value(),
-                    skip.skipNavn,
-                    skip.flaggland,
-                    skip.territorialEllerHavnLand
-                )
-            })
+            SkipListe(
+                skipListe.skip.map { skip ->
+                    Skip(
+                        skip.fartsomraade.value(),
+                        skip.skipNavn,
+                        skip.flaggland,
+                        skip.territorialEllerHavnLand
+                    )
+                }
+            )
         }
     }
 

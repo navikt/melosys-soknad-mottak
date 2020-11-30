@@ -10,8 +10,9 @@ import org.springframework.data.repository.findByIdOrNull
 
 @DataJpaTest
 class DokumentRepositoryTest @Autowired constructor(
-        val entityManager: TestEntityManager,
-        val dokumentRepository: DokumentRepository) {
+    val entityManager: TestEntityManager,
+    val dokumentRepository: DokumentRepository
+) {
 
     @Test
     fun givenNyttDokument_whenLagret_thenFunnet() {

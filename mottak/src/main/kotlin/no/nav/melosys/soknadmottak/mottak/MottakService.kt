@@ -6,13 +6,13 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
+import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
@@ -58,14 +58,18 @@ class MottakService(
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
                         soknadService.lagre(søknad)
                         val søknadPDF = soknadService.lagPdf(søknad)
-                        dokumentService.lagreDokument(Dokument(søknad,
-                            "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF))
+                        dokumentService.lagreDokument(
+                            Dokument(
+                                søknad,
+                                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
+                            )
+                        )
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
-                            "DownloadQueue: behandlet AR: '${arkivRef}' ('${index + 1} av ${elementer.size}') "
+                            "DownloadQueue: behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
                         }
                     }
                 }
@@ -81,7 +85,7 @@ class MottakService(
         attachments: MutableList<ArchivedAttachmentDQBE>,
         arkivRef: String
     ) {
-        logger.info { "DownloadQueue: behandler '${attachments.size}' vedlegg for arkiv: '${arkivRef}'" }
+        logger.info { "DownloadQueue: behandler '${attachments.size}' vedlegg for arkiv: '$arkivRef'" }
         attachments.forEach { attachment ->
             behandleVedlegg(søknad, attachment)
         }
@@ -95,10 +99,10 @@ class MottakService(
         try {
             if (mottakConfig.fjernFraDq) {
                 purgeItem(arkivRef)
-                logger.info { "DownloadQueue: fjernet arkiv '${arkivRef}'" }
+                logger.info { "DownloadQueue: fjernet arkiv '$arkivRef'" }
             }
         } catch (e: Throwable) {
-            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '${arkivRef}'" }
+            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '$arkivRef'" }
         }
     }
 

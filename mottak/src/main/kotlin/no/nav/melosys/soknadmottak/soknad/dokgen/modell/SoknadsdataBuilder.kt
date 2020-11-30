@@ -169,7 +169,7 @@ data class ArbeidssituasjonBuilder(
     fun build(): Arbeidssituasjon {
         return Arbeidssituasjon(
             andreArbeidsgivereIUtsendingsperioden = andreArbeidsgivereIUtsendingsperioden,
-            beskrivArbeidSisteMnd =  beskrivArbeidSisteMnd,
+            beskrivArbeidSisteMnd = beskrivArbeidSisteMnd,
             beskrivelseAnnetArbeid = beskrivelseAnnetArbeid,
             erSkattepliktig = erSkattepliktig,
             loennetArbeidMinstEnMnd = loennetArbeidMinstEnMnd,

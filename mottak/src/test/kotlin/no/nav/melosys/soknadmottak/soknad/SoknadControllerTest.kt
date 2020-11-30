@@ -30,10 +30,10 @@ class SoknadControllerTest @Autowired constructor(
     @Test
     fun `hent søknad som finnes, forvent søknad med innhold`() {
         every { soknadService.hentSøknad(SOKNAD_ID.toString()) } returns
-                Soknad(
-                    "ref", true, "<innhold>xml</innhold>",
-                    Instant.MIN, Instant.MIN, 123, SOKNAD_ID
-                )
+            Soknad(
+                "ref", true, "<innhold>xml</innhold>",
+                Instant.MIN, Instant.MIN, 123, SOKNAD_ID
+            )
 
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)

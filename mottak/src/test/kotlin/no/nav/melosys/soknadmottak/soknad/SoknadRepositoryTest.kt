@@ -10,8 +10,8 @@ import java.time.Instant
 
 @DataJpaTest
 class SoknadRepositoryTest @Autowired constructor(
-        val entityManager: TestEntityManager,
-        val soknadRepository: SoknadRepository
+    val entityManager: TestEntityManager,
+    val soknadRepository: SoknadRepository
 ) {
 
     @Test
