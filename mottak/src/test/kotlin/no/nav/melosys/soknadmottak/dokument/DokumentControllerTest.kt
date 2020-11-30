@@ -38,7 +38,7 @@ class DokumentControllerTest @Autowired constructor(
         val result = mockMvc.get("/api/dokumenter/$DOKUMENT_ID") {
             accept(MediaType.APPLICATION_PDF)
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content {
                 contentTypeCompatibleWith(MediaType.APPLICATION_PDF)
             }
@@ -57,7 +57,7 @@ class DokumentControllerTest @Autowired constructor(
         mockMvc.get("/api/dokumenter/$DOKUMENT_ID") {
             accept(MediaType.APPLICATION_PDF)
         }.andExpect {
-            status { isNotFound }
+            status { isNotFound() }
         }
 
         verify { dokumentService.hentDokument(DOKUMENT_ID) }
@@ -71,7 +71,7 @@ class DokumentControllerTest @Autowired constructor(
         val res = mockMvc.get("/api/soknader/$SOKNAD_ID/dokumenter") {
             accept(MediaType.APPLICATION_JSON)
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content {
                 contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
             }

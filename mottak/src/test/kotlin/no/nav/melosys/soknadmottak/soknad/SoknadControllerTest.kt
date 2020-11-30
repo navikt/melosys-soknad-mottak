@@ -38,7 +38,7 @@ class SoknadControllerTest @Autowired constructor(
         val result = mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content {
                 contentTypeCompatibleWith(MediaType.APPLICATION_XML)
             }
@@ -57,7 +57,7 @@ class SoknadControllerTest @Autowired constructor(
         mockMvc.get("/api/soknader/$SOKNAD_ID") {
             accept(MediaType.APPLICATION_XML)
         }.andExpect {
-            status { isNotFound }
+            status { isNotFound() }
         }
 
         verify { soknadService.hentSøknad(SOKNAD_ID.toString()) }
