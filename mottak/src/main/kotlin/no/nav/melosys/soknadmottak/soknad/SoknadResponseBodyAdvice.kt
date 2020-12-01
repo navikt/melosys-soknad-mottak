@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
 private val logger = KotlinLogging.logger { }
 
+// FIXME: Denne må fjernes før vi går i prod, siden søknaden inneholder sensitive opplysninger
 @ControllerAdvice
 class SoknadResponseBodyAdvice : ResponseBodyAdvice<Any?> {
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>): Boolean {
