@@ -28,3 +28,8 @@ class PubliserSoknadException : Exception {
 
     constructor(throwable: Throwable) : super(throwable)
 }
+
+@ResponseStatus(value = HttpStatus.FORBIDDEN)
+class SikkerhetsbegrensningException : Exception {
+    constructor(melding: String) : super(melding)
+}

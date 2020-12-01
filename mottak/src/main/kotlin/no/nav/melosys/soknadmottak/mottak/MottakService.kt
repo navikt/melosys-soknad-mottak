@@ -13,7 +13,6 @@ import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
@@ -29,7 +28,6 @@ class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
-    private val kvitteringService: KvitteringService,
     private val mottakConfig: MottakConfig,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
@@ -66,7 +64,6 @@ class MottakService(
                         )
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
                         kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                        kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
@@ -78,6 +75,15 @@ class MottakService(
         } finally {
             MDC.remove(MDC_CALL_ID)
         }
+    }
+
+    fun hentIkkeLeverteSøknadIDer() = soknadService.hentIkkeLeverteSøknader().map { it.soknadID }
+
+    fun sendIkkeLeverteSøknader(soknadIDer: List<UUID>) {
+        logger.info { "Forsøker å sende søknader på nytt $soknadIDer" }
+        soknadService.hentIkkeLeverteSøknader()
+            .filter { soknadIDer.contains(it.soknadID) }
+            .forEach { kafkaProducer.publiserMelding(SoknadMottatt(it)) }
     }
 
     private fun behandleVedleggListe(

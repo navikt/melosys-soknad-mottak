@@ -14,7 +14,6 @@ import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
-import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
@@ -38,8 +37,6 @@ class MottakServiceTest {
     @RelaxedMockK
     lateinit var kafkaProducer: KafkaProducer
     @RelaxedMockK
-    lateinit var kvitteringService: KvitteringService
-    @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
     private val mottakConfig = MottakConfig(
@@ -58,7 +55,6 @@ class MottakServiceTest {
                 soknadService,
                 dokumentService,
                 kafkaProducer,
-                kvitteringService,
                 mottakConfig,
                 altinnConfig,
                 downloadQueue
@@ -97,7 +93,6 @@ class MottakServiceTest {
         verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
         assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
         verify { kafkaProducer.publiserMelding(any()) }
-        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 }

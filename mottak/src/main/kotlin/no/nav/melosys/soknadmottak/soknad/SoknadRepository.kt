@@ -7,4 +7,6 @@ interface SoknadRepository : JpaRepository<Soknad, Long> {
     fun findByArkivReferanse(ref: String): Iterable<Soknad>
 
     fun findBySoknadID(soknadID: UUID): Soknad?
+
+    fun findByLevertFalse(): Iterable<Soknad>
 }
