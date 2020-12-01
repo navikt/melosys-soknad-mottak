@@ -43,7 +43,7 @@
 
         <!-- Transitive avhengiheter med konflikter -->
         <asm.version>9.0</asm.version>
-        <bcprov-jdk15on.version>1.66</bcprov-jdk15on.version>
+        <bcprov-jdk15on.version>1.67</bcprov-jdk15on.version>
         <github-classgraph.version>4.8.92</github-classgraph.version>
         <guava.version>24.1.1-jre</guava.version>
         <javassist.version>3.27.0-GA</javassist.version>
