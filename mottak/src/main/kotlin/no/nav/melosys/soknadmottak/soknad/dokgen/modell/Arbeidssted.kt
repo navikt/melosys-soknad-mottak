@@ -19,7 +19,7 @@ data class FysiskArbeidssted(
     val gatenavn: String,
     val by: String,
     val postkode: String,
-    val region: String,
+    val region: String?,
     val land: String
 )
 
