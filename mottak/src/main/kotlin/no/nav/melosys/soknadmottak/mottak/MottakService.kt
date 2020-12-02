@@ -42,7 +42,7 @@ class MottakService(
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 val elementer = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
-                logger.debug { "DownloadQueue: behandler '${elementer.size}' elementer" }
+                logger.debug { "Behandler '${elementer.size}' elementer" }
                 elementer.forEachIndexed { index, item ->
                     val arkivRef = item.archiveReference
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
@@ -69,11 +69,11 @@ class MottakService(
                         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
-                            "DownloadQueue: behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
+                            "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
                         }
                     }
                 }
-                logger.debug { "DownloadQueue: ferdig med behandling av '${elementer.size}' elementer." }
+                logger.debug { "Ferdig med behandling av '${elementer.size}' elementer." }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
@@ -85,7 +85,7 @@ class MottakService(
         attachments: MutableList<ArchivedAttachmentDQBE>,
         arkivRef: String
     ) {
-        logger.info { "DownloadQueue: behandler '${attachments.size}' vedlegg for arkiv: '$arkivRef'" }
+        logger.info { "Behandler '${attachments.size}' vedlegg for arkiv: '$arkivRef'" }
         attachments.forEach { attachment ->
             behandleVedlegg(søknad, attachment)
         }
@@ -99,10 +99,10 @@ class MottakService(
         try {
             if (mottakConfig.fjernFraDq) {
                 purgeItem(arkivRef)
-                logger.info { "DownloadQueue: fjernet arkiv '$arkivRef'" }
+                logger.info { "Fjernet arkiv '$arkivRef'" }
             }
         } catch (e: Throwable) {
-            logger.error { "DownloadQueue: kunne ikke fjerne arkiv '$arkivRef'" }
+            logger.error { "Kunne ikke fjerne arkiv '$arkivRef'" }
         }
     }
 

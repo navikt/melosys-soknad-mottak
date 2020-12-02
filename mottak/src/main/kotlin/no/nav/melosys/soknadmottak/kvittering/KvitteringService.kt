@@ -1,10 +1,13 @@
 package no.nav.melosys.soknadmottak.kvittering
 
+import mu.KotlinLogging
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
 import no.nav.melosys.soknadmottak.kvittering.altinn.KorrespondanseService
 import no.nav.melosys.soknadmottak.kvittering.altinn.Melding
 import no.nav.melosys.soknadmottak.kvittering.altinn.Vedlegg
 import org.springframework.stereotype.Service
+
+private val logger = KotlinLogging.logger { }
 
 @Service
 class KvitteringService(private val korrespondanseService: KorrespondanseService) {
@@ -29,6 +32,7 @@ class KvitteringService(private val korrespondanseService: KorrespondanseService
                 vedlegg
             )
         )
+        logger.info { "Sendt kvittering for arkiv '$arkivRef'" }
     }
 
     private fun lagKvittering(mottakerID: String, arkivRef: String, vedlegg: ByteArray): InsertCorrespondenceBasicV2 {
