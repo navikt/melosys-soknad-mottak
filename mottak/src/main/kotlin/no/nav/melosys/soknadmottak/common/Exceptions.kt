@@ -10,7 +10,7 @@ private val logger = KotlinLogging.logger { }
 class IkkeFunnetException : Exception {
     constructor(melding: String, throwable: Throwable) : super(melding, throwable)
 
-    constructor(melding: String): super(melding) {
+    constructor(melding: String) : super(melding) {
         logger.error { melding }
     }
 
