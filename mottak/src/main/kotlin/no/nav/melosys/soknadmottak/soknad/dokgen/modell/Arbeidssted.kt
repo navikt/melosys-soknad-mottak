@@ -15,7 +15,7 @@ data class ArbeidPaaLand(
 )
 
 data class FysiskArbeidssted(
-    val firmanavn: String,
+    val firmanavn: String?,
     val gatenavn: String,
     val by: String,
     val postkode: String,
