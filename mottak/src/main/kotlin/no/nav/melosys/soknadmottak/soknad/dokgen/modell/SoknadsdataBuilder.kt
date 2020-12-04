@@ -116,8 +116,8 @@ data class UtenlandsoppdragBuilder(
     val erErstatning: Boolean = false,
     val erFortsattAnsattEtterOppdrag: Boolean = false,
     val erSendingForOppdrag: Boolean = false,
-    val periode: String = "",
-    val samletUtsendingPeriode: String = ""
+    val periode: Periode = Periode("", ""),
+    val samletUtsendingPeriode: Periode = Periode("", "")
 ) {
     fun build(): Utenlandsoppdrag {
         return Utenlandsoppdrag(

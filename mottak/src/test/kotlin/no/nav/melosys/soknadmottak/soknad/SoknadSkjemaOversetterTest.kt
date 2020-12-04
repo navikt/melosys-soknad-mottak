@@ -109,9 +109,11 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping utenlandsk oppdrag`() {
         assertThat(søknadsdata.utenlandsoppdrag.arbeidsland).isEqualTo("arbeidsland")
-        assertThat(søknadsdata.utenlandsoppdrag.periode).isEqualTo("f.o.m. 2008-11-15 t.o.m. 2017-5-15")
+        assertThat(søknadsdata.utenlandsoppdrag.periode.fom).isEqualTo("15-11-2008")
+        assertThat(søknadsdata.utenlandsoppdrag.periode.tom).isEqualTo("15-5-2017")
         assertThat(søknadsdata.utenlandsoppdrag.erErstatning).isTrue()
-        assertThat(søknadsdata.utenlandsoppdrag.samletUtsendingPeriode).isEqualTo("f.o.m. 2013-12-21 t.o.m. 2016-1-1")
+        assertThat(søknadsdata.utenlandsoppdrag.samletUtsendingPeriode!!.fom).isEqualTo("21-12-2013")
+        assertThat(søknadsdata.utenlandsoppdrag.samletUtsendingPeriode!!.tom).isEqualTo("1-1-2016")
         assertThat(søknadsdata.utenlandsoppdrag.erSendingForOppdrag).isFalse()
         assertThat(søknadsdata.utenlandsoppdrag.erDrattPaaEgetInitiativ).isFalse()
         assertThat(søknadsdata.utenlandsoppdrag.erAnsettelseForOpphold).isTrue()
