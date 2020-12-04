@@ -9,8 +9,8 @@ data class Arbeidssted(
 )
 
 data class ArbeidPaaLand(
-    val fastArbeidssted: Boolean,
-    val hjemmekontor: Boolean,
+    val fastArbeidssted: Boolean?,
+    val hjemmekontor: Boolean?,
     val fysiskeArbeidssteder: List<FysiskArbeidssted>?
 )
 
