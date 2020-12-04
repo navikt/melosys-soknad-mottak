@@ -172,7 +172,7 @@ object SoknadSkjemaOversetter {
         val utenlandsoppdraget = midlertidigUtsendt.utenlandsoppdraget
         return Utenlandsoppdrag(
             innhold.midlertidigUtsendt.arbeidsland,
-            oversettTidsrom(utenlandsoppdraget.periodeUtland),
+            oversettTidsrom(utenlandsoppdraget.periodeUtland)!!,
             utenlandsoppdraget.isErstatterTidligereUtsendte,
             oversettTidsrom(utenlandsoppdraget.samletUtsendingsperiode),
             utenlandsoppdraget.isSendesUtOppdragIUtlandet,
@@ -182,17 +182,17 @@ object SoknadSkjemaOversetter {
         )
     }
 
-    private fun oversettTidsrom(tidsrom: Tidsrom?): String {
+    private fun oversettTidsrom(tidsrom: Tidsrom?): Periode? {
         return tidsrom?.let {
             val fom = oversettDato(it.periodeFra)
             val tom = oversettDato(it.periodeTil)
-            "f.o.m. $fom t.o.m. $tom"
-        } ?: ""
+            Periode(fom, tom)
+        }
     }
 
     private fun oversettDato(calendar: XMLGregorianCalendar?): String {
         return calendar?.let {
-            "${it.year}-${it.month}-${it.day}"
+            "${it.day}-${it.month}-${it.year}"
         } ?: ""
     }
 
