@@ -40,8 +40,8 @@ data class SkipListe(
 data class Skip(
     val fartsomraade: String,
     val skipNavn: String,
-    val flaggland: String,
-    val territorialEllerHavnLand: String
+    val flaggland: String?,
+    val territorialEllerHavnLand: String?
 )
 
 data class Luftfart(
