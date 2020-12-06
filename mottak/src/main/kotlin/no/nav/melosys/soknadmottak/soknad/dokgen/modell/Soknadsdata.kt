@@ -8,6 +8,6 @@ data class Soknadsdata(
     val kontakperson: Kontakperson?,
     val tidspunktMottatt: String,
     val utenlandsoppdrag: Utenlandsoppdrag,
-    val virksomhetNorge: VirksomhetNorge,
+    val virksomhetNorge: VirksomhetNorge?,
     val arbeidssituasjon: Arbeidssituasjon
 )

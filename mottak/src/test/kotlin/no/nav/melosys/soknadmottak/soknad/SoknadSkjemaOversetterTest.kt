@@ -17,14 +17,15 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(søknadsdata.arbeidsgiver.navn).isEqualTo("virksomhetsnavn")
         assertThat(søknadsdata.arbeidsgiver.adresse).isEqualTo("gate, 1234 poststed land")
         assertThat(søknadsdata.arbeidsgiver.orgnr).isEqualTo("virksomhetsnummer")
+        assertThat(søknadsdata.arbeidsgiver.erOffenlig).isFalse()
 
-        assertThat(søknadsdata.virksomhetNorge.ansatte).isEqualTo(99)
-        assertThat(søknadsdata.virksomhetNorge.administrativtAnsatte).isEqualTo(98)
-        assertThat(søknadsdata.virksomhetNorge.utsendteArbeidstakere).isEqualTo(97)
-        assertThat(søknadsdata.virksomhetNorge.andelOpptjent).isEqualTo(96)
-        assertThat(søknadsdata.virksomhetNorge.andelOppdragskontrakter).isEqualTo(95)
-        assertThat(søknadsdata.virksomhetNorge.andelOppdrag).isEqualTo(94)
-        assertThat(søknadsdata.virksomhetNorge.andelRekruttert).isEqualTo(93)
+        assertThat(søknadsdata.virksomhetNorge!!.ansatte).isEqualTo(99)
+        assertThat(søknadsdata.virksomhetNorge!!.administrativtAnsatte).isEqualTo(98)
+        assertThat(søknadsdata.virksomhetNorge!!.utsendteArbeidstakere).isEqualTo(97)
+        assertThat(søknadsdata.virksomhetNorge!!.andelOpptjent).isEqualTo(96)
+        assertThat(søknadsdata.virksomhetNorge!!.andelOppdragskontrakter).isEqualTo(95)
+        assertThat(søknadsdata.virksomhetNorge!!.andelOppdrag).isEqualTo(94)
+        assertThat(søknadsdata.virksomhetNorge!!.andelRekruttert).isEqualTo(93)
     }
 
     @Test

@@ -43,6 +43,7 @@ object SoknadSkjemaOversetter {
     private fun oversettArbeidsgiver(innhold: Innhold) =
         Arbeidsgiver(
             innhold.arbeidsgiver.virksomhetsnummer,
+            innhold.arbeidsgiver.isOffentligVirksomhet,
             innhold.arbeidsgiver.virksomhetsnavn,
             oversettAdresse(innhold.arbeidsgiver.adresse)
         )
@@ -211,10 +212,9 @@ object SoknadSkjemaOversetter {
         }
     }
 
-    private fun oversettVirksomhetNorge(innhold: Innhold): VirksomhetNorge {
-        return innhold.arbeidsgiver.samletVirksomhetINorge.let {
+    private fun oversettVirksomhetNorge(innhold: Innhold): VirksomhetNorge? {
+        return innhold.arbeidsgiver.samletVirksomhetINorge?.let {
             VirksomhetNorge(
-                innhold.arbeidsgiver.isOffentligVirksomhet,
                 it.antallAdministrativeAnsatteINorge.toInt(),
                 it.andelOppdragINorge.toInt(),
                 it.andelKontrakterInngaasINorge.toInt(),

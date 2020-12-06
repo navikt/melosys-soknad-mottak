@@ -10,7 +10,7 @@ data class SoknadsdataBuilder(
     var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
     var tidspunktMottatt: String = Instant.now().toString(),
     var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
-    var virksomhetNorge: VirksomhetNorge = VirksomhetNorgeBuilder().build(),
+    var virksomhetNorge: VirksomhetNorge? = VirksomhetNorgeBuilder().build(),
     var arbeidssituasjon: Arbeidssituasjon = ArbeidssituasjonBuilder().build()
 ) {
     fun build(): Soknadsdata {
@@ -31,13 +31,15 @@ data class SoknadsdataBuilder(
 data class ArbeidsgiverBuilder(
     val adresse: String = "",
     val navn: String = "",
-    val orgnr: String = ""
+    val orgnr: String = "",
+    val erOffenlig: Boolean = false,
 ) {
     fun build(): Arbeidsgiver {
         return Arbeidsgiver(
             adresse = adresse,
             navn = navn,
-            orgnr = orgnr
+            orgnr = orgnr,
+            erOffenlig = erOffenlig
         )
     }
 }
@@ -140,7 +142,6 @@ data class VirksomhetNorgeBuilder(
     val andelOpptjent: Int = 0,
     val andelRekruttert: Int = 0,
     val ansatte: Int = 0,
-    val erOffenlig: Boolean = false,
     val utsendteArbeidstakere: Int = 0
 ) {
     fun build(): VirksomhetNorge {
@@ -151,7 +152,6 @@ data class VirksomhetNorgeBuilder(
             andelOpptjent = andelOpptjent,
             andelRekruttert = andelRekruttert,
             ansatte = ansatte,
-            erOffenlig = erOffenlig,
             utsendteArbeidstakere = utsendteArbeidstakere
         )
     }
