@@ -204,7 +204,7 @@ object SoknadSkjemaOversetter {
                 utlArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
                 bruttoLoennPerMnd = it.loennNorskArbg?.toPlainString(),
                 bruttoLoennUtlandPerMnd = it.loennUtlArbg?.toPlainString(),
-                mottarNaturalytelser = it.isUtlArbTilhorerSammeKonsern,
+                mottarNaturalytelser = it.isMottarNaturalytelser,
                 samletVerdiNaturalytelser = it.samletVerdiNaturalytelser?.toPlainString(),
                 erArbeidsgiveravgiftHelePerioden = it.isBetalerArbeidsgiveravgift,
                 erTrukketTrygdeavgift = it.isTrukketTrygdeavgift
