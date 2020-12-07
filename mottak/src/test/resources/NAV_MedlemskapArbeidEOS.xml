@@ -127,7 +127,7 @@
         <!--Optional:-->
         <norskArbgUtbetalerLoenn>true</norskArbgUtbetalerLoenn>
         <!--Optional:-->
-        <utlArbgUtbetalerLoenn>false</utlArbgUtbetalerLoenn>
+        <utlArbgUtbetalerLoenn>true</utlArbgUtbetalerLoenn>
         <!--Optional:-->
         <utlArbTilhorerSammeKonsern>true</utlArbTilhorerSammeKonsern>
         <!--Optional:-->
