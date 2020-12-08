@@ -22,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
-private const val ETT_SEKUND_MILLI = 30 * 1000L
-private const val TO_SEKUNDER_MILLI = 45 * 1000L
+private const val VENTETID_MELLOM_OPPSTART_MILLIS = 30 * 1000L
+private const val OPPSTART_FØRSTE_JOBB_MILLIS = 30 * 1000L
+private const val OPPSTART_ANDRE_JOBB_MILLIS = 45 * 1000L
 
 @Service
 class MottakService(
@@ -37,7 +38,7 @@ class MottakService(
     private val brukernavn = altinnConfig.username
     private val passord = altinnConfig.password
 
-    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
+    @Scheduled(fixedRate = VENTETID_MELLOM_OPPSTART_MILLIS, initialDelay = OPPSTART_FØRSTE_JOBB_MILLIS)
     fun pollDokumentKø() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
@@ -70,7 +71,7 @@ class MottakService(
         }
     }
 
-    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = TO_SEKUNDER_MILLI)
+    @Scheduled(fixedRate = VENTETID_MELLOM_OPPSTART_MILLIS, initialDelay = OPPSTART_ANDRE_JOBB_MILLIS)
     fun publiserIkkeLeverteSøknader() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
@@ -82,13 +83,6 @@ class MottakService(
         } finally {
             MDC.remove(MDC_CALL_ID)
         }
-    }
-
-    fun sendIkkeLeverteSøknader(soknadIDer: List<UUID>) {
-        logger.info { "Forsøker å sende søknader på nytt $soknadIDer" }
-        soknadService.hentIkkeLeverteSøknader()
-            .filter { soknadIDer.contains(it.soknadID) }
-            .forEach { kafkaProducer.publiserMelding(SoknadMottatt(it)) }
     }
 
     @Transactional
