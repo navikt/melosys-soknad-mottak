@@ -15,7 +15,10 @@ internal class SoknadSkjemaOversetterTest {
     @Test
     fun `mapping arbeidsgiver`() {
         assertThat(søknadsdata.arbeidsgiver.navn).isEqualTo("virksomhetsnavn")
-        assertThat(søknadsdata.arbeidsgiver.adresse).isEqualTo("gate, 1234 poststed land")
+        assertThat(søknadsdata.arbeidsgiver.adresse!!.gate).isEqualTo("gate")
+        assertThat(søknadsdata.arbeidsgiver.adresse!!.postkode).isEqualTo("1234")
+        assertThat(søknadsdata.arbeidsgiver.adresse!!.poststed).isEqualTo("poststed")
+        assertThat(søknadsdata.arbeidsgiver.adresse!!.land).isEqualTo("land")
         assertThat(søknadsdata.arbeidsgiver.orgnr).isEqualTo("virksomhetsnummer")
         assertThat(søknadsdata.arbeidsgiver.erOffenlig).isFalse()
 

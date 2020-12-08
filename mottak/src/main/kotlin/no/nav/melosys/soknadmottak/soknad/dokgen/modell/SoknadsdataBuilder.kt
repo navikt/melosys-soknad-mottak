@@ -29,7 +29,7 @@ data class SoknadsdataBuilder(
 }
 
 data class ArbeidsgiverBuilder(
-    val adresse: String = "",
+    val adresse: Adresse = Adresse("", "", "", ""),
     val navn: String = "",
     val orgnr: String = "",
     val erOffenlig: Boolean = false,

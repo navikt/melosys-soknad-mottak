@@ -48,10 +48,15 @@ object SoknadSkjemaOversetter {
             oversettAdresse(innhold.arbeidsgiver.adresse)
         )
 
-    private fun oversettAdresse(adresse: ArbeidsgiverAdresse?): String {
+    private fun oversettAdresse(adresse: ArbeidsgiverAdresse?): Adresse? {
         return adresse?.let {
-            "${it.gate}, ${it.postkode} ${it.poststed} ${it.land}"
-        } ?: ""
+            Adresse(
+                it.gate,
+                it.postkode,
+                it.poststed,
+                it.land
+            )
+        }
     }
 
     private fun oversettArbeidssted(innhold: Innhold): Arbeidssted {
