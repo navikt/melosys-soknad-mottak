@@ -18,6 +18,7 @@ import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
@@ -55,15 +56,7 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
-                        soknadService.lagre(søknad)
-                        val søknadPDF = soknadService.lagPdf(søknad)
-                        dokumentService.lagreDokument(
-                            Dokument(
-                                søknad,
-                                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
-                            )
-                        )
-                        behandleVedleggListe(søknad, vedlegg, arkivRef)
+                        lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
@@ -96,6 +89,23 @@ class MottakService(
         soknadService.hentIkkeLeverteSøknader()
             .filter { soknadIDer.contains(it.soknadID) }
             .forEach { kafkaProducer.publiserMelding(SoknadMottatt(it)) }
+    }
+
+    @Transactional
+    fun lagreDokumentOgVedlegg(
+        søknad: Soknad,
+        arkivRef: String,
+        vedlegg: MutableList<ArchivedAttachmentDQBE>
+    ) {
+        soknadService.lagre(søknad)
+        val søknadPDF = soknadService.lagPdf(søknad)
+        dokumentService.lagreDokument(
+            Dokument(
+                søknad,
+                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
+            )
+        )
+        behandleVedleggListe(søknad, vedlegg, arkivRef)
     }
 
     private fun behandleVedleggListe(
