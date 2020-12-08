@@ -40,5 +40,11 @@ internal class CallbackServiceTest {
         callbackService.kvitter(SendResult(producerRecord, mockk()))
 
         verify { soknadService.oppdaterLeveringsstatus(uuid) }
+        verify {
+            kvitteringService.sendKvittering(
+                eq("fullmektigVirksomhetsnummer"),
+                eq("referanse"), eq(ByteArray(0))
+            )
+        }
     }
 }

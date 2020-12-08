@@ -18,7 +18,6 @@ class CallbackService(
         logger.info { "Melding ble sendt på topic: $soknadMottatt" }
         soknadService.oppdaterLeveringsstatus(soknadMottatt!!.soknadID)
 
-        // FIXME Legg til mottakerID, arkivReferanse og søknadPDF i SoknadMottatt
         val søknad = soknadService.hentSøknad(soknadMottatt.soknadID)
         val søknadPDF = soknadService.lagPdf(søknad)
         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), søknad.arkivReferanse, søknadPDF)

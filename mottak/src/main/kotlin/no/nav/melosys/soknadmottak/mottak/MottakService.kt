@@ -22,6 +22,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger { }
 private const val ETT_SEKUND_MILLI = 30 * 1000L
+private const val TO_SEKUNDER_MILLI = 45 * 1000L
 
 @Service
 class MottakService(
@@ -63,7 +64,6 @@ class MottakService(
                             )
                         )
                         behandleVedleggListe(søknad, vedlegg, arkivRef)
-                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
@@ -77,7 +77,19 @@ class MottakService(
         }
     }
 
-    fun hentIkkeLeverteSøknadIDer() = soknadService.hentIkkeLeverteSøknader().map { it.soknadID }
+    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = TO_SEKUNDER_MILLI)
+    fun publiserIkkeLeverteSøknader() {
+        try {
+            withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
+                soknadService.hentIkkeLeverteSøknader().forEach { søknad ->
+                    logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
+                    kafkaProducer.publiserMelding(SoknadMottatt(søknad))
+                }
+            }
+        } finally {
+            MDC.remove(MDC_CALL_ID)
+        }
+    }
 
     fun sendIkkeLeverteSøknader(soknadIDer: List<UUID>) {
         logger.info { "Forsøker å sende søknader på nytt $soknadIDer" }

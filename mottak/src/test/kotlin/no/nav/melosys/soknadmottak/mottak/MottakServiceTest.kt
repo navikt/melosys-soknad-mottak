@@ -14,19 +14,25 @@ import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
+import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
 import javax.xml.datatype.DatatypeFactory
 
 @ExtendWith(MockKExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MottakServiceTest {
     @RelaxedMockK
     lateinit var altinnConfig: AltinnConfig
@@ -43,6 +49,20 @@ class MottakServiceTest {
         true
     )
 
+    private lateinit var mottakService: MottakService
+
+    @BeforeAll
+    fun setUp() {
+        mottakService = MottakService(
+            soknadService,
+            dokumentService,
+            kafkaProducer,
+            mottakConfig,
+            altinnConfig,
+            downloadQueue
+        )
+    }
+
     @Test
     fun pollDokumentKø() {
         val itemList = DownloadQueueItemBEList()
@@ -50,15 +70,6 @@ class MottakServiceTest {
             archiveReference = "ref"
         }
         itemList.downloadQueueItemBE.add(item)
-        val mottakService =
-            MottakService(
-                soknadService,
-                dokumentService,
-                kafkaProducer,
-                mottakConfig,
-                altinnConfig,
-                downloadQueue
-            )
         every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
 
         val vedlegg1 = ArchivedAttachmentDQBE().apply {
@@ -92,7 +103,20 @@ class MottakServiceTest {
         val dokumentSlot = slot<Dokument>()
         verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
         assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
-        verify { kafkaProducer.publiserMelding(any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
+    }
+
+    @Test
+    fun publiserIkkeLeverteSøknader() {
+        val søknad = Soknad(
+            arkivReferanse = "", levert = false, innhold = "",
+            innsendtTidspunkt = Instant.now(), soknadID = UUID.randomUUID()
+        )
+        every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
+        mottakService.publiserIkkeLeverteSøknader()
+
+        val slot = slot<SoknadMottatt>()
+        verify { kafkaProducer.publiserMelding(capture(slot)) }
+        assertThat(slot.captured.soknadID).isEqualTo(søknad.soknadID.toString())
     }
 }
