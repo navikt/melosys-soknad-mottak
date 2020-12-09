@@ -30,7 +30,7 @@ class KafkaProducerIT @Autowired constructor(
     @Value("\${melosys.kafka.producer.topic-name}")
     private val topicName: String
 ) {
-    private val callbackService = spyk(CallbackService(mockk(), mockk()))
+    private val callbackService = spyk(CallbackService(mockk()))
     private lateinit var kafkaProducer: KafkaProducer
 
     @BeforeEach

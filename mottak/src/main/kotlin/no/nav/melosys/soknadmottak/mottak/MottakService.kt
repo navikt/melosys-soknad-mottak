@@ -13,6 +13,7 @@ import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
+import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
@@ -31,6 +32,7 @@ class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
+    private val kvitteringService: KvitteringService,
     private val mottakConfig: MottakConfig,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
@@ -57,7 +59,9 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
-                        lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg)
+                        val søknadPDF = soknadService.lagPdf(søknad)
+                        lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg, søknadPDF)
+                        kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
@@ -89,10 +93,10 @@ class MottakService(
     fun lagreDokumentOgVedlegg(
         søknad: Soknad,
         arkivRef: String,
-        vedlegg: MutableList<ArchivedAttachmentDQBE>
+        vedlegg: MutableList<ArchivedAttachmentDQBE>,
+        søknadPDF: ByteArray
     ) {
         soknadService.lagre(søknad)
-        val søknadPDF = soknadService.lagPdf(søknad)
         dokumentService.lagreDokument(
             Dokument(
                 søknad,
