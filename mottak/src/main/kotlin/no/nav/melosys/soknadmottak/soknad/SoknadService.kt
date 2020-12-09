@@ -19,7 +19,7 @@ class SoknadService @Autowired constructor(
     }
 
     fun hentSøknad(soknadID: String): Soknad {
-        logger.info { "Henter søknad med ID $soknadID" }
+        logger.debug { "Henter søknad med ID $soknadID" }
         return soknadRepository.findBySoknadID(UUID.fromString(soknadID))
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }

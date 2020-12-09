@@ -94,6 +94,7 @@ class MottakService(
         vedlegg: MutableList<ArchivedAttachmentDQBE>,
         søknadPDF: ByteArray
     ) {
+        logger.info { "Lagrer søknad med soknadID ${søknad.soknadID}" }
         soknadService.lagre(søknad)
         dokumentService.lagreDokument(
             Dokument(
