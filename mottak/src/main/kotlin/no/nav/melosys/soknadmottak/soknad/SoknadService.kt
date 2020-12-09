@@ -39,4 +39,8 @@ class SoknadService @Autowired constructor(
             }
         )
     }
+
+    fun hentIkkeLeverteSøknader(): Iterable<Soknad> {
+        return soknadRepository.findByLevertFalse()
+    }
 }

@@ -19,10 +19,13 @@ import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
-private const val ETT_SEKUND_MILLI = 30 * 1000L
+private const val VENTETID_MELLOM_JOBBER_MILLIS = 10 * 1000L
+private const val OPPSTART_FØRSTE_JOBB_MILLIS = 30 * 1000L
+private const val OPPSTART_ANDRE_JOBB_MILLIS = 45 * 1000L
 
 @Service
 class MottakService(
@@ -37,7 +40,7 @@ class MottakService(
     private val brukernavn = altinnConfig.username
     private val passord = altinnConfig.password
 
-    @Scheduled(fixedRate = ETT_SEKUND_MILLI, initialDelay = ETT_SEKUND_MILLI)
+    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS, initialDelay = OPPSTART_FØRSTE_JOBB_MILLIS)
     fun pollDokumentKø() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
@@ -56,16 +59,8 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
-                        soknadService.lagre(søknad)
                         val søknadPDF = soknadService.lagPdf(søknad)
-                        dokumentService.lagreDokument(
-                            Dokument(
-                                søknad,
-                                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
-                            )
-                        )
-                        behandleVedleggListe(søknad, vedlegg, arkivRef)
-                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
+                        lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg, søknadPDF)
                         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
@@ -78,6 +73,37 @@ class MottakService(
         } finally {
             MDC.remove(MDC_CALL_ID)
         }
+    }
+
+    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS, initialDelay = OPPSTART_ANDRE_JOBB_MILLIS)
+    fun publiserIkkeLeverteSøknader() {
+        try {
+            withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
+                soknadService.hentIkkeLeverteSøknader().forEach { søknad ->
+                    logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
+                    kafkaProducer.publiserMelding(SoknadMottatt(søknad))
+                }
+            }
+        } finally {
+            MDC.remove(MDC_CALL_ID)
+        }
+    }
+
+    @Transactional
+    fun lagreDokumentOgVedlegg(
+        søknad: Soknad,
+        arkivRef: String,
+        vedlegg: MutableList<ArchivedAttachmentDQBE>,
+        søknadPDF: ByteArray
+    ) {
+        soknadService.lagre(søknad)
+        dokumentService.lagreDokument(
+            Dokument(
+                søknad,
+                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
+            )
+        )
+        behandleVedleggListe(søknad, vedlegg, arkivRef)
     }
 
     private fun behandleVedleggListe(
