@@ -10,7 +10,6 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.config.AltinnConfig
-import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
@@ -48,10 +47,6 @@ class MottakServiceTest {
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
-    private val mottakConfig = MottakConfig(
-        true
-    )
-
     private lateinit var mottakService: MottakService
 
     @BeforeAll
@@ -61,7 +56,6 @@ class MottakServiceTest {
             dokumentService,
             kafkaProducer,
             kvitteringService,
-            mottakConfig,
             altinnConfig,
             downloadQueue
         )
@@ -74,6 +68,15 @@ class MottakServiceTest {
             archiveReference = "ref"
         }
         itemList.downloadQueueItemBE.add(item)
+        val mottakService =
+            MottakService(
+                soknadService,
+                dokumentService,
+                kafkaProducer,
+                kvitteringService,
+                altinnConfig,
+                downloadQueue
+            )
         every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
 
         val vedlegg1 = ArchivedAttachmentDQBE().apply {

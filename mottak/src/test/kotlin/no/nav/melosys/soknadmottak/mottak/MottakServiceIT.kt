@@ -4,7 +4,6 @@ import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import no.nav.melosys.soknadmottak.config.AltinnConfig
-import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kvittering.KvitteringService
 import no.nav.melosys.soknadmottak.soknad.SoknadService
@@ -19,7 +18,6 @@ internal class MottakServiceIT(
     @Autowired val soknadService: SoknadService,
     @Autowired val dokumentService: DokumentService,
     @Autowired val kvitteringService: KvitteringService,
-    @Autowired val mottakConfig: MottakConfig,
     @Autowired val altinnConfig: AltinnConfig,
     @Autowired val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
@@ -28,7 +26,6 @@ internal class MottakServiceIT(
         dokumentService,
         mockk(),
         kvitteringService,
-        mottakConfig,
         altinnConfig,
         iDownloadQueueExternalBasic
     )

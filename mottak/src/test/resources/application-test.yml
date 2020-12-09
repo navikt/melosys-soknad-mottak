@@ -23,9 +23,6 @@ SRV_USERNAME: dummy
 SRV_PASSWORD: dummy
 KAFKA_TOPIC: test-topic
 
-mottak:
-  fjern-fra-dq: true
-
 STS_URL: fixme
 
 ALTINN_INFORMASJON_URL: https://altinn.no/altinnInformasjon
