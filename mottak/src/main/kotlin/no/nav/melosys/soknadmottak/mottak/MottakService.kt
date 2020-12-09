@@ -57,9 +57,10 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
+                        val dokID = lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg)
                         val søknadPDF = soknadService.lagPdf(søknad)
-                        lagreDokumentOgVedlegg(søknad, arkivRef, vedlegg, søknadPDF)
                         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
+                        lagrePDF(dokID, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "
@@ -91,18 +92,26 @@ class MottakService(
     fun lagreDokumentOgVedlegg(
         søknad: Soknad,
         arkivRef: String,
-        vedlegg: MutableList<ArchivedAttachmentDQBE>,
-        søknadPDF: ByteArray
-    ) {
+        vedlegg: MutableList<ArchivedAttachmentDQBE>
+    ): String {
         logger.info { "Lagrer søknad med soknadID ${søknad.soknadID}, arkivRef '$arkivRef'" }
         soknadService.lagre(søknad)
-        dokumentService.lagreDokument(
+        behandleVedleggListe(søknad, vedlegg, arkivRef)
+        return dokumentService.lagreDokument(
             Dokument(
                 søknad,
-                "ref_$arkivRef.pdf", DokumentType.SOKNAD, søknadPDF
+                "ref_$arkivRef.pdf", DokumentType.SOKNAD
             )
         )
-        behandleVedleggListe(søknad, vedlegg, arkivRef)
+    }
+
+    fun lagrePDF(
+        dokID: String,
+        søknadPDF: ByteArray
+    ) {
+        val dokument = dokumentService.hentDokument(dokID)
+        dokument.innhold = søknadPDF
+        dokumentService.lagreDokument(dokument)
     }
 
     private fun behandleVedleggListe(

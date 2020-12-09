@@ -20,8 +20,8 @@ class Dokument(
     @Column(name = "dok_type", nullable = false)
     var type: String,
 
-    @Column(name = "innhold", nullable = false)
-    var innhold: ByteArray,
+    @Column(name = "innhold")
+    var innhold: ByteArray? = null,
 
     @Column(name = "lagret_tidspunkt")
     @CreationTimestamp

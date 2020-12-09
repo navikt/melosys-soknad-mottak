@@ -5,7 +5,7 @@ CREATE TABLE DOKUMENT
     fk_soknad        INTEGER     NOT NULL,
     filnavn          VARCHAR     NOT NULL,
     dok_type         VARCHAR     NOT NULL,
-    innhold          BYTEA       NOT NULL,
+    innhold          BYTEA       NULL,
     lagret_tidspunkt TIMESTAMP   NOT NULL,
     FOREIGN KEY (fk_soknad) REFERENCES SOKNAD_MOTTAK (id)
 );

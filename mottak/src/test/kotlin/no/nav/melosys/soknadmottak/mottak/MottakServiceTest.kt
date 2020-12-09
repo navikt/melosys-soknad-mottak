@@ -107,9 +107,11 @@ class MottakServiceTest {
 
         verify { soknadService.lagre(any()) }
         verify { soknadService.lagPdf(any()) }
-        val dokumentSlot = slot<Dokument>()
-        verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
-        assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
+        val dokumentSlots = mutableListOf<Dokument>()
+        verify(exactly = 3) { dokumentService.lagreDokument(capture(dokumentSlots)) }
+        assertThat(dokumentSlots[0].filnavn).isEqualTo("vedlegg_1")
+        assertThat(dokumentSlots[1].filnavn).isEqualTo("ref_ref.pdf")
+        assertThat(dokumentSlots[2].filnavn).isEqualTo("")
         verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), any()) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
