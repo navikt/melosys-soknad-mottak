@@ -54,9 +54,6 @@ altinn:
 dokgen:
   url: ${DOKGEN_URL}
 
-mottak:
-  fjern-fra-dq: ${FJERN_FRA_DQ}
-
 sts:
   url: ${STS_URL}
   username: ${SRV_USERNAME}

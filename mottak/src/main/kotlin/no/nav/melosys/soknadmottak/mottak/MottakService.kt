@@ -7,7 +7,6 @@ import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAtta
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.AltinnConfig
-import no.nav.melosys.soknadmottak.config.MottakConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
@@ -33,7 +32,6 @@ class MottakService(
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
     private val kvitteringService: KvitteringService,
-    private val mottakConfig: MottakConfig,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
@@ -123,10 +121,8 @@ class MottakService(
 
     private fun fjernElementFraKø(arkivRef: String) {
         try {
-            if (mottakConfig.fjernFraDq) {
-                purgeItem(arkivRef)
-                logger.info { "Fjernet arkiv '$arkivRef'" }
-            }
+            purgeItem(arkivRef)
+            logger.info { "Fjernet arkiv '$arkivRef'" }
         } catch (e: Throwable) {
             logger.error { "Kunne ikke fjerne arkiv '$arkivRef'" }
         }
