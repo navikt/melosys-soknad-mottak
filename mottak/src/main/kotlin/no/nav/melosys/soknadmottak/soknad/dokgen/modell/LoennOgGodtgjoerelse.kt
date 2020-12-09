@@ -7,6 +7,6 @@ data class LoennOgGodtgjoerelse(
     val bruttoLoennUtlandPerMnd: String?,
     val mottarNaturalytelser: Boolean?,
     val samletVerdiNaturalytelser: String?,
-    val erArbeidsgiveravgiftHelePerioden: Boolean,
-    val erTrukketTrygdeavgift: Boolean
+    val erArbeidsgiveravgiftHelePerioden: Boolean?,
+    val erTrukketTrygdeavgift: Boolean?
 )
