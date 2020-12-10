@@ -12,6 +12,7 @@ import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternal
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
+import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.kvittering.KvitteringService
@@ -117,16 +118,29 @@ class MottakServiceTest {
     }
 
     @Test
-    fun publiserIkkeLeverteSøknader() {
+    fun `publiserIkkeLeverteSøknader dokumentInnholdErLagret søknadBlirPublisert`() {
         val søknad = Soknad(
             arkivReferanse = "", levert = false, innhold = "",
             innsendtTidspunkt = Instant.now(), soknadID = UUID.randomUUID()
         )
         every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
+        every { dokumentService.hentDokumenterForSoknad(any()) } returns
+            listOf(Dokument(søknad, "", DokumentType.SOKNAD, ByteArray(0)))
         mottakService.publiserIkkeLeverteSøknader()
 
         val slot = slot<SoknadMottatt>()
         verify { kafkaProducer.publiserMelding(capture(slot)) }
         assertThat(slot.captured.soknadID).isEqualTo(søknad.soknadID.toString())
+    }
+
+    @Test
+    fun `publiserIkkeLeverteSøknader dokumentInnholdIkkeLagret søknadBlirIkkePublisert`() {
+        val søknad = Soknad("", false, "", Instant.now(), soknadID = UUID.randomUUID())
+        every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
+        every { dokumentService.hentDokumenterForSoknad(any()) } returns
+            listOf(Dokument(søknad, "", DokumentType.SOKNAD))
+        mottakService.publiserIkkeLeverteSøknader()
+
+        verify(exactly = 0) { kafkaProducer.publiserMelding(any()) }
     }
 }

@@ -78,10 +78,12 @@ class MottakService(
     fun publiserIkkeLeverteSøknader() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                soknadService.hentIkkeLeverteSøknader().forEach { søknad ->
-                    logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
-                    kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                }
+                soknadService.hentIkkeLeverteSøknader()
+                    .filter { erDokumentInnholdLagret(it.soknadID.toString()) }
+                    .forEach { søknad ->
+                        logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
+                        kafkaProducer.publiserMelding(SoknadMottatt(søknad))
+                    }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
@@ -89,7 +91,7 @@ class MottakService(
     }
 
     @Transactional
-    fun lagreDokumentOgVedlegg(
+    private fun lagreDokumentOgVedlegg(
         søknad: Soknad,
         arkivRef: String,
         vedlegg: MutableList<ArchivedAttachmentDQBE>
@@ -105,7 +107,7 @@ class MottakService(
         )
     }
 
-    fun lagrePDF(
+    private fun lagrePDF(
         dokID: String,
         søknadPDF: ByteArray
     ) {
@@ -146,4 +148,9 @@ class MottakService(
 
     private fun getArchivedFormTaskBasicDQ(arkivRef: String) =
         iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(brukernavn, passord, arkivRef, null, false)
+
+    private fun erDokumentInnholdLagret(soknadID: String): Boolean {
+        return dokumentService.hentDokumenterForSoknad(soknadID)
+            .all { it.innhold != null }
+    }
 }
