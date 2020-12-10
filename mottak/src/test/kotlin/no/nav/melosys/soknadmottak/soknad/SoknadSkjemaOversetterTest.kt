@@ -126,7 +126,8 @@ internal class SoknadSkjemaOversetterTest {
 
     @Test
     fun `mapping lønn og godtgjørelser`() {
-        assertThat(søknadsdata.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isTrue()
+        assertThat(søknadsdata.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isFalse()
+        assertThat(søknadsdata.loennOgGodtgjoerelse.erArbeidstakerAnsattHelePerioden).isTrue()
         assertThat(søknadsdata.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
         assertThat(søknadsdata.loennOgGodtgjoerelse.bruttoLoennPerMnd).isEqualTo("1000.00")
         assertThat(søknadsdata.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")

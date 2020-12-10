@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.soknad.dokgen.modell
 
 data class LoennOgGodtgjoerelse(
     val norskArbgUtbetalerLoenn: Boolean,
+    val erArbeidstakerAnsattHelePerioden: Boolean?,
     val utlArbgUtbetalerLoenn: Boolean,
     val bruttoLoennPerMnd: String?,
     val bruttoLoennUtlandPerMnd: String?,

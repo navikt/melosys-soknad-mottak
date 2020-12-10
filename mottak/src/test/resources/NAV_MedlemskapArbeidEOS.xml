@@ -125,7 +125,7 @@
       <!--Optional:-->
       <loennOgGodtgjoerelse>
         <!--Optional:-->
-        <norskArbgUtbetalerLoenn>true</norskArbgUtbetalerLoenn>
+        <norskArbgUtbetalerLoenn>false</norskArbgUtbetalerLoenn>
         <!--Optional:-->
         <utlArbgUtbetalerLoenn>true</utlArbgUtbetalerLoenn>
         <!--Optional:-->

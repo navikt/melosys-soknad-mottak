@@ -203,9 +203,12 @@ object SoknadSkjemaOversetter {
     }
 
     private fun oversettLoennOgGodtgjoerelse(innhold: Innhold): LoennOgGodtgjoerelse {
+        val erArbeidstakerAnsattHelePerioden =
+            innhold.midlertidigUtsendt.utenlandsoppdraget.isErArbeidstakerAnsattHelePerioden
         return innhold.midlertidigUtsendt.loennOgGodtgjoerelse.let {
             LoennOgGodtgjoerelse(
                 norskArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
+                erArbeidstakerAnsattHelePerioden,
                 utlArbgUtbetalerLoenn = it.isUtlArbgUtbetalerLoenn,
                 bruttoLoennPerMnd = it.loennNorskArbg?.toPlainString(),
                 bruttoLoennUtlandPerMnd = it.loennUtlArbg?.toPlainString(),
