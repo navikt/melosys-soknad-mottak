@@ -34,8 +34,8 @@ class KvitteringService(private val korrespondanseService: KorrespondanseService
                     vedlegg
                 )
             )
-        } catch (e: Throwable) {
-            throw IntegrasjonException("Kunne ikke kvittere for arkiv '$arkivRef'")
+        } catch (t: Throwable) {
+            throw IntegrasjonException("Kunne ikke kvittere for arkiv '$arkivRef'", t)
         }
         logger.info { "Sendt kvittering for arkiv '$arkivRef'" }
     }

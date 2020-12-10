@@ -21,6 +21,10 @@ class IntegrasjonException : Exception {
     constructor(melding: String) : super(melding) {
         logger.error { message }
     }
+
+    constructor(melding: String, throwable: Throwable) : super(melding, throwable) {
+        logger.error(throwable) { melding }
+    }
 }
 
 class PubliserSoknadException : Exception {
