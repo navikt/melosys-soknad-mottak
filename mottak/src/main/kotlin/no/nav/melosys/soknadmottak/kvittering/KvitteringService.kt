@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.kvittering
 
 import mu.KotlinLogging
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
+import no.nav.melosys.soknadmottak.common.IntegrasjonException
 import no.nav.melosys.soknadmottak.kvittering.altinn.KorrespondanseService
 import no.nav.melosys.soknadmottak.kvittering.altinn.Melding
 import no.nav.melosys.soknadmottak.kvittering.altinn.Vedlegg
@@ -25,13 +26,17 @@ class KvitteringService(private val korrespondanseService: KorrespondanseService
         arkivRef: String,
         vedlegg: ByteArray
     ) {
-        korrespondanseService.sendMelding(
-            lagKvittering(
-                mottakerID,
-                arkivRef,
-                vedlegg
+        try {
+            korrespondanseService.sendMelding(
+                lagKvittering(
+                    mottakerID,
+                    arkivRef,
+                    vedlegg
+                )
             )
-        )
+        } catch (t: Throwable) {
+            throw IntegrasjonException("Kunne ikke kvittere for arkiv '$arkivRef'", t)
+        }
         logger.info { "Sendt kvittering for arkiv '$arkivRef'" }
     }
 

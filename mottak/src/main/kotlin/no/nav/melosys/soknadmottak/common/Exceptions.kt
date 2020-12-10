@@ -11,25 +11,32 @@ class IkkeFunnetException : Exception {
     constructor(melding: String, throwable: Throwable) : super(melding, throwable)
 
     constructor(melding: String) : super(melding) {
-        logger.error { melding }
+        logger.warn { melding }
     }
 
     constructor(throwable: Throwable) : super(throwable)
 }
 
 class IntegrasjonException : Exception {
-    constructor(melding: String) : super(melding)
+    constructor(melding: String) : super(melding) {
+        logger.error { message }
+    }
+
+    constructor(melding: String, throwable: Throwable) : super(melding, throwable) {
+        logger.error(throwable) { melding }
+    }
 }
 
 class PubliserSoknadException : Exception {
-    constructor(melding: String, throwable: Throwable) : super(melding, throwable)
+    constructor(melding: String, throwable: Throwable) : super(melding, throwable) {
+        logger.error(throwable) { melding }
+    }
 
-    constructor(melding: String) : super(melding)
+    constructor(melding: String) : super(melding) {
+        logger.error { melding }
+    }
 
-    constructor(throwable: Throwable) : super(throwable)
-}
-
-@ResponseStatus(value = HttpStatus.FORBIDDEN)
-class SikkerhetsbegrensningException : Exception {
-    constructor(melding: String) : super(melding)
+    constructor(throwable: Throwable) : super(throwable) {
+        logger.error(throwable) { }
+    }
 }
