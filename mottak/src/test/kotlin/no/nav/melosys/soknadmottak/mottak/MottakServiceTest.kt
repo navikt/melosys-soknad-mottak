@@ -88,15 +88,16 @@ class MottakServiceTest {
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
         every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
-        val soknadSlot = slot<Soknad>()
-        every { soknadService.lagreSøknadOgDokumenter(capture(soknadSlot), eq("ref"), any()) } returns "dokID"
-        every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         mottakService.pollDokumentKø()
 
+        val soknadSlot = slot<Soknad>()
+        verify { soknadService.lagreSøknadOgDokumenter(capture(soknadSlot), eq("ref"), any()) }
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
-        verify { soknadService.lagPdf(any()) }
-        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), any()) }
+        verify { soknadService.lagPdf(soknadSlot.captured) }
+        val pdfSlot = slot<ByteArray>()
+        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
+        verify { dokumentService.lagrePDF(any(), pdfSlot.captured) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 
