@@ -10,7 +10,6 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.config.AltinnConfig
-import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
@@ -68,15 +67,6 @@ class MottakServiceTest {
             archiveReference = "ref"
         }
         itemList.downloadQueueItemBE.add(item)
-        val mottakService =
-            MottakService(
-                soknadService,
-                dokumentService,
-                kafkaProducer,
-                kvitteringService,
-                altinnConfig,
-                downloadQueue
-            )
         every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
 
         val vedlegg1 = ArchivedAttachmentDQBE().apply {
@@ -98,33 +88,38 @@ class MottakServiceTest {
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
         every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
-        val soknadSlot = slot<Soknad>()
-        every { soknadService.lagre(capture(soknadSlot)) } returns SoknadFactory.lagSoknad(1)
-        every { dokumentService.lagreDokument(any()) } returns "lagret"
 
         mottakService.pollDokumentKø()
-        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
 
-        verify { soknadService.lagre(any()) }
-        verify { soknadService.lagPdf(any()) }
-        val dokumentSlot = slot<Dokument>()
-        verify { dokumentService.lagreDokument(capture(dokumentSlot)) }
-        assertThat(dokumentSlot.captured.filnavn).isEqualTo("vedlegg_1")
-        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), any()) }
+        val soknadSlot = slot<Soknad>()
+        verify { soknadService.lagreSøknadOgDokumenter(capture(soknadSlot), eq("ref"), any()) }
+        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
+        verify { soknadService.lagPdf(soknadSlot.captured) }
+        val pdfSlot = slot<ByteArray>()
+        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
+        verify { dokumentService.lagrePDF(any(), pdfSlot.captured) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }
 
     @Test
-    fun publiserIkkeLeverteSøknader() {
-        val søknad = Soknad(
-            arkivReferanse = "", levert = false, innhold = "",
-            innsendtTidspunkt = Instant.now(), soknadID = UUID.randomUUID()
-        )
+    fun `publiserIkkeLeverteSøknader dokumentInnholdErLagret søknadBlirPublisert`() {
+        val søknad = Soknad("", false, "", Instant.now(), soknadID = UUID.randomUUID())
         every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
+        every { dokumentService.erDokumentInnholdLagret(søknad.soknadID.toString()) } returns true
         mottakService.publiserIkkeLeverteSøknader()
 
         val slot = slot<SoknadMottatt>()
         verify { kafkaProducer.publiserMelding(capture(slot)) }
         assertThat(slot.captured.soknadID).isEqualTo(søknad.soknadID.toString())
+    }
+
+    @Test
+    fun `publiserIkkeLeverteSøknader dokumentInnholdIkkeLagret søknadBlirIkkePublisert`() {
+        val søknad = Soknad("", false, "", Instant.now(), soknadID = UUID.randomUUID())
+        every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
+        every { dokumentService.erDokumentInnholdLagret(søknad.soknadID.toString()) } returns false
+        mottakService.publiserIkkeLeverteSøknader()
+
+        verify(exactly = 0) { kafkaProducer.publiserMelding(any()) }
     }
 }
