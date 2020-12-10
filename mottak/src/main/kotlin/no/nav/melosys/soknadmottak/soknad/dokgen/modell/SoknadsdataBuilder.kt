@@ -88,6 +88,7 @@ data class KontakpersonBuilder(
 
 data class LoennOgGodtgjoerelseBuilder(
     val bruttoLoennPerMnd: String = "",
+    val erArbeidstakerAnsattHelePerioden: Boolean = false,
     val bruttoLoennUtlandPerMnd: String = "",
     val erArbeidsgiveravgiftHelePerioden: Boolean = false,
     val erTrukketTrygdeavgift: Boolean = false,
@@ -99,6 +100,7 @@ data class LoennOgGodtgjoerelseBuilder(
     fun build(): LoennOgGodtgjoerelse {
         return LoennOgGodtgjoerelse(
             norskArbgUtbetalerLoenn = norskArbgUtbetalerLoenn,
+            erArbeidstakerAnsattHelePerioden = erArbeidstakerAnsattHelePerioden,
             utlArbgUtbetalerLoenn = utlArbgUtbetalerLoenn,
             bruttoLoennPerMnd = bruttoLoennPerMnd,
             bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
