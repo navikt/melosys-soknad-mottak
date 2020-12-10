@@ -29,4 +29,18 @@ class DokumentService @Autowired constructor(
         dokumentRepository.save(dokument.apply { dokumentID = dokID })
         return dokID
     }
+
+    fun lagrePDF(
+        dokID: String,
+        søknadPDF: ByteArray
+    ) {
+        val dokument = hentDokument(dokID)
+        dokument.innhold = søknadPDF
+        lagreDokument(dokument)
+    }
+
+    fun erDokumentInnholdLagret(soknadID: String): Boolean {
+        return hentDokumenterForSoknad(soknadID)
+            .all { it.innhold != null }
+    }
 }

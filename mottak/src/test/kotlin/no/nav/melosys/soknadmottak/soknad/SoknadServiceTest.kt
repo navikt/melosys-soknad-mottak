@@ -7,6 +7,9 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
+import no.nav.melosys.soknadmottak.dokument.Dokument
+import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
@@ -22,12 +25,14 @@ internal class SoknadServiceTest {
     lateinit var soknadRepository: SoknadRepository
     @MockK
     lateinit var dokgenService: DokgenService
+    @RelaxedMockK
+    lateinit var dokumentService: DokumentService
 
     private lateinit var soknadService: SoknadService
 
     @BeforeAll
     fun setUp() {
-        soknadService = SoknadService(soknadRepository, dokgenService)
+        soknadService = SoknadService(soknadRepository, dokgenService, dokumentService)
     }
 
     @Test
@@ -44,6 +49,27 @@ internal class SoknadServiceTest {
         val soknadID = UUID.randomUUID()
         soknadService.hentSøknad(soknadID.toString())
         verify { soknadRepository.findBySoknadID(soknadID) }
+    }
+
+    @Test
+    fun lagreSøknadOgDokumenter() {
+        val søknad = SoknadFactory.lagSoknad(1)
+        val vedlegg = ArchivedAttachmentDQBE().apply {
+            attachmentData = ByteArray(8)
+            fileName = "vedlegg_1"
+            attachmentTypeName = "Fullmakt"
+        }
+        val soknadSlot = slot<Soknad>()
+        every { soknadService.lagre(capture(soknadSlot)) } returns søknad
+        every { dokumentService.lagreDokument(any()) } returns "lagret"
+
+        soknadService.lagreSøknadOgDokumenter(søknad, "ref", mutableListOf(vedlegg))
+
+        verify { soknadService.lagre(any()) }
+        val dokumentSlots = mutableListOf<Dokument>()
+        verify(exactly = 2) { dokumentService.lagreDokument(capture(dokumentSlots)) }
+        assertThat(dokumentSlots[0].filnavn).isEqualTo("vedlegg_1")
+        assertThat(dokumentSlots[1].filnavn).isEqualTo("ref_ref.pdf")
     }
 
     @Test
