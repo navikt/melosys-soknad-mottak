@@ -1,10 +1,9 @@
 package no.nav.melosys.soknadmottak.kvittering
 
-import io.micrometer.core.instrument.Metrics
 import mu.KotlinLogging
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
 import no.nav.melosys.soknadmottak.common.IntegrasjonException
-import no.nav.melosys.soknadmottak.common.Metrikker.KVITTERING_SENDT
+import no.nav.melosys.soknadmottak.common.Metrikker
 import no.nav.melosys.soknadmottak.kvittering.altinn.KorrespondanseService
 import no.nav.melosys.soknadmottak.kvittering.altinn.Melding
 import no.nav.melosys.soknadmottak.kvittering.altinn.Vedlegg
@@ -39,7 +38,7 @@ class KvitteringService(private val korrespondanseService: KorrespondanseService
         } catch (t: Throwable) {
             throw IntegrasjonException("Kunne ikke kvittere for arkiv '$arkivRef'", t)
         }
-        Metrics.counter(KVITTERING_SENDT).increment()
+        Metrikker.kvitteringSendt.increment()
         logger.info { "Sendt kvittering for arkiv '$arkivRef'" }
     }
 

@@ -1,12 +1,11 @@
 package no.nav.melosys.soknadmottak.mottak
 
-import io.micrometer.core.instrument.Metrics
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
-import no.nav.melosys.soknadmottak.common.Metrikker.SØKNAD_MOTTATT
+import no.nav.melosys.soknadmottak.common.Metrikker
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
@@ -55,8 +54,8 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
-                        Metrics.counter(SØKNAD_MOTTATT).increment()
                         val dokID = soknadService.lagreSøknadOgDokumenter(søknad, arkivRef, vedlegg)
+                        Metrikker.søknadMottatt.increment()
                         val søknadPDF = soknadService.lagPdf(søknad)
                         kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         dokumentService.lagrePDF(dokID, søknadPDF)
