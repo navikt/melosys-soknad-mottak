@@ -20,7 +20,7 @@ spec:
     initialDelay: 100
     timeout: 10
   prometheus:
-    enabled: false
+    enabled: true
     path: /actuator/prometheus
   resources:
     limits:
