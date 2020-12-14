@@ -48,31 +48,31 @@ jobs:
           RESOURCE: nais.yaml
           VAR: namespace=q2,ingress=https://melosys-soknad-mottak-q2.dev.intern.nav.no
 
-#      - name: Deploy til prod-fss
-#        if: github.ref == 'refs/heads/master'
-#        uses: nais/deploy/actions/deploy@v1
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: prod-fss
-#          RESOURCE: nais.yaml
-#          VAR: namespace=default,ingress=https://melosys-soknad-mottak.intern.nav.no
-#      - name: Slack Notification (deploy success)
-#        if: success()
-#        uses: rtCamp/action-slack-notify@v2
-#        env:
-#          SLACK_COLOR: good
-#          SLACK_USERNAME: Github Actions
-#          SLACK_ICON: https://github.com/github.png?size=48
-#          SLACK_TITLE: 'melosys-soknad-mottak ble deployet til prod :rocket:'
-#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
-#      - name: Slack Notification (deploy failure)
-#        if: failure()
-#        uses: rtCamp/action-slack-notify@v2
-#        env:
-#          SLACK_COLOR: danger
-#          SLACK_USERNAME: Github Actions
-#          SLACK_ICON: https://github.com/github.png?size=48
-#          SLACK_TITLE: ':crying_cat_face: melosys-soknad-mottak kunne ikke deployes til prod!'
-#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+      - name: Deploy til prod-fss
+        if: github.ref == 'refs/heads/master'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais.yaml
+          VAR: namespace=default,ingress=https://melosys-soknad-mottak.intern.nav.no
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: good
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: 'melosys-soknad-mottak ble deployet til prod :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+      - name: Slack Notification (deploy failure)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: danger
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':crying_cat_face: melosys-soknad-mottak kunne ikke deployes til prod!'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
