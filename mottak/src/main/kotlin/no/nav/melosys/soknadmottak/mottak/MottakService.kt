@@ -72,7 +72,7 @@ class MottakService(
         }
     }
 
-    // FIXME @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS, initialDelay = OPPSTART_ANDRE_JOBB_MILLIS)
+    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS, initialDelay = OPPSTART_ANDRE_JOBB_MILLIS)
     fun publiserIkkeLeverteSøknader() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
