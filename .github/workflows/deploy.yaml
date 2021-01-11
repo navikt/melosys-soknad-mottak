@@ -53,16 +53,13 @@ jobs:
       - name: Test and build
         run: mvn clean package -B -e -U
       - name: Build docker image
-        run: |
-          docker build -t ${IMAGE} .
+        run: docker build -t ${IMAGE} .
       - name: Login to Github Package Registry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+        run: docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
       - name: Push Docker image
-        run: |
-          docker push ${IMAGE}
+        run: docker push ${IMAGE}
 
   deploy:
     runs-on: ubuntu-latest
