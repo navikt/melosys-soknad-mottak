@@ -3,60 +3,7 @@ updates:
 - package-ecosystem: maven
   directory: "/"
   schedule:
-    interval: monthly
+    interval: weekly
     time: "04:00"
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: io.springfox:springfox-swagger2
-    versions:
-    - ">= 2.10.a"
-    - "< 2.11"
-  - dependency-name: io.springfox:springfox-swagger-ui
-    versions:
-    - ">= 2.10.a"
-    - "< 2.11"
-  - dependency-name: no.nav:kafka-embedded-env
-    versions:
-    - "> 2.4.0"
-    - "< 3"
-  - dependency-name: org.apache.cxf:cxf-rt-features-logging
-    versions:
-    - "> 3.4.1"
-    - "< 3.5"
-  - dependency-name: org.apache.cxf:cxf-rt-frontend-jaxws
-    versions:
-    - "> 3.4.1"
-    - "< 3.5"
-  - dependency-name: org.apache.cxf:cxf-rt-transports-http
-    versions:
-    - "> 3.4.1"
-    - "< 3.5"
-  - dependency-name: org.apache.cxf:cxf-rt-ws-security
-    versions:
-    - "> 3.4.1"
-    - "< 3.5"
-  - dependency-name: org.jetbrains.kotlin:kotlin-maven-allopen
-    versions:
-    - "> 1.4.20"
-    - "< 1.5"
-  - dependency-name: org.jetbrains.kotlin:kotlin-maven-noarg
-    versions:
-    - "> 1.4.20"
-    - "< 1.5"
-  - dependency-name: org.jetbrains.kotlin:kotlin-maven-plugin
-    versions:
-    - "> 1.4.20"
-    - "< 1.5"
-  - dependency-name: org.scala-lang:scala-library
-    versions:
-    - ">= 2.13.a"
-    - "< 2.14"
-  - dependency-name: org.scala-lang:scala-reflect
-    versions:
-    - ">= 2.13.a"
-    - "< 2.14"
-  - dependency-name: org.springframework.boot:spring-boot-starter-parent
-    versions:
-    - "> 2.2.4.RELEASE"
-    - "< 2.3"
-  rebase-strategy: disabled
+  open-pull-requests-limit: 5
+  rebase-strategy: auto
