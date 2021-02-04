@@ -102,6 +102,7 @@ data class LoennOgGodtgjoerelseBuilder(
             norskArbgUtbetalerLoenn = norskArbgUtbetalerLoenn,
             erArbeidstakerAnsattHelePerioden = erArbeidstakerAnsattHelePerioden,
             utlArbgUtbetalerLoenn = utlArbgUtbetalerLoenn,
+            utlArbTilhoererSammeKonsern = null,
             bruttoLoennPerMnd = bruttoLoennPerMnd,
             bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
             mottarNaturalytelser = mottarNaturalytelser,

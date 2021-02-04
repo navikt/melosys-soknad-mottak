@@ -129,7 +129,7 @@
         <!--Optional:-->
         <utlArbgUtbetalerLoenn>true</utlArbgUtbetalerLoenn>
         <!--Optional:-->
-        <utlArbTilhorerSammeKonsern>true</utlArbTilhorerSammeKonsern>
+        <utlArbTilhorerSammeKonsern>false</utlArbTilhorerSammeKonsern>
         <!--Optional:-->
         <mottarNaturalytelser>false</mottarNaturalytelser>
         <!--Optional:-->

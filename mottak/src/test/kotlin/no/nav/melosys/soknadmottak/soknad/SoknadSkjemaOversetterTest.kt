@@ -129,6 +129,7 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(søknadsdata.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn).isFalse()
         assertThat(søknadsdata.loennOgGodtgjoerelse.erArbeidstakerAnsattHelePerioden).isTrue()
         assertThat(søknadsdata.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn).isTrue()
+        assertThat(søknadsdata.loennOgGodtgjoerelse.utlArbTilhoererSammeKonsern).isFalse()
         assertThat(søknadsdata.loennOgGodtgjoerelse.bruttoLoennPerMnd).isEqualTo("1000.00")
         assertThat(søknadsdata.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd).isEqualTo("1000.00")
         assertThat(søknadsdata.loennOgGodtgjoerelse.mottarNaturalytelser).isFalse()

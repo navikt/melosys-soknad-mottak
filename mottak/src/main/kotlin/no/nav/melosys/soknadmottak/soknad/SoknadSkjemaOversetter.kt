@@ -208,8 +208,9 @@ object SoknadSkjemaOversetter {
         return innhold.midlertidigUtsendt.loennOgGodtgjoerelse.let {
             LoennOgGodtgjoerelse(
                 norskArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
-                erArbeidstakerAnsattHelePerioden,
+                erArbeidstakerAnsattHelePerioden = erArbeidstakerAnsattHelePerioden,
                 utlArbgUtbetalerLoenn = it.isUtlArbgUtbetalerLoenn,
+                utlArbTilhoererSammeKonsern = it.isUtlArbTilhorerSammeKonsern,
                 bruttoLoennPerMnd = it.loennNorskArbg?.toPlainString(),
                 bruttoLoennUtlandPerMnd = it.loennUtlArbg?.toPlainString(),
                 mottarNaturalytelser = it.isMottarNaturalytelser,
