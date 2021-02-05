@@ -21,7 +21,10 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(søknadsdata.arbeidsgiver.adresse!!.land).isEqualTo("land")
         assertThat(søknadsdata.arbeidsgiver.orgnr).isEqualTo("virksomhetsnummer")
         assertThat(søknadsdata.arbeidsgiver.erOffenlig).isFalse()
+    }
 
+    @Test
+    fun `mapping samlet virksomhet i Norge`() {
         assertThat(søknadsdata.virksomhetNorge!!.ansatte).isEqualTo(99)
         assertThat(søknadsdata.virksomhetNorge!!.administrativtAnsatte).isEqualTo(98)
         assertThat(søknadsdata.virksomhetNorge!!.utsendteArbeidstakere).isEqualTo(97)
@@ -136,6 +139,17 @@ internal class SoknadSkjemaOversetterTest {
         assertThat(søknadsdata.loennOgGodtgjoerelse.samletVerdiNaturalytelser).isEqualTo("9876.55")
         assertThat(søknadsdata.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden).isTrue()
         assertThat(søknadsdata.loennOgGodtgjoerelse.erTrukketTrygdeavgift).isFalse()
+    }
+
+    @Test
+    fun `mapping utenlandsk virksomhet`() {
+        assertThat(søknadsdata.utenlandskVirksomhet!!.navn).isEqualTo("Virskomheten i utlandet")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.registreringsnummer).isEqualTo("XYZ123456789")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.adresse.gate).isEqualTo("gatenavn med mer")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.adresse.by).isEqualTo("testbyen")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.adresse.postkode).isEqualTo("UTLAND-1234")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.adresse.region).isEqualTo("testregion")
+        assertThat(søknadsdata.utenlandskVirksomhet!!.adresse.land).isEqualTo("BELGIA")
     }
 
     @Test
