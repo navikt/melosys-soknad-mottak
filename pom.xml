@@ -53,7 +53,7 @@
         <snappy.version>1.1.8.4</snappy.version>
         <stax2-api.version>4.2.1</stax2-api.version>
         <woodstox.version>6.2.3</woodstox.version>
-        <xmlsec.version>2.1.5</xmlsec.version>
+        <xmlsec.version>2.2.1</xmlsec.version>
         <zkclient.version>0.11</zkclient.version>
         <zookeeper.version>3.6.1</zookeeper.version>
     </properties>
