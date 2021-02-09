@@ -51,12 +51,16 @@ object SoknadSkjemaOversetter {
     }
 
     private fun oversettUtenlandskVirksomhet(innhold: Innhold): UtenlandskVirksomhet? {
-        return innhold.midlertidigUtsendt.virksomhetIUtlandet.let {
+        return if (innhold.midlertidigUtsendt.virksomhetIUtlandet != null &&
+            StringUtils.isNotBlank(innhold.midlertidigUtsendt.virksomhetIUtlandet.navn)
+        ) {
             UtenlandskVirksomhet(
                 innhold.midlertidigUtsendt.virksomhetIUtlandet.navn,
                 innhold.midlertidigUtsendt.virksomhetIUtlandet.registreringsnummer,
                 oversettUtenlandskAdresse(innhold.midlertidigUtsendt.virksomhetIUtlandet.adresse)
             )
+        } else {
+            null
         }
     }
 
