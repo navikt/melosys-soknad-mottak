@@ -129,7 +129,7 @@
         <!--Optional:-->
         <utlArbgUtbetalerLoenn>true</utlArbgUtbetalerLoenn>
         <!--Optional:-->
-        <utlArbTilhorerSammeKonsern>true</utlArbTilhorerSammeKonsern>
+        <utlArbTilhorerSammeKonsern>false</utlArbTilhorerSammeKonsern>
         <!--Optional:-->
         <mottarNaturalytelser>false</mottarNaturalytelser>
         <!--Optional:-->
@@ -146,21 +146,21 @@
       <!--Optional:-->
       <virksomhetIUtlandet>
         <!--Optional:-->
-        <navn>string</navn>
+        <navn>Virskomheten i utlandet</navn>
         <!--Optional:-->
-        <registreringsnummer>string</registreringsnummer>
+        <registreringsnummer>XYZ123456789</registreringsnummer>
         <!--Optional:-->
         <adresse>
           <!--Optional:-->
-          <gatenavn>string</gatenavn>
+          <gatenavn>gatenavn med mer</gatenavn>
           <!--Optional:-->
-          <by>string</by>
+          <by>testbyen</by>
           <!--Optional:-->
-          <postkode>string</postkode>
+          <postkode>UTLAND-1234</postkode>
           <!--Optional:-->
-          <region>string</region>
+          <region>testregion</region>
           <!--Optional:-->
-          <land>string</land>
+          <land>BELGIA</land>
         </adresse>
       </virksomhetIUtlandet>
       <!--Optional:-->

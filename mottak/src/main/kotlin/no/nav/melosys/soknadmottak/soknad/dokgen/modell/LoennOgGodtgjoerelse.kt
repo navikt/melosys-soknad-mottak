@@ -4,6 +4,7 @@ data class LoennOgGodtgjoerelse(
     val norskArbgUtbetalerLoenn: Boolean,
     val erArbeidstakerAnsattHelePerioden: Boolean?,
     val utlArbgUtbetalerLoenn: Boolean,
+    val utlArbTilhoererSammeKonsern: Boolean?,
     val bruttoLoennPerMnd: String?,
     val bruttoLoennUtlandPerMnd: String?,
     val mottarNaturalytelser: Boolean?,

@@ -10,20 +10,22 @@ data class SoknadsdataBuilder(
     var kontakperson: Kontakperson? = KontakpersonBuilder().build(),
     var tidspunktMottatt: String = Instant.now().toString(),
     var utenlandsoppdrag: Utenlandsoppdrag = UtenlandsoppdragBuilder().build(),
+    var utenlandskVirksomhet: UtenlandskVirksomhet? = null,
     var virksomhetNorge: VirksomhetNorge? = VirksomhetNorgeBuilder().build(),
     var arbeidssituasjon: Arbeidssituasjon = ArbeidssituasjonBuilder().build()
 ) {
     fun build(): Soknadsdata {
         return Soknadsdata(
             arbeidsgiver = arbeidsgiver,
+            arbeidssituasjon = arbeidssituasjon,
             arbeidssted = arbeidssted,
             arbeidstaker = arbeidstaker,
-            loennOgGodtgjoerelse = loennOgGodtgjoerelse,
             kontakperson = kontakperson,
+            loennOgGodtgjoerelse = loennOgGodtgjoerelse,
             tidspunktMottatt = tidspunktMottatt,
+            utenlandskVirksomhet = utenlandskVirksomhet,
             utenlandsoppdrag = utenlandsoppdrag,
-            virksomhetNorge = virksomhetNorge,
-            arbeidssituasjon = arbeidssituasjon
+            virksomhetNorge = virksomhetNorge
         )
     }
 }
@@ -102,6 +104,7 @@ data class LoennOgGodtgjoerelseBuilder(
             norskArbgUtbetalerLoenn = norskArbgUtbetalerLoenn,
             erArbeidstakerAnsattHelePerioden = erArbeidstakerAnsattHelePerioden,
             utlArbgUtbetalerLoenn = utlArbgUtbetalerLoenn,
+            utlArbTilhoererSammeKonsern = null,
             bruttoLoennPerMnd = bruttoLoennPerMnd,
             bruttoLoennUtlandPerMnd = bruttoLoennUtlandPerMnd,
             mottarNaturalytelser = mottarNaturalytelser,

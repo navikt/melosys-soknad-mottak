@@ -5,11 +5,20 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.melosys.altinn.soknad.ArbeidsgiverAdresse
-import no.nav.melosys.altinn.soknad.Innhold
-import no.nav.melosys.altinn.soknad.MedlemskapArbeidEOSM
-import no.nav.melosys.altinn.soknad.Tidsrom
+import no.nav.melosys.altinn.soknad.*
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.ArbeidPaaLand
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidsgiver
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidssted
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Arbeidstaker
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.FysiskArbeidssted
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.LoennOgGodtgjoerelse
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Luftfart
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.LuftfartBase
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.OffshoreEnhet
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.OffshoreEnheter
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Skip
+import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SkipListe
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadsdataBuilder
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
@@ -33,12 +42,36 @@ object SoknadSkjemaOversetter {
             utenlandsoppdrag = oversettUtenlandsoppdrag(innhold)
             arbeidssted = oversettArbeidssted(innhold)
             loennOgGodtgjoerelse = oversettLoennOgGodtgjoerelse(innhold)
+            utenlandskVirksomhet = oversettUtenlandskVirksomhet(innhold)
             virksomhetNorge = oversettVirksomhetNorge(innhold)
             arbeidssituasjon = oversettArbeidssituasjon(innhold)
         }
 
         return søknadsdataBuilder.build()
     }
+
+    private fun oversettUtenlandskVirksomhet(innhold: Innhold): UtenlandskVirksomhet? {
+        return if (innhold.midlertidigUtsendt.virksomhetIUtlandet != null &&
+            StringUtils.isNotBlank(innhold.midlertidigUtsendt.virksomhetIUtlandet.navn)
+        ) {
+            UtenlandskVirksomhet(
+                innhold.midlertidigUtsendt.virksomhetIUtlandet.navn,
+                innhold.midlertidigUtsendt.virksomhetIUtlandet.registreringsnummer,
+                oversettUtenlandskAdresse(innhold.midlertidigUtsendt.virksomhetIUtlandet.adresse)
+            )
+        } else {
+            null
+        }
+    }
+
+    private fun oversettUtenlandskAdresse(postadresseUtland: PostadresseUtland): UtenlandskAdresse =
+        UtenlandskAdresse(
+            gate = postadresseUtland.gatenavn,
+            postkode = postadresseUtland.postkode,
+            by = postadresseUtland.by,
+            region = postadresseUtland.region,
+            land = postadresseUtland.land
+        )
 
     private fun oversettArbeidsgiver(innhold: Innhold) =
         Arbeidsgiver(
@@ -208,8 +241,9 @@ object SoknadSkjemaOversetter {
         return innhold.midlertidigUtsendt.loennOgGodtgjoerelse.let {
             LoennOgGodtgjoerelse(
                 norskArbgUtbetalerLoenn = it.isNorskArbgUtbetalerLoenn,
-                erArbeidstakerAnsattHelePerioden,
+                erArbeidstakerAnsattHelePerioden = erArbeidstakerAnsattHelePerioden,
                 utlArbgUtbetalerLoenn = it.isUtlArbgUtbetalerLoenn,
+                utlArbTilhoererSammeKonsern = it.isUtlArbTilhorerSammeKonsern,
                 bruttoLoennPerMnd = it.loennNorskArbg?.toPlainString(),
                 bruttoLoennUtlandPerMnd = it.loennUtlArbg?.toPlainString(),
                 mottarNaturalytelser = it.isMottarNaturalytelser,
