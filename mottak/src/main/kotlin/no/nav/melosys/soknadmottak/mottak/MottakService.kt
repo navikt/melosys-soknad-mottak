@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
-private const val VENTETID_MELLOM_JOBBER_MILLIS = 10 * 1000L
+private const val VENTETID_MELLOM_JOBBER_MILLIS = 5 * 60 * 1000L
 private const val OPPSTART_FØRSTE_JOBB_MILLIS = 30 * 1000L
 private const val OPPSTART_ANDRE_JOBB_MILLIS = 45 * 1000L
 
