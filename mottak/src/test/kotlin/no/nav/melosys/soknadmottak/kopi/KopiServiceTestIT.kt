@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kvittering
+package no.nav.melosys.soknadmottak.kopi
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,12 +7,12 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("test")
-internal class KvitteringServiceTestIT(
-    @Autowired val kvitteringService: KvitteringService
+internal class KopiServiceTestIT(
+    @Autowired val kopiService: KopiService
 ) {
     @Test
     fun `sender en kvittering med Hello World`() {
-        kvitteringService.sendKvittering("mottakerID", "test_", HelloPdf.data)
+        kopiService.sendKopi("mottakerID", "test_", HelloPdf.data)
     }
 
     private object HelloPdf {

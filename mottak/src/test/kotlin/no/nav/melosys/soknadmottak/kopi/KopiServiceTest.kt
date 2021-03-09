@@ -1,26 +1,26 @@
-package no.nav.melosys.soknadmottak.kvittering
+package no.nav.melosys.soknadmottak.kopi
 
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.melosys.soknadmottak.kvittering.altinn.KorrespondanseService
-import no.nav.melosys.soknadmottak.kvittering.altinn.Melding
+import no.nav.melosys.soknadmottak.kopi.altinn.KorrespondanseService
+import no.nav.melosys.soknadmottak.kopi.altinn.Melding
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
-internal class KvitteringServiceTest {
+internal class KopiServiceTest {
     @RelaxedMockK
     lateinit var korrespondanseService: KorrespondanseService
 
     @Test
     fun lagKvittering() {
         val arkivRef = "arkivRef"
-        val kvitteringService = KvitteringService(korrespondanseService)
+        val kvitteringService = KopiService(korrespondanseService)
 
-        kvitteringService.sendKvittering(
+        kvitteringService.sendKopi(
             "mottakerID",
             arkivRef,
             ByteArray(0)

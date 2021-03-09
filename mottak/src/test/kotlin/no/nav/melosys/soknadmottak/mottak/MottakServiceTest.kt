@@ -13,7 +13,7 @@ import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.kvittering.KvitteringService
+import no.nav.melosys.soknadmottak.kopi.KopiService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadService
@@ -42,7 +42,7 @@ class MottakServiceTest {
     @RelaxedMockK
     lateinit var kafkaProducer: KafkaProducer
     @RelaxedMockK
-    lateinit var kvitteringService: KvitteringService
+    lateinit var kopiService: KopiService
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
 
@@ -54,7 +54,7 @@ class MottakServiceTest {
             soknadService,
             dokumentService,
             kafkaProducer,
-            kvitteringService,
+            kopiService,
             altinnConfig,
             downloadQueue
         )
@@ -96,7 +96,7 @@ class MottakServiceTest {
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
         verify { soknadService.lagPdf(soknadSlot.captured) }
         val pdfSlot = slot<ByteArray>()
-        verify { kvitteringService.sendKvittering(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
+        verify { kopiService.sendKopi(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
         verify { dokumentService.lagrePDF(any(), pdfSlot.captured) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
     }

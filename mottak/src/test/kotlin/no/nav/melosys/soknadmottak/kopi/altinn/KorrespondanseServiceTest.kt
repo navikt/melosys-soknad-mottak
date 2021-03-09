@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kvittering.altinn
+package no.nav.melosys.soknadmottak.kopi.altinn
 
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
