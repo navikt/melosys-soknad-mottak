@@ -15,9 +15,10 @@ private val logger = KotlinLogging.logger { }
 class KvitteringService(private val korrespondanseService: KorrespondanseService) {
     companion object {
         private const val MELDING_SENDER = "NAV"
-        private const val MELDING_EMNE = "Kvittering for søknad om A1"
-        private const val MELDING_TEKST =
+        private const val MELDING_EMNE = "Bekreftelse på innsendt søknad om A1"
+        private const val MELDING_TEKST_KOPI =
             "Du har sendt inn «Søknad om A1 for utsendte arbeidstakere innen EØS/Sveits». Kopi av søknaden er vedlagt."
+        private const val MELDING_TEKST_ALTINN_REF = "Altinn-referanse:"
         private const val FIL_NAVN = "Søknad om A1 for utsendte arbeidstakere innen EØS/Sveits"
         private const val LANGT_FREM_I_TID_ANTALL_ÅR = 20L
     }
@@ -42,13 +43,15 @@ class KvitteringService(private val korrespondanseService: KorrespondanseService
         logger.info { "Sendt kvittering for arkiv '$arkivRef'" }
     }
 
-    private fun lagKvittering(mottakerID: String, arkivRef: String, vedlegg: ByteArray): InsertCorrespondenceBasicV2 {
+    fun lagKvittering(mottakerID: String, arkivRef: String, vedlegg: ByteArray): InsertCorrespondenceBasicV2 {
         return korrespondanseService.lagMelding(
             mottakerID,
             arkivRef,
             MELDING_SENDER,
-            Melding(MELDING_EMNE, MELDING_TEKST, Vedlegg(FIL_NAVN, vedlegg)),
+            Melding(MELDING_EMNE, lagMeldingTekst(arkivRef), Vedlegg(FIL_NAVN, vedlegg)),
             LANGT_FREM_I_TID_ANTALL_ÅR
         )
     }
+
+    private fun lagMeldingTekst(arkivRef: String): String = "$MELDING_TEKST_KOPI $MELDING_TEKST_ALTINN_REF $arkivRef"
 }
