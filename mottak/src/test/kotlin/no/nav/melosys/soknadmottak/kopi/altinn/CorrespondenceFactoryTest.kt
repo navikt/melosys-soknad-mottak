@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kvittering.altinn
+package no.nav.melosys.soknadmottak.kopi.altinn
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

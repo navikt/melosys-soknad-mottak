@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kvittering.altinn
+package no.nav.melosys.soknadmottak.kopi.altinn
 
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2

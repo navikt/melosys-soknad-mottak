@@ -1,4 +1,4 @@
-package no.nav.melosys.soknadmottak.kvittering.altinn
+package no.nav.melosys.soknadmottak.kopi.altinn
 
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2

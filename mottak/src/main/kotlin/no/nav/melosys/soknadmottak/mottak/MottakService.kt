@@ -10,7 +10,7 @@ import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
-import no.nav.melosys.soknadmottak.kvittering.KvitteringService
+import no.nav.melosys.soknadmottak.kopi.KopiService
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
@@ -28,7 +28,7 @@ class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
     private val kafkaProducer: KafkaProducer,
-    private val kvitteringService: KvitteringService,
+    private val kopiService: KopiService,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
 ) {
@@ -57,7 +57,7 @@ class MottakService(
                         val dokID = soknadService.lagreSøknadOgDokumenter(søknad, arkivRef, vedlegg)
                         Metrikker.søknadMottatt.increment()
                         val søknadPDF = soknadService.lagPdf(søknad)
-                        kvitteringService.sendKvittering(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
+                        kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         dokumentService.lagrePDF(dokID, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
