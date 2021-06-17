@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <profiles>
+        <profile>
+            <id>github</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>jcenter</id>
+                    <url>https://jcenter.bintray.com/</url>
+                </repository>
+
+                <repository>
+                    <id>confluent</id>
+                    <url>https://packages.confluent.io/maven</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <servers>
+        <!-- i tilfelle bygget kjører som en Github Action, vil tokenet automatisk injectes her -->
+        <server>
+            <id>github-package-registry-navikt</id>
+            <username>token</username>
+            <password>${env.GITHUB_TOKEN}</password>
+        </server>
+    </servers>
+</settings>

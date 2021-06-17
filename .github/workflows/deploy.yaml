@@ -51,7 +51,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Test and build
-        run: mvn clean package -B -e -U
+        run: mvn --settings .github/maven-settings.xml clean package -B -e -U
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build docker image
         run: docker build -t ${IMAGE} .
       - name: Login to Github Package Registry
