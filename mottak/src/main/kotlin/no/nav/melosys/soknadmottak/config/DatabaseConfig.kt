@@ -78,5 +78,5 @@ class DatabaseConfig(private val environment: Environment) {
         else -> PREPROD_MOUNT_PATH
     }
 
-    private fun dbRole(role: String) = arrayOf(environment.getProperty("DATABASE_NAME"), role).joinToString { "-" }
+    private fun dbRole(role: String) = arrayOf(environment.getProperty("DATABASE_NAME"), role).joinToString("-")
 }
