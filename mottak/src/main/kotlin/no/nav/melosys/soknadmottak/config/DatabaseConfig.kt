@@ -24,7 +24,6 @@ import javax.sql.DataSource
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {
     companion object {
-        private const val DATABASE_NAME = "melosys-soknad"
         private const val PROD_MOUNT_PATH = "postgresql/prod-fss"
         private const val PREPROD_MOUNT_PATH = "postgresql/preprod-fss"
     }
@@ -79,11 +78,5 @@ class DatabaseConfig(private val environment: Environment) {
         else -> PREPROD_MOUNT_PATH
     }
 
-    private fun dbRole(role: String): String {
-        val namespace = environment.getProperty("NAIS_NAMESPACE")
-        return when {
-            isProduction -> arrayOf(DATABASE_NAME, role)
-            else -> arrayOf(DATABASE_NAME, namespace, role)
-        }.joinToString("-")
-    }
+    private fun dbRole(role: String) = arrayOf(environment.getProperty("DATABASE_NAME"), role).joinToString { "-" }
 }
