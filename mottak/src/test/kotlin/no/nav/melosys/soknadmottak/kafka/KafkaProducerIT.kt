@@ -25,7 +25,7 @@ import java.util.*
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaProducerIT @Autowired constructor(
-    private val kafkaTemplate: KafkaTemplate<String, SoknadMottatt>,
+    private val onPremKafkaTemplate: KafkaTemplate<String, SoknadMottatt>,
     private val embeddedKafka: KafkaEnvironment,
     @Value("\${melosys.kafka.producer.topic-name}")
     private val topicName: String
@@ -35,7 +35,7 @@ class KafkaProducerIT @Autowired constructor(
 
     @BeforeEach
     internal fun beforeEach() {
-        kafkaProducer = KafkaProducer(kafkaTemplate, callbackService, topicName)
+        kafkaProducer = KafkaProducer(onPremKafkaTemplate, callbackService, topicName)
     }
 
     @BeforeAll

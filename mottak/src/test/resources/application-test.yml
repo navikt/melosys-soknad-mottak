@@ -19,9 +19,14 @@ spring:
         protocol: PLAINTEXT
       security.protocol: PLAINTEXT
 
+port: 60065
+KAFKA_BOOTSTRAP_SERVERS: localhost:${port}
+KAFKA_BROKERS: localhost:${port}
+
 SRV_USERNAME: dummy
 SRV_PASSWORD: dummy
 KAFKA_TOPIC: test-topic
+KAFKA_SOKNAD_MOTTATT_TOPIC: teammelosys.soknad-mottatt.v1-local
 
 STS_URL: fixme
 

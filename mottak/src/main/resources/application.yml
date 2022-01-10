@@ -31,8 +31,14 @@ management:
 
 melosys:
   kafka:
+    aiven:
+      brokers: ${KAFKA_BROKERS}
+      keystorePath: ${KAFKA_KEYSTORE_PATH:/dev/zero}
+      truststorePath: ${KAFKA_TRUSTSTORE_PATH:/dev/zero}
+      credstorePassword: ${KAFKA_CREDSTORE_PASSWORD:pwd}
     producer:
       topic-name: ${KAFKA_TOPIC}
+      topic-name-aiven: ${KAFKA_SOKNAD_MOTTATT_TOPIC}
   systemuser:
     username: ${SRV_USERNAME}
     password: ${SRV_PASSWORD}

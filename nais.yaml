@@ -33,6 +33,7 @@ spec:
     - {{ingress}}
   vault:
     enabled: true
-
+  kafka:
+    pool: {{ KAFKA_POOL }}
 
 

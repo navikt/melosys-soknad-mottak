@@ -1,6 +1,7 @@
 package no.nav.melosys.soknadmottak
 
 import no.nav.common.KafkaEnvironment
+import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
@@ -15,12 +16,15 @@ class SoknadMottakTestConfiguration {
 
     @Bean
     @Order(1)
-    fun embeddedKafka(@Value("\${melosys.kafka.producer.topic-name}") topic: String) = KafkaEnvironment(
-        topicNames = listOf(topic)
+    fun embeddedKafka(
+        @Value("\${melosys.kafka.producer.topic-name}") topic: String,
+        @Value("\${melosys.kafka.producer.topic-name-aiven}") aivenTopic: String
+    ) = KafkaEnvironment(
+        topicNames = listOf(topic, aivenTopic)
     )
 
     @Bean
-    fun producerFactory(embeddedKafka: KafkaEnvironment) = DefaultKafkaProducerFactory<Any, Any>(
+    fun producerFactory(embeddedKafka: KafkaEnvironment) = DefaultKafkaProducerFactory<String, SoknadMottatt>(
         mapOf(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to embeddedKafka.brokersURL,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
