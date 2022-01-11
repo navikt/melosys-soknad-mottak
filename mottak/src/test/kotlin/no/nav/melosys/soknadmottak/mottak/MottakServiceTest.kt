@@ -9,8 +9,10 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.finn.unleash.FakeUnleash
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
+import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
 import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.kopi.KopiService
@@ -45,6 +47,10 @@ class MottakServiceTest {
     lateinit var kopiService: KopiService
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
+    @RelaxedMockK
+    lateinit var kafkaAivenProducer: KafkaAivenProducer
+
+    private val fakeUnleash = FakeUnleash()
 
     private lateinit var mottakService: MottakService
 
@@ -56,7 +62,9 @@ class MottakServiceTest {
             kafkaProducer,
             kopiService,
             altinnConfig,
-            downloadQueue
+            downloadQueue,
+            fakeUnleash,
+            kafkaAivenProducer
         )
     }
 

@@ -2,9 +2,11 @@ package no.nav.melosys.soknadmottak.mottak
 
 import io.mockk.mockk
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.finn.unleash.Unleash
 import no.nav.melosys.soknadmottak.SoknadMottakTestConfiguration
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
+import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
 import no.nav.melosys.soknadmottak.kopi.KopiService
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.junit.jupiter.api.Test
@@ -19,7 +21,9 @@ internal class MottakServiceIT(
     @Autowired val dokumentService: DokumentService,
     @Autowired val kopiService: KopiService,
     @Autowired val altinnConfig: AltinnConfig,
-    @Autowired val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic
+    @Autowired val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic,
+    @Autowired val fakeUnleash: Unleash,
+    @Autowired val kafkaAivenProducer: KafkaAivenProducer
 ) {
     private var mottakService = MottakService(
         soknadService,
@@ -27,7 +31,9 @@ internal class MottakServiceIT(
         mockk(),
         kopiService,
         altinnConfig,
-        iDownloadQueueExternalBasic
+        iDownloadQueueExternalBasic,
+        fakeUnleash,
+        kafkaAivenProducer
     )
 
     @Test
