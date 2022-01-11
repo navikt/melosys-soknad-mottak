@@ -19,7 +19,7 @@ class FeaturetoggleConfig {
         }
 
         val unleashConfig = UnleashConfig.builder()
-            .appName("melosys")
+            .appName("melosys-soknad-mottak")
             .unleashAPI("https://unleash.nais.io/api/")
             .build()
         return DefaultUnleash(
