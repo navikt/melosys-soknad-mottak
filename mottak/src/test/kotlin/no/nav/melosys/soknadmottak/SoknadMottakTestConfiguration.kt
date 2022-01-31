@@ -17,10 +17,9 @@ class SoknadMottakTestConfiguration {
     @Bean
     @Order(1)
     fun embeddedKafka(
-        @Value("\${melosys.kafka.producer.topic-name}") topic: String,
         @Value("\${melosys.kafka.producer.topic-name-aiven}") aivenTopic: String
     ) = KafkaEnvironment(
-        topicNames = listOf(topic, aivenTopic)
+        topicNames = listOf(aivenTopic)
     )
 
     @Bean

@@ -25,17 +25,17 @@ import java.util.*
 @ActiveProfiles(profiles = ["test"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaProducerIT @Autowired constructor(
-    private val onPremKafkaTemplate: KafkaTemplate<String, SoknadMottatt>,
+    private val aivenKafkaTemplate: KafkaTemplate<String, SoknadMottatt>,
     private val embeddedKafka: KafkaEnvironment,
     @Value("\${melosys.kafka.producer.topic-name}")
     private val topicName: String
 ) {
     private val callbackService = spyk(CallbackService(mockk()))
-    private lateinit var kafkaProducer: KafkaProducer
+    private lateinit var kafkaProducer: KafkaAivenProducer
 
     @BeforeEach
     internal fun beforeEach() {
-        kafkaProducer = KafkaProducer(onPremKafkaTemplate, callbackService, topicName)
+        kafkaProducer = KafkaAivenProducer(aivenKafkaTemplate, callbackService, topicName)
     }
 
     @BeforeAll

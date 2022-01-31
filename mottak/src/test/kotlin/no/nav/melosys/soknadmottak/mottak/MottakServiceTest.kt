@@ -9,11 +9,9 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
-import no.finn.unleash.FakeUnleash
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
-import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.kopi.KopiService
 import no.nav.melosys.soknadmottak.soknad.Soknad
@@ -37,20 +35,21 @@ import javax.xml.datatype.DatatypeFactory
 class MottakServiceTest {
     @RelaxedMockK
     lateinit var altinnConfig: AltinnConfig
+
     @RelaxedMockK
     lateinit var soknadService: SoknadService
+
     @RelaxedMockK
     lateinit var dokumentService: DokumentService
-    @RelaxedMockK
-    lateinit var kafkaProducer: KafkaProducer
+
     @RelaxedMockK
     lateinit var kopiService: KopiService
+
     @RelaxedMockK
     lateinit var downloadQueue: IDownloadQueueExternalBasic
+
     @RelaxedMockK
     lateinit var kafkaAivenProducer: KafkaAivenProducer
-
-    private val fakeUnleash = FakeUnleash()
 
     private lateinit var mottakService: MottakService
 
@@ -59,11 +58,9 @@ class MottakServiceTest {
         mottakService = MottakService(
             soknadService,
             dokumentService,
-            kafkaProducer,
             kopiService,
             altinnConfig,
             downloadQueue,
-            fakeUnleash,
             kafkaAivenProducer
         )
     }
@@ -117,7 +114,7 @@ class MottakServiceTest {
         mottakService.publiserIkkeLeverteSøknader()
 
         val slot = slot<SoknadMottatt>()
-        verify { kafkaProducer.publiserMelding(capture(slot)) }
+        verify { kafkaAivenProducer.publiserMelding(capture(slot)) }
         assertThat(slot.captured.soknadID).isEqualTo(søknad.soknadID.toString())
     }
 
@@ -128,6 +125,6 @@ class MottakServiceTest {
         every { dokumentService.erDokumentInnholdLagret(søknad.soknadID.toString()) } returns false
         mottakService.publiserIkkeLeverteSøknader()
 
-        verify(exactly = 0) { kafkaProducer.publiserMelding(any()) }
+        verify(exactly = 0) { kafkaAivenProducer.publiserMelding(any()) }
     }
 }
