@@ -4,13 +4,11 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
-import no.finn.unleash.Unleash
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.common.Metrikker
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
-import no.nav.melosys.soknadmottak.kafka.KafkaProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.kopi.KopiService
 import no.nav.melosys.soknadmottak.soknad.Soknad
@@ -29,11 +27,9 @@ private const val OPPSTART_ANDRE_JOBB_MILLIS = 45 * 1000L
 class MottakService(
     private val soknadService: SoknadService,
     private val dokumentService: DokumentService,
-    private val kafkaProducer: KafkaProducer,
     private val kopiService: KopiService,
     private val altinnConfig: AltinnConfig,
     private val iDownloadQueueExternalBasic: IDownloadQueueExternalBasic,
-    private val unleash: Unleash,
     private val kafkaAivenProducer: KafkaAivenProducer
 ) {
     private val brukernavn = altinnConfig.username
@@ -84,11 +80,7 @@ class MottakService(
                     .filter { dokumentService.erDokumentInnholdLagret(it.soknadID.toString()) }
                     .forEach { søknad ->
                         logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
-                        if (unleash.isEnabled("melosys.soknad.producer-aiven")) {
-                            kafkaAivenProducer.publiserMelding(SoknadMottatt(søknad))
-                        } else {
-                            kafkaProducer.publiserMelding(SoknadMottatt(søknad))
-                        }
+                        kafkaAivenProducer.publiserMelding(SoknadMottatt(søknad))
                     }
             }
         } finally {

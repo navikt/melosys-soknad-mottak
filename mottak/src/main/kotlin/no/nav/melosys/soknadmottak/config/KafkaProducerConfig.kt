@@ -36,11 +36,6 @@ class KafkaProducerConfig(
         return KafkaTemplate(producerFactory)
     }
 
-    @Bean
-    fun onPremKafkaTemplate(producerFactory: ProducerFactory<String, SoknadMottatt>, objectMapper: ObjectMapper?): KafkaTemplate<String, SoknadMottatt> {
-        return KafkaTemplate(producerFactory)
-    }
-
     private fun commonProps(): Map<String, Any> {
         val props: MutableMap<String, Any> = HashMap()
         props[CommonClientConfigs.CLIENT_ID_CONFIG] = "aiven-producer"
