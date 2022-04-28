@@ -24,3 +24,16 @@ jobs:
        java-version: '11.x'
     - name: Build and test
       run: mvn --settings .github/maven-settings.xml verify
+  automerge:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          target: patch
