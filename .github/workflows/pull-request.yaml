@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        ssh-key: "${{ secrets.COMMIT_KEY }}"      
     - name: Setup Maven
       uses: actions/cache@v2
       with:
