@@ -26,7 +26,7 @@
         <kotlin.code.style>official</kotlin.code.style>
 
         <cxf.version>3.4.2</cxf.version>
-        <flyway.version>7.10.0</flyway.version>
+        <flyway.version>7.15.0</flyway.version>
         <h2.version>1.4.200</h2.version>
         <kotlin-logging.version>1.12.5</kotlin-logging.version>
         <kotest.version>4.4.1</kotest.version>
@@ -47,7 +47,7 @@
         <bcprov-jdk15on.version>1.68</bcprov-jdk15on.version>
         <github-classgraph.version>4.8.146</github-classgraph.version>
         <guava.version>30.1.1-jre</guava.version>
-        <javassist.version>3.27.0-GA</javassist.version>
+        <javassist.version>3.28.0-GA</javassist.version>
         <json-smart.version>2.4.8</json-smart.version>
         <paranamer.version>2.8</paranamer.version>
         <scala.version>2.12.13</scala.version>
