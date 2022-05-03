@@ -47,7 +47,7 @@
         <bcprov-jdk15on.version>1.68</bcprov-jdk15on.version>
         <github-classgraph.version>4.8.146</github-classgraph.version>
         <guava.version>30.1.1-jre</guava.version>
-        <javassist.version>3.27.0-GA</javassist.version>
+        <javassist.version>3.28.0-GA</javassist.version>
         <json-smart.version>2.4.8</json-smart.version>
         <paranamer.version>2.8</paranamer.version>
         <scala.version>2.12.13</scala.version>
