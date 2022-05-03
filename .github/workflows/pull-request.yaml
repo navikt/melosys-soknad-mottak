@@ -11,8 +11,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ssh-key: "${{ secrets.COMMIT_KEY }}"      
     - name: Setup Maven
       uses: actions/cache@v2
       with:
@@ -35,7 +33,12 @@ jobs:
       contents: write
 
     steps:
-      - uses: fastify/github-action-merge-dependabot@v3
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ssh-key: "${{ secrets.COMMIT_KEY }}"    
+      - name: Dependabot automerge
+        uses: fastify/github-action-merge-dependabot@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           target: patch
