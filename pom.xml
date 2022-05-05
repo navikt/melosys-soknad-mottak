@@ -43,7 +43,7 @@
         <unleash.version>4.4.0</unleash.version>
 
         <!-- Transitive avhengiheter med konflikter -->
-        <asm.version>9.1</asm.version>
+        <asm.version>9.3</asm.version>
         <bcprov-jdk15on.version>1.68</bcprov-jdk15on.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
         <github-classgraph.version>4.8.146</github-classgraph.version>
