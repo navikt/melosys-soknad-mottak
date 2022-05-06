@@ -38,7 +38,7 @@
         <springfox.version>3.0.0</springfox.version>
         <tjenestespesifikasjoner.version>1.2020.10.21-14.38-e6bb56478815</tjenestespesifikasjoner.version>
         <token-support.version>1.3.7</token-support.version>
-        <ulid.version>8.2.0</ulid.version>
+        <ulid.version>8.3.0</ulid.version>
         <vault-jdbc.version>1.3.9</vault-jdbc.version>
         <unleash.version>4.4.0</unleash.version>
 
