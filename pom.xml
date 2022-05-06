@@ -44,7 +44,7 @@
 
         <!-- Transitive avhengiheter med konflikter -->
         <asm.version>9.3</asm.version>
-        <bcprov-jdk15on.version>1.68</bcprov-jdk15on.version>
+        <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
         <github-classgraph.version>4.8.146</github-classgraph.version>
         <guava.version>30.1.1-jre</guava.version>
