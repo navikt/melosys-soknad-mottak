@@ -60,7 +60,7 @@
         <woodstox.version>6.2.4</woodstox.version>
         <xmlsec.version>2.3.0</xmlsec.version>
         <zkclient.version>0.11</zkclient.version>
-        <zookeeper.version>3.6.2</zookeeper.version>
+        <zookeeper.version>3.8.0</zookeeper.version>
     </properties>
 
     <dependencyManagement>
