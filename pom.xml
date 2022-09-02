@@ -21,8 +21,8 @@
     </modules>
 
     <properties>
-        <java.version>11</java.version>
-        <kotlin.version>1.5.10</kotlin.version>
+        <java.version>17</java.version>
+        <kotlin.version>1.6.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
         <cxf.version>3.4.2</cxf.version>
