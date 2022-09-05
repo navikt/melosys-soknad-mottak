@@ -164,6 +164,14 @@ internal class SoknadSkjemaOversetterTest {
     }
 
     @Test
+    fun `offentlig virksomhet har ikke virksomhet i Norge fyllt ut`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_offentlig_virksomhet.xml")
+        val søknadsdata = SoknadSkjemaOversetter.tilSøknadsdata(soknadFraXmlFil)
+
+        assertThat(søknadsdata.virksomhetNorge).isNull()
+    }
+
+    @Test
     fun `avklar hvem skal motta kvittering`() {
         val mottaker = SoknadSkjemaOversetter.avklarKvitteringMottaker(søknad)
         assertThat(mottaker).isEqualTo("fullmektigVirksomhetsnummer")
