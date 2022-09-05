@@ -255,17 +255,17 @@ object SoknadSkjemaOversetter {
     }
 
     private fun oversettVirksomhetNorge(innhold: Innhold): VirksomhetNorge? {
-        return innhold.arbeidsgiver.samletVirksomhetINorge?.let {
-            VirksomhetNorge(
-                it.antallAdministrativeAnsatteINorge.toInt(),
-                it.andelOppdragINorge.toInt(),
-                it.andelKontrakterInngaasINorge.toInt(),
-                it.andelOmsetningINorge.toInt(),
-                it.andelRekrutteresINorge.toInt(),
-                it.antallAnsatte.toInt(),
-                it.antallUtsendte.toInt()
-            )
-        }
+        val samletVirksomhetINorge = innhold.arbeidsgiver.samletVirksomhetINorge
+        return if (samletVirksomhetINorge == null || samletVirksomhetINorge.isEmpty()) null
+        else VirksomhetNorge(
+            samletVirksomhetINorge.antallAdministrativeAnsatteINorge.toInt(),
+            samletVirksomhetINorge.andelOppdragINorge.toInt(),
+            samletVirksomhetINorge.andelKontrakterInngaasINorge.toInt(),
+            samletVirksomhetINorge.andelOmsetningINorge.toInt(),
+            samletVirksomhetINorge.andelRekrutteresINorge.toInt(),
+            samletVirksomhetINorge.antallAnsatte.toInt(),
+            samletVirksomhetINorge.antallUtsendte.toInt()
+        )
     }
 
     private fun oversettArbeidssituasjon(innhold: Innhold) =
@@ -310,4 +310,14 @@ object SoknadSkjemaOversetter {
             innhold.arbeidstaker.foedselsnummer
         }
     }
+}
+
+private fun SamletVirksomhetINorge.isEmpty(): Boolean {
+    return antallAdministrativeAnsatteINorge == null
+            && andelOppdragINorge == null
+            && andelKontrakterInngaasINorge == null
+            && andelOmsetningINorge == null
+            && andelRekrutteresINorge == null
+            && antallAnsatte == null
+            && antallUtsendte == null
 }

@@ -1,0 +1,75 @@
+<melding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:seres="http://seres.no/xsd/forvaltningsdata"
+         xmlns:ns8="http://schemas.microsoft.com/2003/10/Serialization/" dataFormatProvider="SERES" dataFormatId="6320"
+         dataFormatVersion="46081">
+    <Innhold>
+        <arbeidsgiver>
+            <virksomhetsnummer>910825569</virksomhetsnummer>
+            <kontaktperson>
+                <kontaktpersonNavn>BLÅ BÆREPOSE</kontaktpersonNavn>
+            </kontaktperson>
+            <samletVirksomhetINorge></samletVirksomhetINorge>
+            <offentligVirksomhet>true</offentligVirksomhet>
+            <virksomhetsnavn>STORFOSNA OG FREDRIKSTAD REGNSKAP</virksomhetsnavn>
+            <adresse>
+                <gate>Bråtebakken 26</gate>
+                <land>NO</land>
+                <postkode>1727</postkode>
+                <poststed>SARPSBORG</poststed>
+            </adresse>
+        </arbeidsgiver>
+        <arbeidstaker>
+            <foedselsnummer>13046901112</foedselsnummer>
+            <foedested>Oslo</foedested>
+            <foedeland>NO</foedeland>
+            <reiserMedBarnTilUtlandet>false</reiserMedBarnTilUtlandet>
+            <barn/>
+            <etternavn>Hermansen</etternavn>
+            <fulltNavn>HERMANSEN OLE</fulltNavn>
+        </arbeidstaker>
+        <midlertidigUtsendt>
+            <arbeidsland>SE</arbeidsland>
+            <andreArbeidsgivereIUtsendingsperioden>false</andreArbeidsgivereIUtsendingsperioden>
+            <mottaYtelserNorge>false</mottaYtelserNorge>
+            <mottaYtelserUtlandet>false</mottaYtelserUtlandet>
+            <loennetArbeidMinstEnMnd>true</loennetArbeidMinstEnMnd>
+            <skattepliktig>true</skattepliktig>
+            <utenlandsoppdraget>
+                <periodeUtland>
+                    <periodeFra>2022-09-30</periodeFra>
+                    <periodeTil>2022-10-02</periodeTil>
+                </periodeUtland>
+                <samletUtsendingsperiode></samletUtsendingsperiode>
+                <sendesUtOppdragIUtlandet>true</sendesUtOppdragIUtlandet>
+                <ansattForOppdragIUtlandet>false</ansattForOppdragIUtlandet>
+                <erstatterTidligereUtsendte>false</erstatterTidligereUtsendte>
+            </utenlandsoppdraget>
+            <loennOgGodtgjoerelse>
+                <norskArbgUtbetalerLoenn>true</norskArbgUtbetalerLoenn>
+                <utlArbgUtbetalerLoenn>false</utlArbgUtbetalerLoenn>
+                <mottarNaturalytelser>false</mottarNaturalytelser>
+                <trukketTrygdeavgift>true</trukketTrygdeavgift>
+                <betalerArbeidsgiveravgift>true</betalerArbeidsgiveravgift>
+                <loennNorskArbg>0</loennNorskArbg>
+            </loennOgGodtgjoerelse>
+            <virksomhetIUtlandet>
+                <adresse></adresse>
+            </virksomhetIUtlandet>
+            <arbeidssted>
+                <typeArbeidssted>land</typeArbeidssted>
+                <arbeidPaaLand>
+                    <fysiskeArbeidssteder/>
+                    <hjemmekontor>false</hjemmekontor>
+                    <fastArbeidssted>false</fastArbeidssted>
+                </arbeidPaaLand>
+                <offshoreEnheter/>
+                <luftfart>
+                    <luftfartBaser/>
+                </luftfart>
+                <skipListe/>
+            </arbeidssted>
+        </midlertidigUtsendt>
+        <fullmakt>
+            <fullmaktFraArbeidstaker>true</fullmaktFraArbeidstaker>
+        </fullmakt>
+    </Innhold>
+</melding>
