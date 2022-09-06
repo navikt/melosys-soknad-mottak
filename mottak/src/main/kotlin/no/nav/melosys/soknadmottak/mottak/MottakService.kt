@@ -6,7 +6,6 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
-import no.nav.melosys.soknadmottak.common.Metrikker
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
@@ -58,11 +57,10 @@ class MottakService(
                         innsendtTidspunkt
                     )
                     if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
-                        val dokID = soknadService.lagreSøknadOgDokumenter(søknad, arkivRef, vedlegg)
-                        Metrikker.søknadMottatt.increment()
-                        val søknadPDF = soknadService.lagPdf(søknad)
+                        val søknadDokumentID = soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
+                        val søknadPDF = soknadService.lagPDF(søknad)
                         kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
-                        dokumentService.lagrePDF(dokID, søknadPDF)
+                        dokumentService.lagrePDF(søknadDokumentID, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet AR: '$arkivRef' ('${index + 1} av ${elementer.size}') "

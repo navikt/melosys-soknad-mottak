@@ -97,9 +97,9 @@ class MottakServiceTest {
         mottakService.pollDokumentKø()
 
         val soknadSlot = slot<Soknad>()
-        verify { soknadService.lagreSøknadOgDokumenter(capture(soknadSlot), eq("ref"), any()) }
+        verify { soknadService.lagreSøknadMeldingOgVedlegg(capture(soknadSlot), eq("ref"), any()) }
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
-        verify { soknadService.lagPdf(soknadSlot.captured) }
+        verify { soknadService.lagPDF(soknadSlot.captured) }
         val pdfSlot = slot<ByteArray>()
         verify { kopiService.sendKopi(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
         verify { dokumentService.lagrePDF(any(), pdfSlot.captured) }
