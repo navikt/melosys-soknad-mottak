@@ -40,7 +40,7 @@ internal class SoknadServiceTest {
         val søknad = SoknadFactory.lagSoknadFraXmlFil()
         every { dokgenService.lagSøknadPDF(any()) } returns ByteArray(8)
 
-        val pdf = soknadService.lagPdf(søknad)
+        val pdf = soknadService.lagPDF(søknad)
         assertThat(pdf).hasSize(8)
     }
 
@@ -63,7 +63,7 @@ internal class SoknadServiceTest {
         every { soknadService.lagre(capture(soknadSlot)) } returns søknad
         every { dokumentService.lagreDokument(any()) } returns "lagret"
 
-        soknadService.lagreSøknadOgDokumenter(søknad, "ref", mutableListOf(vedlegg))
+        soknadService.lagreSøknadMeldingOgVedlegg(søknad, "ref", mutableListOf(vedlegg))
 
         verify { soknadService.lagre(any()) }
         val dokumentSlots = mutableListOf<Dokument>()

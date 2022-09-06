@@ -30,12 +30,12 @@ class SoknadService @Autowired constructor(
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }
 
-    fun lagPdf(søknad: Soknad): ByteArray {
+    fun lagPDF(søknad: Soknad): ByteArray {
         return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilSøknadsdata(søknad))
     }
 
     @Transactional
-    fun lagreSøknadOgDokumenter(
+    fun lagreSøknadMeldingOgVedlegg(
         søknad: Soknad,
         arkivRef: String,
         vedlegg: MutableList<ArchivedAttachmentDQBE>
