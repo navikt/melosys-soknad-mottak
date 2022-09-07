@@ -24,6 +24,10 @@ class DokumentService @Autowired constructor(
         return dokumentRepository.findBySoknadSoknadID(UUID.fromString(soknadID))
     }
 
+    fun hentSøknadDokument(soknadID: String): Dokument {
+        return dokumentRepository.findBySoknadSoknadIDAndType(UUID.fromString(soknadID), DokumentType.SOKNAD)
+    }
+
     fun lagreDokument(dokument: Dokument): String {
         val dokID = ulidGenerator.nextULID()
         dokumentRepository.save(dokument.apply { dokumentID = dokID })
@@ -31,11 +35,10 @@ class DokumentService @Autowired constructor(
     }
 
     fun lagrePDF(
-        dokID: String,
-        søknadPDF: ByteArray
+        dokument: Dokument,
+        pdf: ByteArray
     ) {
-        val dokument = hentDokument(dokID)
-        dokument.innhold = søknadPDF
+        dokument.innhold = pdf
         lagreDokument(dokument)
     }
 

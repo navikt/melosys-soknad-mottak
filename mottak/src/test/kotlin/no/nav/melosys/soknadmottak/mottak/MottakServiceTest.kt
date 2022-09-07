@@ -10,6 +10,7 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.config.AltinnConfig
+import no.nav.melosys.soknadmottak.dokument.DokumentFactory
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
@@ -66,7 +67,7 @@ class MottakServiceTest {
     }
 
     @Test
-    fun pollDokumentKø() {
+    fun `pollDokumentKø lagrer (melding + vedlegg + søknadPDF) og sender kopi og fjerner fra kø`() {
         val itemList = DownloadQueueItemBEList()
         val item = DownloadQueueItemBE().apply {
             archiveReference = "ref"
@@ -93,17 +94,50 @@ class MottakServiceTest {
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
         every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
+        val dokument = DokumentFactory.lagDokument(innhold = null)
+        every { dokumentService.hentSøknadDokument(any()) } returns dokument
+
 
         mottakService.pollDokumentKø()
+
 
         val soknadSlot = slot<Soknad>()
         verify { soknadService.lagreSøknadMeldingOgVedlegg(capture(soknadSlot), eq("ref"), any()) }
         assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
-        verify { soknadService.lagPDF(soknadSlot.captured) }
         val pdfSlot = slot<ByteArray>()
-        verify { kopiService.sendKopi(eq("fullmektigVirksomhetsnummer"), eq("ref"), capture(pdfSlot)) }
-        verify { dokumentService.lagrePDF(any(), pdfSlot.captured) }
+        verify { dokumentService.lagrePDF(any(), capture(pdfSlot)) }
+        verify { kopiService.sendKopi("fullmektigVirksomhetsnummer","ref", pdfSlot.captured) }
         verify { downloadQueue.purgeItem(any(), any(), "ref") }
+    }
+
+    @Test
+    fun `pollDokumentKø ikke lagre søknad-PDF hvis det ble gjort`() {
+        val itemList = DownloadQueueItemBEList()
+        val item = DownloadQueueItemBE().apply {
+            archiveReference = "ref"
+        }
+        itemList.downloadQueueItemBE.add(item)
+        every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
+
+        val søknadXML = SoknadFactory.lagSoknadFraXmlFil().innhold
+        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
+
+        val archivedForm = ArchivedFormTaskDQBE().apply {
+            forms = ArchivedFormListDQBE()
+                .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
+            attachments = ArchivedAttachmentExternalListDQBE()
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
+            reportee = "reportee"
+        }
+        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForm
+        every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
+        val dokument = DokumentFactory.lagDokument()
+        every { dokumentService.hentSøknadDokument(any()) } returns dokument
+
+        mottakService.pollDokumentKø()
+
+
+        verify(exactly = 0) { dokumentService.lagrePDF(any(), any()) }
     }
 
     @Test
