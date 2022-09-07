@@ -10,6 +10,7 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.*
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.config.AltinnConfig
+import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentFactory
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
@@ -30,6 +31,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.xml.datatype.DatatypeFactory
+
+private const val ARKIV_REF = "AR_ref"
 
 @ExtendWith(MockKExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -70,7 +73,7 @@ class MottakServiceTest {
     fun `pollDokumentKø lagrer (melding + vedlegg + søknadPDF) og sender kopi og fjerner fra kø`() {
         val itemList = DownloadQueueItemBEList()
         val item = DownloadQueueItemBE().apply {
-            archiveReference = "ref"
+            archiveReference = ARKIV_REF
         }
         itemList.downloadQueueItemBE.add(item)
         every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
@@ -82,19 +85,21 @@ class MottakServiceTest {
         }
         val vedleggListe = ArchivedAttachmentExternalListDQBE().withArchivedAttachmentDQBE(vedlegg1)
 
+        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS)
         val søknadXML = SoknadFactory.lagSoknadFraXmlFil().innhold
-        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
+        val søknad = Soknad.fraArkivFormData(ARKIV_REF, søknadXML, nå.toInstant())
 
         val archivedForms = ArchivedFormTaskDQBE().apply {
             forms = ArchivedFormListDQBE()
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = vedleggListe
-            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå.format(DateTimeFormatter.ISO_INSTANT))
             reportee = "reportee"
         }
-        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
+        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), ARKIV_REF, null, false) } returns archivedForms
         every { soknadService.erSøknadArkivLagret(any()) } returns false
-        val dokument = DokumentFactory.lagDokument(innhold = null)
+        every { soknadService.hentSøknadMedArkivRef(ARKIV_REF) } returns søknad
+        val dokument = DokumentFactory.lagDokument(soknad = søknad, innhold = null)
         every { dokumentService.hentSøknadDokument(any()) } returns dokument
 
 
@@ -102,37 +107,42 @@ class MottakServiceTest {
 
 
         val soknadSlot = slot<Soknad>()
-        verify { soknadService.lagreSøknadMeldingOgVedlegg(capture(soknadSlot), eq("ref"), any()) }
-        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå)
+        verify { soknadService.lagreSøknadMeldingOgVedlegg(capture(soknadSlot), eq(ARKIV_REF), any()) }
+        assertThat(soknadSlot.captured.innsendtTidspunkt).isEqualTo(nå.toInstant())
+        val dokumentSlot = slot<Dokument>()
         val pdfSlot = slot<ByteArray>()
-        verify { dokumentService.lagrePDF(any(), capture(pdfSlot)) }
-        verify { kopiService.sendKopi("fullmektigVirksomhetsnummer","ref", pdfSlot.captured) }
-        verify { downloadQueue.purgeItem(any(), any(), "ref") }
+        verify { dokumentService.lagrePDF(capture(dokumentSlot), capture(pdfSlot)) }
+        assertThat(dokumentSlot.captured.soknad.innhold).isEqualTo(soknadSlot.captured.innhold)
+        verify { kopiService.sendKopi("fullmektigVirksomhetsnummer", ARKIV_REF, pdfSlot.captured) }
+        verify { downloadQueue.purgeItem(any(), any(), ARKIV_REF) }
     }
 
     @Test
     fun `pollDokumentKø ikke lagre søknad-PDF hvis det ble gjort`() {
         val itemList = DownloadQueueItemBEList()
         val item = DownloadQueueItemBE().apply {
-            archiveReference = "ref"
+            archiveReference = ARKIV_REF
         }
         itemList.downloadQueueItemBE.add(item)
         every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
 
         val søknadXML = SoknadFactory.lagSoknadFraXmlFil().innhold
-        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS).format(DateTimeFormatter.ISO_INSTANT)
+        val nå = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS)
 
         val archivedForm = ArchivedFormTaskDQBE().apply {
             forms = ArchivedFormListDQBE()
                 .withArchivedFormDQBE(ArchivedFormDQBE().withFormData(søknadXML))
             attachments = ArchivedAttachmentExternalListDQBE()
-            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå)
+            archiveTimeStamp = DatatypeFactory.newInstance().newXMLGregorianCalendar(nå.format(DateTimeFormatter.ISO_INSTANT))
             reportee = "reportee"
         }
-        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForm
+        every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), ARKIV_REF, null, false) } returns archivedForm
         every { soknadService.erSøknadArkivLagret(any()) } returns false
+        val søknad = Soknad.fraArkivFormData(ARKIV_REF, søknadXML, nå.toInstant())
+        every { soknadService.hentSøknadMedArkivRef(ARKIV_REF) } returns søknad
         val dokument = DokumentFactory.lagDokument()
         every { dokumentService.hentSøknadDokument(any()) } returns dokument
+
 
         mottakService.pollDokumentKø()
 

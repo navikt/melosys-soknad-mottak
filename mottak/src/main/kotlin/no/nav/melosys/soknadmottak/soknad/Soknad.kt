@@ -53,4 +53,14 @@ class Soknad(
     override fun hashCode(): Int {
         return soknadID.hashCode()
     }
+
+    companion object {
+        fun fraArkivFormData(
+            arkivRef: String, formData: String, innsendtTidspunkt: Instant
+        ): Soknad {
+            return Soknad(
+                arkivRef, false, formData, innsendtTidspunkt
+            )
+        }
+    }
 }
