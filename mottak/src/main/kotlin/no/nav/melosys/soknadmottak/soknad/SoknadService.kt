@@ -20,7 +20,7 @@ class SoknadService @Autowired constructor(
     private val dokgenService: DokgenService,
     private val dokumentService: DokumentService
 ) {
-    fun erSøknadArkivIkkeLagret(arkivRef: String): Boolean {
+    fun erSøknadArkivLagret(arkivRef: String): Boolean {
         return soknadRepository.findByArkivReferanse(arkivRef).count() == 0
     }
 
