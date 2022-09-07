@@ -21,7 +21,7 @@ class SoknadService @Autowired constructor(
     private val dokumentService: DokumentService
 ) {
     fun erSøknadArkivLagret(arkivRef: String): Boolean {
-        return soknadRepository.findByArkivReferanse(arkivRef).count() == 0
+        return soknadRepository.existsByArkivReferanse(arkivRef)
     }
 
     fun hentSøknad(soknadID: String): Soknad {
