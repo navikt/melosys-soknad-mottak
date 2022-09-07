@@ -93,7 +93,7 @@ class MottakServiceTest {
             reportee = "reportee"
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForms
-        every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
+        every { soknadService.erSøknadArkivLagret(any()) } returns false
         val dokument = DokumentFactory.lagDokument(innhold = null)
         every { dokumentService.hentSøknadDokument(any()) } returns dokument
 
@@ -130,7 +130,7 @@ class MottakServiceTest {
             reportee = "reportee"
         }
         every { downloadQueue.getArchivedFormTaskBasicDQ(any(), any(), "ref", null, false) } returns archivedForm
-        every { soknadService.erSøknadArkivIkkeLagret(any()) } returns true
+        every { soknadService.erSøknadArkivLagret(any()) } returns false
         val dokument = DokumentFactory.lagDokument()
         every { dokumentService.hentSøknadDokument(any()) } returns dokument
 

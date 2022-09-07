@@ -56,7 +56,7 @@ class MottakService(
                         archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData,
                         innsendtTidspunkt
                     )
-                    if (soknadService.erSøknadArkivIkkeLagret(arkivRef)) {
+                    if (!soknadService.erSøknadArkivLagret(arkivRef)) {
                         logger.info {
                             "Behandler straks arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
                         }
