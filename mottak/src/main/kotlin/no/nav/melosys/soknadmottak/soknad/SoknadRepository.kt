@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface SoknadRepository : JpaRepository<Soknad, Long> {
+
+    fun existsByArkivReferanse(ref: String): Boolean
+
     fun findByArkivReferanse(ref: String): Iterable<Soknad>
 
     fun findBySoknadID(soknadID: UUID): Soknad?

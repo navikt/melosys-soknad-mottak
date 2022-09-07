@@ -60,10 +60,10 @@ class MottakService(
                         logger.info {
                             "Behandler straks arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
                         }
-                        val søknadDokumentID = soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
+                        soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
                         val søknadPDF = soknadService.lagPDF(søknad)
                         kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
-                        dokumentService.lagrePDF(søknadDokumentID, søknadPDF)
+                        dokumentService.lagrePDF("TODO søknadDokumentID", søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet arkivRef: '$arkivRef'"
