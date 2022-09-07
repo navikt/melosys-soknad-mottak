@@ -107,8 +107,8 @@ class MottakService(
         try {
             purgeItem(arkivRef)
             logger.info { "Fjernet arkiv '$arkivRef'" }
-        } catch (e: Throwable) {
-            logger.error { "Kunne ikke fjerne arkiv '$arkivRef'" }
+        } catch (t: Throwable) {
+            logger.error(t, { "Kunne ikke fjerne arkiv '$arkivRef'" })
         }
     }
 
