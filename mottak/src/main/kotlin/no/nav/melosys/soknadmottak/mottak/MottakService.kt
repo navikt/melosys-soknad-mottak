@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBE
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
+import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedFormTaskDQBE
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.AltinnConfig
@@ -16,6 +17,7 @@ import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
@@ -46,21 +48,12 @@ class MottakService(
                 elementer.forEachIndexed { index, item ->
                     logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
                     val arkivRef = item.archiveReference
-                    val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
-                    val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
-                    val innsendtTidspunkt = archivedFormTaskBasicDQ.archiveTimeStamp.toGregorianCalendar().toInstant()
 
-                    val søknad = Soknad(
-                        arkivRef,
-                        false,
-                        archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData,
-                        innsendtTidspunkt
-                    )
                     if (!soknadService.erSøknadArkivLagret(arkivRef)) {
                         logger.info {
-                            "Behandler straks arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
+                            "Lagrer melding og vedlegg for arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
                         }
-                        soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
+                        val søknad = lagreMeldingOgVedleggForArkiv(arkivRef)
                         val søknadPDF = soknadService.lagPDF(søknad)
                         lagreNySøknadPDF(søknad, søknadPDF)
                         kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
@@ -102,6 +95,26 @@ class MottakService(
         return "archiveReference '${item.archiveReference}', archivedDate '${item.archivedDate}', reporteeType '${item
             .reporteeType}', serviceCode '${item.serviceCode}', serviceEditionCode '${item.serviceEditionCode}'"
     }
+
+    private fun lagreMeldingOgVedleggForArkiv(arkivRef: String) : Soknad {
+        val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
+        val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
+        val innsendtTidspunkt = archivedFormTaskBasicDQ.archiveTimeStamp.toGregorianCalendar().toInstant()
+        val nySøknad = lagSøknadFraArkiv(arkivRef, archivedFormTaskBasicDQ, innsendtTidspunkt)
+        soknadService.lagreSøknadMeldingOgVedlegg(nySøknad, arkivRef, vedlegg)
+        return nySøknad
+    }
+
+    private fun lagSøknadFraArkiv(
+        arkivRef: String,
+        archivedFormTaskBasicDQ: ArchivedFormTaskDQBE,
+        innsendtTidspunkt: Instant
+    ) = Soknad(
+        arkivRef,
+        false,
+        archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData,
+        innsendtTidspunkt
+    )
 
     private fun lagreNySøknadPDF(søknad: Soknad, søknadPDF: ByteArray) {
         val søknadDokument = dokumentService.hentSøknadDokument(søknad.soknadID.toString())
