@@ -6,4 +6,5 @@ import java.util.*
 interface DokumentRepository : JpaRepository<Dokument, Long> {
     fun findByDokumentID(dokID: String): Dokument?
     fun findBySoknadSoknadID(soknadID: UUID): Iterable<Dokument>
+    fun findBySoknadSoknadIDAndType(soknadID: UUID, type: String): Dokument
 }

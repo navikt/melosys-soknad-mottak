@@ -62,8 +62,8 @@ class MottakService(
                         }
                         soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
                         val søknadPDF = soknadService.lagPDF(søknad)
+                        lagreNySøknadPDF(søknad, søknadPDF)
                         kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
-                        dokumentService.lagrePDF("TODO søknadDokumentID", søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
                             "Behandlet arkivRef: '$arkivRef'"
@@ -101,6 +101,13 @@ class MottakService(
     private fun formatDownloadQueueItemData(item: DownloadQueueItemBE): String {
         return "archiveReference '${item.archiveReference}', archivedDate '${item.archivedDate}', reporteeType '${item
             .reporteeType}', serviceCode '${item.serviceCode}', serviceEditionCode '${item.serviceEditionCode}'"
+    }
+
+    private fun lagreNySøknadPDF(søknad: Soknad, søknadPDF: ByteArray) {
+        val søknadDokument = dokumentService.hentSøknadDokument(søknad.soknadID.toString())
+        if (søknadDokument.innhold == null) {
+            dokumentService.lagrePDF(søknadDokument, søknadPDF)
+        }
     }
 
     private fun fjernElementFraKø(arkivRef: String) {
