@@ -1,18 +1,16 @@
 package no.nav.melosys.soknadmottak.soknad
 
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.nav.melosys.soknadmottak.dokument.Dokument
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.soknad.dokgen.DokgenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,6 +33,11 @@ internal class SoknadServiceTest {
         soknadService = SoknadService(soknadRepository, dokgenService, dokumentService)
     }
 
+    @BeforeEach
+    fun beforeEach() {
+        clearAllMocks()
+    }
+
     @Test
     fun hentPdf() {
         val søknad = SoknadFactory.lagSoknadFraXmlFil()
@@ -52,7 +55,7 @@ internal class SoknadServiceTest {
     }
 
     @Test
-    fun lagreSøknadOgDokumenter() {
+    fun lagreSøknadMeldingOgVedlegg() {
         val søknad = SoknadFactory.lagSoknad(1)
         val vedlegg = ArchivedAttachmentDQBE().apply {
             attachmentData = ByteArray(8)
@@ -68,8 +71,19 @@ internal class SoknadServiceTest {
         verify { soknadService.lagre(any()) }
         val dokumentSlots = mutableListOf<Dokument>()
         verify(exactly = 2) { dokumentService.lagreDokument(capture(dokumentSlots)) }
-        assertThat(dokumentSlots[0].filnavn).isEqualTo("vedlegg_1")
-        assertThat(dokumentSlots[1].filnavn).isEqualTo("ref_ref.pdf")
+        assertThat(dokumentSlots[0].filnavn).isEqualTo("ref_ref.pdf")
+        assertThat(dokumentSlots[1].filnavn).isEqualTo("vedlegg_1")
+    }
+
+    @Test
+    fun `Ikke lagre XML + vedlegg hvis det ble gjort`() {
+        val søknad = SoknadFactory.lagSoknad(1)
+        every { soknadRepository.existsByArkivReferanse("ref") } returns true
+
+        soknadService.lagreSøknadMeldingOgVedlegg(søknad, "ref", emptyList<ArchivedAttachmentDQBE>().toMutableList())
+
+        verify(exactly = 0) { soknadService.lagre(any()) }
+        verify { dokumentService wasNot called }
     }
 
     @Test
@@ -85,6 +99,6 @@ internal class SoknadServiceTest {
 
         val slot = slot<Soknad>()
         verify { soknadRepository.save(capture(slot)) }
-        assertThat(slot.captured.levert).isTrue()
+        assertThat(slot.captured.levert).isTrue
     }
 }

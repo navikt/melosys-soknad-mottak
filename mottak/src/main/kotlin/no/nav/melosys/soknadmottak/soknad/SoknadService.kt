@@ -39,16 +39,19 @@ class SoknadService @Autowired constructor(
         søknad: Soknad,
         arkivRef: String,
         vedlegg: MutableList<ArchivedAttachmentDQBE>
-    ): String {
-        logger.info { "Lagrer søknad med soknadID ${søknad.soknadID}, arkivRef '$arkivRef'" }
+    ) {
+        if (soknadRepository.existsByArkivReferanse(arkivRef)) {
+            logger.info { "Søknad XML og vedlegg for arkivRef '$arkivRef' er allerede lagret" }
+            return
+        }
+        logger.info { "Lagrer søknad XML og vedlegg for arkivRef '$arkivRef'" }
         lagre(søknad)
-        behandleVedleggListe(søknad, vedlegg, arkivRef)
-        return dokumentService.lagreDokument(
+        dokumentService.lagreDokument(
             Dokument(
-                søknad,
-                "ref_$arkivRef.pdf", DokumentType.SOKNAD
+                søknad, "ref_$arkivRef.pdf", DokumentType.SOKNAD
             )
         )
+        behandleVedleggListe(søknad, vedlegg, arkivRef)
     }
 
     fun lagre(soknad: Soknad): Soknad {
