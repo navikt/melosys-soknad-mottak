@@ -16,6 +16,8 @@ import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.slf4j.MDC
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
@@ -57,7 +59,9 @@ class MottakService(
                     val søknad = soknadService.hentSøknadMedArkivRef(arkivRef)
                     val søknadPDF = soknadService.lagPDF(søknad)
                     lagreNySøknadPDF(søknad, søknadPDF)
-                    kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
+                    if (søknad.innsendtTidspunkt.isAfter(Instant.now().minus(7, ChronoUnit.DAYS))) {
+                        kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
+                    }
                     fjernElementFraKø(arkivRef)
                     logger.info {
                         "Behandlet arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}')"
