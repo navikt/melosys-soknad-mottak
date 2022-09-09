@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.mottak
 
 import mu.KotlinLogging
 import mu.withLoggingContext
+import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBE
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
@@ -40,8 +41,11 @@ class MottakService(
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 val elementer = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
-                logger.debug { "Behandler '${elementer.size}' elementer" }
+                logger.info {
+                    "Hentet '${elementer.size}' DownloadQueueItems: '${elementer.map { it.archiveReference }}'"
+                }
                 elementer.forEachIndexed { index, item ->
+                    logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
                     val arkivRef = item.archiveReference
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
                     val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
@@ -76,16 +80,26 @@ class MottakService(
     fun publiserIkkeLeverteSøknader() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                soknadService.hentIkkeLeverteSøknader()
-                    .filter { dokumentService.erDokumentInnholdLagret(it.soknadID.toString()) }
-                    .forEach { søknad ->
-                        logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
-                        kafkaAivenProducer.publiserMelding(SoknadMottatt(søknad))
+                val partition = soknadService.hentIkkeLeverteSøknader()
+                    .partition { dokumentService.erDokumentInnholdLagret(it.soknadID.toString()) }
+                partition.first.forEach { søknad ->
+                    logger.info { "Publiser søknad med soknadID ${søknad.soknadID}" }
+                    kafkaAivenProducer.publiserMelding(SoknadMottatt(søknad))
+                }
+                if (partition.second.isNotEmpty()) {
+                    logger.info {
+                        "Følgende '${partition.second.size}' søknad(er) mangler dokument og kan derfor ikke publiseres: '${partition.second.map { it.soknadID }}''"
                     }
+                }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
         }
+    }
+
+    private fun formatDownloadQueueItemData(item: DownloadQueueItemBE): String {
+        return "archiveReference '${item.archiveReference}', archivedDate '${item.archivedDate}', reporteeType '${item
+            .reporteeType}', serviceCode '${item.serviceCode}', serviceEditionCode '${item.serviceEditionCode}'"
     }
 
     private fun fjernElementFraKø(arkivRef: String) {
