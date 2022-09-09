@@ -59,9 +59,7 @@ class MottakService(
                     val søknad = soknadService.hentSøknadMedArkivRef(arkivRef)
                     val søknadPDF = soknadService.lagPDF(søknad)
                     lagreNySøknadPDF(søknad, søknadPDF)
-                    if (søknad.innsendtTidspunkt.isAfter(Instant.now().minus(7, ChronoUnit.DAYS))) {
-                        kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
-                    }
+                    sendSøknadKopiHvisØnskelig(søknad, arkivRef, søknadPDF)
                     fjernElementFraKø(arkivRef)
                     logger.info {
                         "Behandlet arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}')"
@@ -113,6 +111,20 @@ class MottakService(
         val søknadDokument = dokumentService.hentSøknadDokument(søknad.soknadID.toString())
         if (søknadDokument.innhold == null) {
             dokumentService.lagrePDF(søknadDokument, søknadPDF)
+        }
+    }
+
+    private fun sendSøknadKopiHvisØnskelig(
+        søknad: Soknad,
+        arkivRef: String,
+        søknadPDF: ByteArray
+    ) {
+        if (søknad.innsendtTidspunkt.isAfter(Instant.now().minus(7, ChronoUnit.DAYS))) {
+            kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
+        } else {
+            logger.info {
+                "Sender ikke søknad kopi fordi for mange dager har passert."
+            }
         }
     }
 
