@@ -8,6 +8,7 @@ import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternal
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
+import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
 import no.nav.melosys.soknadmottak.kafka.SoknadMottatt
 import no.nav.melosys.soknadmottak.kopi.KopiService
@@ -84,9 +85,29 @@ class MottakService(
                 }
                 if (partition.second.isNotEmpty()) {
                     logger.info {
-                        "Følgende '${partition.second.size}' søknad(er) mangler dokument og kan derfor ikke publiseres: '${partition.second.map { it.soknadID }}''"
+                        "Følgende '${partition.second.size}' søknad(er) mangler dokument og kan derfor ikke publiseres: '${partition.second.map { it.soknadID }}'"
                     }
                 }
+            }
+        } finally {
+            MDC.remove(MDC_CALL_ID)
+        }
+    }
+
+    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS * 12, initialDelay = OPPSTART_FØRSTE_JOBB_MILLIS)
+    fun lagSøknadPdfHvisManglerEtterFeil() {
+        try {
+            withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
+                soknadService.hentIkkeLeverteSøknader()
+                    .filter { !finnesPåDownloadQueue(it.arkivReferanse) }
+                    .filter { manglerBareSøknadPdf(it) }
+                    .forEach { søknad ->
+                        logger.info {
+                            "Søknad med arkiv referanse '${søknad.arkivReferanse}' mangler dokument og er ikke på kø."
+                        }
+                        val søknadPDF = soknadService.lagPDF(søknad)
+                        lagreNySøknadPDF(søknad, søknadPDF)
+                    }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
@@ -136,6 +157,18 @@ class MottakService(
             logger.error(t, { "Kunne ikke fjerne arkiv '$arkivRef'" })
         }
     }
+
+    private fun finnesPåDownloadQueue(arkivReferanse: String): Boolean =
+        getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE.map {
+            it.archiveReference
+        }.contains(arkivReferanse)
+
+    private fun manglerBareSøknadPdf(it: Soknad) =
+        dokumentService.hentDokumenterForSoknad(it.soknadID.toString()).filter {
+            it.type == DokumentType.SOKNAD
+        }.all {
+            it.innhold == null
+        }
 
     fun getDownloadQueueItems(serviceCode: String): DownloadQueueItemBEList =
         iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)

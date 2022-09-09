@@ -191,10 +191,11 @@ class MottakServiceTest {
     }
 
     @Test
-    fun `publiserIkkeLeverteSøknader dokumentInnholdErLagret søknadBlirPublisert`() {
+    fun `publiserIkkeLeverteSøknader - dokumentInnholdErLagret søknadBlirPublisert`() {
         val søknad = Soknad("", false, "", Instant.now(), soknadID = UUID.randomUUID())
         every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
         every { dokumentService.erDokumentInnholdLagret(søknad.soknadID.toString()) } returns true
+
         mottakService.publiserIkkeLeverteSøknader()
 
         val slot = slot<SoknadMottatt>()
@@ -203,12 +204,40 @@ class MottakServiceTest {
     }
 
     @Test
-    fun `publiserIkkeLeverteSøknader dokumentInnholdIkkeLagret søknadBlirIkkePublisert`() {
+    fun `publiserIkkeLeverteSøknader - dokumentInnholdIkkeLagret søknadBlirIkkePublisert`() {
         val søknad = Soknad("", false, "", Instant.now(), soknadID = UUID.randomUUID())
         every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknad)
         every { dokumentService.erDokumentInnholdLagret(søknad.soknadID.toString()) } returns false
+
         mottakService.publiserIkkeLeverteSøknader()
 
         verify(exactly = 0) { kafkaAivenProducer.publiserMelding(any()) }
     }
+
+    @Test
+    fun `lagSøknadPdfHvisManglerEtterFeil - lager PDF for søknader som ikke lenger er på Altinn DownloadQueue`() {
+        val søknadPåKø = Soknad("ref på kø", false, "xml", Instant.EPOCH, soknadID = UUID
+            .randomUUID())
+        val søknadUtenPdfOgIkkePåKø = Soknad("ref ikke på kø", false, "xml", Instant.MIN, soknadID = UUID
+            .randomUUID())
+        every { soknadService.hentIkkeLeverteSøknader() } returns listOf(søknadPåKø, søknadUtenPdfOgIkkePåKø)
+
+        val itemList = DownloadQueueItemBEList()
+        val item = DownloadQueueItemBE().apply {
+            archiveReference = "ref på kø"
+        }
+        itemList.downloadQueueItemBE.add(item)
+        every { downloadQueue.getDownloadQueueItems(any(), any(), any()) } returns itemList
+
+        val søknadDokumentUtenPdfInnhold = DokumentFactory.lagDokument(soknad = søknadUtenPdfOgIkkePåKø, innhold = null)
+        every { dokumentService.hentDokumenterForSoknad(søknadUtenPdfOgIkkePåKø.soknadID.toString()) } returns listOf(søknadDokumentUtenPdfInnhold)
+        every { dokumentService.hentSøknadDokument(søknadUtenPdfOgIkkePåKø.soknadID.toString()) } returns søknadDokumentUtenPdfInnhold
+
+
+        mottakService.lagSøknadPdfHvisManglerEtterFeil()
+
+
+        verify(exactly = 1) { dokumentService.lagrePDF(any(), any()) }
+    }
+
 }
