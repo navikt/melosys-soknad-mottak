@@ -41,17 +41,17 @@ class MottakService(
     fun pollDokumentKø() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
-                val elementer = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
+                val items = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
                 logger.info {
-                    "Hentet '${elementer.size}' DownloadQueueItems: '${elementer.map { it.archiveReference }}'"
+                    "Hentet '${items.size}' DownloadQueueItems: '${items.map { it.archiveReference }}'"
                 }
-                elementer.forEachIndexed { index, item ->
+                items.forEachIndexed { index, item ->
                     logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
                     val arkivRef = item.archiveReference
 
                     if (!soknadService.erSøknadArkivLagret(arkivRef)) {
                         logger.info {
-                            "Lagrer melding og vedlegg for arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
+                            "Lagrer melding og vedlegg for arkivRef: '$arkivRef' ('${index + 1} av ${items.size}') "
                         }
                         lagreMeldingOgVedleggForArkiv(arkivRef)
                     }
@@ -62,10 +62,10 @@ class MottakService(
                     sendSøknadKopiHvisØnskelig(søknad, arkivRef, søknadPDF)
                     fjernElementFraKø(arkivRef)
                     logger.info {
-                        "Behandlet arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}')"
+                        "Behandlet arkivRef: '$arkivRef' ('${index + 1} av ${items.size}')"
                     }
                 }
-                logger.debug { "Ferdig med behandling av '${elementer.size}' elementer." }
+                logger.debug { "Ferdig med behandling av '${items.size}' elementer." }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
