@@ -94,7 +94,7 @@ class MottakService(
         }
     }
 
-    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS * 12, initialDelay = OPPSTART_FØRSTE_JOBB_MILLIS)
+    @Scheduled(fixedDelay = VENTETID_MELLOM_JOBBER_MILLIS * 12, initialDelay = 60 * 1000L)
     fun lagSøknadPdfHvisManglerEtterFeil() {
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
