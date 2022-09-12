@@ -11,9 +11,11 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class MetrikkConfig {
 
-    private val NAMESPACE = "melosys_soknad_mottak"
-    private val SOKNAD_LEVERT = NAMESPACE + "soknad.levert"
-    private val SOKNAD_IKKE_LEVERT = NAMESPACE + "soknad.ikke.levert"
+    companion object {
+        private const val NAMESPACE = "melosys.soknad.mottak_"
+        private const val SOKNAD_LEVERT = NAMESPACE + "soknad.levert"
+        private const val SOKNAD_IKKE_LEVERT = NAMESPACE + "soknad.ikke.levert"
+    }
 
     @Bean
     fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry>? {

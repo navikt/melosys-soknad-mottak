@@ -14,7 +14,7 @@ class FeaturetoggleConfig {
 
     @Bean
     fun unleash(environment: Environment): Unleash? {
-        if (environment.activeProfiles.contains("test")) {
+        if (environment.activeProfiles.contains("test") || environment.activeProfiles.contains("local")) {
             return FakeUnleash()
         }
 
