@@ -107,6 +107,9 @@ class MottakService(
                         }
                         val søknadPDF = soknadService.lagPDF(søknad)
                         lagreNySøknadPDF(søknad, søknadPDF)
+                        logger.info {
+                            "Opprettet PDF for søknad '${søknad.soknadID}' med arkiv referanse '${søknad.arkivReferanse}'"
+                        }
                     }
             }
         } finally {
