@@ -3,7 +3,6 @@ package no.nav.melosys.soknadmottak.kopi
 import mu.KotlinLogging
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
 import no.nav.melosys.soknadmottak.common.IntegrasjonException
-import no.nav.melosys.soknadmottak.common.Metrikker
 import no.nav.melosys.soknadmottak.kopi.altinn.KorrespondanseService
 import no.nav.melosys.soknadmottak.kopi.altinn.Melding
 import no.nav.melosys.soknadmottak.kopi.altinn.Vedlegg
@@ -39,7 +38,6 @@ class KopiService(private val korrespondanseService: KorrespondanseService) {
         } catch (t: Throwable) {
             throw IntegrasjonException("Kunne ikke kvittere for arkiv '$arkivRef'", t)
         }
-        Metrikker.kvitteringSendt.increment()
         logger.info { "Sendt kopi for arkiv '$arkivRef'" }
     }
 
