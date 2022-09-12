@@ -147,7 +147,7 @@ class MottakService(
             kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
         } else {
             logger.info {
-                "Sender ikke søknad kopi fordi for mange dager har passert."
+                "Sender ikke søknad kopi for AR '$arkivRef' fordi for mange dager har passert."
             }
         }
     }
