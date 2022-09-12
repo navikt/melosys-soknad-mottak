@@ -100,7 +100,7 @@ class MottakService(
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 soknadService.hentIkkeLeverteSøknader()
                     .filter { !finnesPåDownloadQueue(it.arkivReferanse) }
-                    .filter { manglerBareSøknadPdf(it) }
+                    .filter { !harSøknadPdf(it) }
                     .forEach { søknad ->
                         logger.info {
                             "Søknad med arkiv referanse '${søknad.arkivReferanse}' mangler dokument og er ikke på kø."
@@ -163,10 +163,10 @@ class MottakService(
             it.archiveReference
         }.contains(arkivReferanse)
 
-    private fun manglerBareSøknadPdf(it: Soknad) =
+    private fun harSøknadPdf(it: Soknad) =
         dokumentService.hentDokumenterForSoknad(it.soknadID.toString()).filter {
             it.type == DokumentType.SOKNAD
-        }.all {
+        }.none {
             it.innhold == null
         }
 
