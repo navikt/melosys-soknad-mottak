@@ -45,16 +45,16 @@ class MottakService(
                 val items = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
                 if (items.size > 0) {
                     logger.info {
-                        "Hentet '${items.size}' DownloadQueueItems: '${items.map { it.archiveReference }}'"
+                        "Hentet ${items.size} DownloadQueueItems: ${items.map { it.archiveReference }}"
                     }
                 }
                 items.forEachIndexed { index, item ->
-                    logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
+                    logger.info { "Behandler arkiv ${formatDownloadQueueItemData(item)}" }
                     val arkivRef = item.archiveReference
 
                     if (!soknadService.erSøknadArkivLagret(arkivRef)) {
                         logger.info {
-                            "Lagrer melding og vedlegg for arkivRef: '$arkivRef' ('${index + 1} av ${items.size}') "
+                            "Lagrer melding og vedlegg for arkivRef $arkivRef (${index + 1} av ${items.size}) "
                         }
                         lagreMeldingOgVedleggForArkiv(arkivRef)
                     }
@@ -65,10 +65,9 @@ class MottakService(
                     sendSøknadKopiHvisØnskelig(søknad, arkivRef, søknadPDF)
                     fjernElementFraKø(arkivRef)
                     logger.info {
-                        "Behandlet arkivRef: '$arkivRef' ('${index + 1} av ${items.size}')"
+                        "Behandlet arkivRef $arkivRef (${index + 1} av ${items.size})"
                     }
                 }
-                logger.debug { "Ferdig med behandling av '${items.size}' elementer." }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
@@ -87,7 +86,7 @@ class MottakService(
                 }
                 if (partition.second.isNotEmpty()) {
                     logger.info {
-                        "Følgende '${partition.second.size}' søknad(er) mangler dokument og kan derfor ikke publiseres: '${partition.second.map { it.soknadID }}'"
+                        "Følgende ${partition.second.size} søknad(er) mangler dokument og kan derfor ikke publiseres: ${partition.second.map { it.soknadID }}"
                     }
                 }
             }
@@ -105,12 +104,12 @@ class MottakService(
                     .filter { !harSøknadPdf(it) }
                     .forEach { søknad ->
                         logger.info {
-                            "Søknad med arkiv referanse '${søknad.arkivReferanse}' mangler dokument og er ikke på kø."
+                            "Søknad med arkiv referanse ${søknad.arkivReferanse} mangler dokument og er ikke på kø."
                         }
                         val søknadPDF = soknadService.lagPDF(søknad)
                         lagreNySøknadPDF(søknad, søknadPDF)
                         logger.info {
-                            "Opprettet PDF for søknad '${søknad.soknadID}' med arkiv referanse '${søknad.arkivReferanse}'"
+                            "Opprettet PDF for søknad ${søknad.soknadID} med arkiv referanse ${søknad.arkivReferanse}"
                         }
                     }
             }
@@ -120,8 +119,8 @@ class MottakService(
     }
 
     private fun formatDownloadQueueItemData(item: DownloadQueueItemBE): String {
-        return "archiveReference '${item.archiveReference}', archivedDate '${item.archivedDate}', reporteeType '${item
-            .reporteeType}', serviceCode '${item.serviceCode}', serviceEditionCode '${item.serviceEditionCode}'"
+        return "archiveReference ${item.archiveReference}, archivedDate ${item.archivedDate}, reporteeType ${item
+            .reporteeType}, serviceCode ${item.serviceCode}, serviceEditionCode ${item.serviceEditionCode}"
     }
 
     private fun lagreMeldingOgVedleggForArkiv(arkivRef: String) {
@@ -149,7 +148,7 @@ class MottakService(
             kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
         } else {
             logger.info {
-                "Sender ikke søknad kopi for AR '$arkivRef' fordi for mange dager har passert."
+                "Sender ikke søknad kopi for AR $arkivRef fordi for mange dager har passert."
             }
         }
     }
@@ -157,9 +156,9 @@ class MottakService(
     private fun fjernElementFraKø(arkivRef: String) {
         try {
             purgeItem(arkivRef)
-            logger.info { "Fjernet arkiv '$arkivRef'" }
+            logger.info { "Fjernet arkiv $arkivRef" }
         } catch (t: Throwable) {
-            logger.error(t, { "Kunne ikke fjerne arkiv '$arkivRef'" })
+            logger.error(t, { "Kunne ikke fjerne arkiv $arkivRef" })
         }
     }
 
