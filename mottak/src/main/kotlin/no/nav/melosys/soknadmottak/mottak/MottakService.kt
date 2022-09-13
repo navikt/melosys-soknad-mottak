@@ -41,10 +41,10 @@ class MottakService(
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 val elementer = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
                 logger.info {
-                    "Hentet '${elementer.size}' DownloadQueueItems: '${elementer.map { it.archiveReference }}'"
+                    "Hentet ${elementer.size} DownloadQueueItems: ${elementer.map { it.archiveReference }}"
                 }
                 elementer.forEachIndexed { index, item ->
-                    logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
+                    logger.info { "Behandler arkiv ${formatDownloadQueueItemData(item)}" }
                     val arkivRef = item.archiveReference
                     val archivedFormTaskBasicDQ = getArchivedFormTaskBasicDQ(arkivRef)
                     val vedlegg = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
@@ -58,7 +58,7 @@ class MottakService(
                     )
                     if (!soknadService.erSøknadArkivLagret(arkivRef)) {
                         logger.info {
-                            "Behandler straks arkivRef: '$arkivRef' ('${index + 1} av ${elementer.size}') "
+                            "Behandler straks arkivRef $arkivRef (${index + 1} av ${elementer.size}) "
                         }
                         soknadService.lagreSøknadMeldingOgVedlegg(søknad, arkivRef, vedlegg)
                         val søknadPDF = soknadService.lagPDF(søknad)
@@ -66,11 +66,10 @@ class MottakService(
                         kopiService.sendKopi(søknad.hentKvitteringMottakerID(), arkivRef, søknadPDF)
                         fjernElementFraKø(arkivRef)
                         logger.info {
-                            "Behandlet arkivRef: '$arkivRef'"
+                            "Behandlet arkivRef $arkivRef"
                         }
                     }
                 }
-                logger.debug { "Ferdig med behandling av '${elementer.size}' elementer." }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
@@ -89,7 +88,7 @@ class MottakService(
                 }
                 if (partition.second.isNotEmpty()) {
                     logger.info {
-                        "Følgende '${partition.second.size}' søknad(er) mangler dokument og kan derfor ikke publiseres: '${partition.second.map { it.soknadID }}''"
+                        "Følgende ${partition.second.size} søknad(er) mangler dokument og kan derfor ikke publiseres: ${partition.second.map { it.soknadID }}"
                     }
                 }
             }
@@ -99,8 +98,8 @@ class MottakService(
     }
 
     private fun formatDownloadQueueItemData(item: DownloadQueueItemBE): String {
-        return "archiveReference '${item.archiveReference}', archivedDate '${item.archivedDate}', reporteeType '${item
-            .reporteeType}', serviceCode '${item.serviceCode}', serviceEditionCode '${item.serviceEditionCode}'"
+        return "archiveReference ${item.archiveReference}, archivedDate ${item.archivedDate}, reporteeType ${item
+            .reporteeType}, serviceCode ${item.serviceCode}, serviceEditionCode ${item.serviceEditionCode}"
     }
 
     private fun lagreNySøknadPDF(søknad: Soknad, søknadPDF: ByteArray) {
@@ -113,9 +112,9 @@ class MottakService(
     private fun fjernElementFraKø(arkivRef: String) {
         try {
             purgeItem(arkivRef)
-            logger.info { "Fjernet arkiv '$arkivRef'" }
+            logger.info { "Fjernet arkiv $arkivRef" }
         } catch (t: Throwable) {
-            logger.error(t, { "Kunne ikke fjerne arkiv '$arkivRef'" })
+            logger.error(t, { "Kunne ikke fjerne arkiv $arkivRef" })
         }
     }
 
