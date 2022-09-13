@@ -1,12 +1,11 @@
 package no.nav.melosys.soknadmottak.soknad
 
-import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SoknadCache @Autowired constructor(
+class SoknadStatsCache @Autowired constructor(
     private val soknadRepository: SoknadRepository,
     @Value("\${melosys.cache.levetid:300000}")
     private val cacheLevetid: Long
