@@ -18,6 +18,8 @@ management:
         include: health, prometheus
 
 melosys:
+  cache:
+    levetid: 300000
   kafka:
     aiven:
       brokers: ${KAFKA_BROKERS}

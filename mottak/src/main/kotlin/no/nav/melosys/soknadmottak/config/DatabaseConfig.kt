@@ -19,7 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-@Profile("!test")
+@Profile("prod")
 @Configuration
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {

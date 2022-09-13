@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/testdb;MV_STORE=false;AUTO_SERVER=TRUE
+    username: postgres
+    password: su
+  main:
+    banner-mode: off
+  application:
+    name: melosys-soknad-mottak
+  flyway:
+    enabled: true
+
+melosys:
+  cache:
+    levetid: 30000
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+
+port: 60065
+KAFKA_BOOTSTRAP_SERVERS: localhost:${port}
+KAFKA_BROKERS: localhost:${port}
+
+SRV_USERNAME: dummy
+SRV_PASSWORD: dummy
+KAFKA_SOKNAD_MOTTATT_TOPIC: teammelosys.soknad-mottatt.v1-local
+
+STS_URL: fixme
+
+ALTINN_INFORMASJON_URL: https://altinn.no/altinnInformasjon
+ALTINN_USERNAME: dummy
+ALTINN_PASSWORD: dummy
+ALTINN_SERVICE_CODE: 0000
+
+DOKGEN_URL: changeme
+
+DATABASE_NAME: testdb

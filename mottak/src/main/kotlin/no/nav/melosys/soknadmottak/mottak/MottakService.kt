@@ -7,6 +7,7 @@ import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueI
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.AltinnConfig
+import no.nav.melosys.soknadmottak.config.MetrikkConfig
 import no.nav.melosys.soknadmottak.dokument.DokumentService
 import no.nav.melosys.soknadmottak.dokument.DokumentType
 import no.nav.melosys.soknadmottak.kafka.KafkaAivenProducer
@@ -57,6 +58,7 @@ class MottakService(
                             "Lagrer melding og vedlegg for arkivRef $arkivRef (${index + 1} av ${items.size}) "
                         }
                         lagreMeldingOgVedleggForArkiv(arkivRef)
+                        MetrikkConfig.Metrikker.søknadMottatt.increment()
                     }
 
                     val søknad = soknadService.hentSøknadMedArkivRef(arkivRef)
@@ -119,8 +121,8 @@ class MottakService(
     }
 
     private fun formatDownloadQueueItemData(item: DownloadQueueItemBE): String {
-        return "archiveReference ${item.archiveReference}, archivedDate ${item.archivedDate}, reporteeType ${item
-            .reporteeType}, serviceCode ${item.serviceCode}, serviceEditionCode ${item.serviceEditionCode}"
+        return "archiveReference ${item.archiveReference}, archivedDate ${item.archivedDate}, " +
+                "reporteeType ${item.reporteeType}, serviceCode ${item.serviceCode}, serviceEditionCode ${item.serviceEditionCode}"
     }
 
     private fun lagreMeldingOgVedleggForArkiv(arkivRef: String) {
