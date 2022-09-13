@@ -30,6 +30,12 @@ class SoknadService @Autowired constructor(
             ?: throw IkkeFunnetException("Finner ikke søknad med ID $soknadID")
     }
 
+    fun hentSøknadMedArkivRef(arkivRef: String): Soknad {
+        logger.debug { "Henter søknad med arkiRef $arkivRef" }
+        return soknadRepository.findByArkivReferanse(arkivRef)
+            ?: throw IkkeFunnetException("Finner ikke søknad med arkiRef $arkivRef")
+    }    
+
     fun lagPDF(søknad: Soknad): ByteArray {
         return dokgenService.lagSøknadPDF(SoknadSkjemaOversetter.tilSøknadsdata(søknad))
     }
