@@ -43,8 +43,10 @@ class MottakService(
         try {
             withLoggingContext(MDC_CALL_ID to UUID.randomUUID().toString()) {
                 val items = getDownloadQueueItems(altinnConfig.downloadQueue.code).downloadQueueItemBE
-                logger.info {
-                    "Hentet '${items.size}' DownloadQueueItems: '${items.map { it.archiveReference }}'"
+                if (items.size > 0) {
+                    logger.info {
+                        "Hentet '${items.size}' DownloadQueueItems: '${items.map { it.archiveReference }}'"
+                    }
                 }
                 items.forEachIndexed { index, item ->
                     logger.info { "Behandler arkiv '${formatDownloadQueueItemData(item)}'" }
