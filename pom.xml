@@ -57,7 +57,7 @@
         <scala.version>2.12.15</scala.version>
         <snappy.version>1.1.8.4</snappy.version>
         <stax2-api.version>4.2.1</stax2-api.version>
-        <woodstox.version>6.2.8</woodstox.version>
+        <woodstox.version>6.4.0</woodstox.version>
         <xmlsec.version>2.3.0</xmlsec.version>
         <zkclient.version>0.11</zkclient.version>
         <zookeeper.version>3.6.2</zookeeper.version>
