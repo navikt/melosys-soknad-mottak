@@ -1,5 +1,10 @@
 # melosys-soknad-mottak
-Mottaksapplikasjon for søknader om trygdetilhørighet
+Mottaksapplikasjon for søknader om trygdetilhørighet av utsendte arbeidstakere.
+
+- Leser fra en kø hos Altinn
+- Lagrer XML-søknad og vedlegg
+- Bestiller PDF som representerer søknaden
+- Sender en Kafka-melding når søknad er klar
 
 ## Oppsett
 
