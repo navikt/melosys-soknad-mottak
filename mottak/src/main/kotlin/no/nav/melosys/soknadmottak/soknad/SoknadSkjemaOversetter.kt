@@ -172,12 +172,16 @@ object SoknadSkjemaOversetter {
         Arbeidstaker(
             oversettMedfølgendeBarn(innhold),
             innhold.arbeidstaker.isReiserMedBarnTilUtlandet,
-            innhold.arbeidstaker.fulltNavn,
+            hentArbeidstakerNavn(innhold),
             innhold.arbeidstaker.foedselsnummer,
             innhold.arbeidstaker.foedeland,
             innhold.arbeidstaker.foedested,
             innhold.arbeidstaker.utenlandskIDnummer
         )
+
+    private fun hentArbeidstakerNavn(innhold: Innhold): String =
+        if (innhold.arbeidstaker.fulltNavn != null) innhold.arbeidstaker.fulltNavn else
+            innhold.arbeidstaker.etternavn
 
     private fun oversettMedfølgendeBarn(innhold: Innhold): List<BarnMed> {
         return innhold.arbeidstaker.barn?.barnet
