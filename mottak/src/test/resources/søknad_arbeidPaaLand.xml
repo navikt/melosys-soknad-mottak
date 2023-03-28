@@ -70,8 +70,6 @@
       <etternavn>etternavn</etternavn>
       <!--Optional:-->
       <utenlandskIDnummer>utenlandskIDnummer</utenlandskIDnummer>
-      <!--Optional:-->
-      <fulltNavn>Fullt Navn</fulltNavn>
     </arbeidstaker>
     <!--Optional:-->
     <midlertidigUtsendt>

@@ -48,6 +48,14 @@ internal class SoknadSkjemaOversetterTest {
     }
 
     @Test
+    fun `mapping arbeidstaker med bare etternavn, uten fullt navn`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_arbeidPaaLand.xml")
+        val søknadsdata = SoknadSkjemaOversetter.tilSøknadsdata(soknadFraXmlFil)
+
+        assertThat(søknadsdata.arbeidstaker.fulltNavn).isEqualTo("etternavn")
+    }
+
+    @Test
     fun `mapping kontakperson`() {
         assertThat(søknadsdata.kontakperson!!.navn).isEqualTo("kontaktpersonNavn")
         assertThat(søknadsdata.kontakperson!!.telefon).isEqualTo("kontaktpersonTelefon")
