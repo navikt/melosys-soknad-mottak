@@ -50,29 +50,42 @@ class MottakService(
                     }
                 }
                 items.forEachIndexed { index, item ->
-                    logger.info { "Behandler arkiv ${formatDownloadQueueItemData(item)}" }
-                    val arkivRef = item.archiveReference
-
-                    if (!soknadService.erSøknadArkivLagret(arkivRef)) {
-                        logger.info {
-                            "Lagrer melding og vedlegg for arkivRef $arkivRef (${index + 1} av ${items.size}) "
+                    try {
+                        behandleArkivItem(index, item)
+                    } catch (t: Throwable) {
+                        logger.error(t) {
+                            "Behandling av arkivRef ${item.archiveReference} feilet"
                         }
-                        lagreMeldingOgVedleggForArkiv(arkivRef)
-                        MetrikkConfig.Metrikker.søknadMottatt.increment()
-                    }
-
-                    val søknad = soknadService.hentSøknadMedArkivRef(arkivRef)
-                    val søknadPDF = soknadService.lagPDF(søknad)
-                    lagreNySøknadPDF(søknad, søknadPDF)
-                    sendSøknadKopiHvisØnskelig(søknad, arkivRef, søknadPDF)
-                    fjernElementFraKø(arkivRef)
-                    logger.info {
-                        "Behandlet arkivRef $arkivRef (${index + 1} av ${items.size})"
                     }
                 }
             }
         } finally {
             MDC.remove(MDC_CALL_ID)
+        }
+    }
+
+    private fun behandleArkivItem(
+        index: Int,
+        item: DownloadQueueItemBE
+    ) {
+        logger.info { "Behandler arkiv ${formatDownloadQueueItemData(item)}" }
+        val arkivRef = item.archiveReference
+
+        if (!soknadService.erSøknadArkivLagret(arkivRef)) {
+            logger.info {
+                "Lagrer melding og vedlegg for arkivRef $arkivRef (index: ${index + 1}) "
+            }
+            lagreMeldingOgVedleggForArkiv(arkivRef)
+            MetrikkConfig.Metrikker.søknadMottatt.increment()
+        }
+
+        val søknad = soknadService.hentSøknadMedArkivRef(arkivRef)
+        val søknadPDF = soknadService.lagPDF(søknad)
+        lagreNySøknadPDF(søknad, søknadPDF)
+        sendSøknadKopiHvisØnskelig(søknad, arkivRef, søknadPDF)
+        fjernElementFraKø(arkivRef)
+        logger.info {
+            "Behandlet arkivRef $arkivRef (index: ${index + 1})"
         }
     }
 
