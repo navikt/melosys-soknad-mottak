@@ -78,7 +78,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais.yaml
-          VAR: ingress=https://melosys-soknad-mottak.intern.dev.nav.no,KAFKA_POOL=nav-dev
+          VAR: ingress=https://melosys-soknad-mottak.dev.intern.nav.no,KAFKA_POOL=nav-dev
       - name: Deploy til prod-fss
         if: github.event.inputs.environment == 'prod' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
         uses: nais/deploy/actions/deploy@v1
