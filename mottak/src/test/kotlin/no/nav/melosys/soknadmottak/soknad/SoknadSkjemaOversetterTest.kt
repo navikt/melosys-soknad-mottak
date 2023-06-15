@@ -184,4 +184,12 @@ internal class SoknadSkjemaOversetterTest {
         val mottaker = SoknadSkjemaOversetter.avklarKvitteringMottaker(søknad)
         assertThat(mottaker).isEqualTo("fullmektigVirksomhetsnummer")
     }
+
+    @Test
+    fun `ikke oppgitt reiserMedBarnTilUtlandet blir false`() {
+        val soknadFraXmlFil = SoknadFactory.lagSoknadFraXmlFil("søknad_arbeidPaaLand.xml")
+        val søknadsdata = SoknadSkjemaOversetter.tilSøknadsdata(soknadFraXmlFil)
+
+        assertThat(søknadsdata.arbeidstaker.erMedBarnUnder18).isFalse()
+    }
 }

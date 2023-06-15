@@ -170,13 +170,13 @@ object SoknadSkjemaOversetter {
 
     private fun oversettArbeidstaker(innhold: Innhold) =
         Arbeidstaker(
-            oversettMedfølgendeBarn(innhold),
-            innhold.arbeidstaker.isReiserMedBarnTilUtlandet,
-            hentArbeidstakerNavn(innhold),
-            innhold.arbeidstaker.foedselsnummer,
-            innhold.arbeidstaker.foedeland,
-            innhold.arbeidstaker.foedested,
-            innhold.arbeidstaker.utenlandskIDnummer
+            barnMed = oversettMedfølgendeBarn(innhold),
+            erMedBarnUnder18 = innhold.arbeidstaker.isReiserMedBarnTilUtlandet ?: false,
+            fulltNavn = hentArbeidstakerNavn(innhold),
+            fnr = innhold.arbeidstaker.foedselsnummer,
+            foedeland = innhold.arbeidstaker.foedeland,
+            foedested = innhold.arbeidstaker.foedested,
+            utenlandskIDnummer = innhold.arbeidstaker.utenlandskIDnummer
         )
 
     private fun hentArbeidstakerNavn(innhold: Innhold): String =

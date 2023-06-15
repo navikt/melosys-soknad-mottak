@@ -53,7 +53,7 @@
       <!--Optional:-->
       <foedeland>foedeland</foedeland>
       <!--Optional:-->
-      <reiserMedBarnTilUtlandet>true</reiserMedBarnTilUtlandet>
+      <!--  <reiserMedBarnTilUtlandet>false</reiserMedBarnTilUtlandet> -->
       <!--Optional:-->
       <barn>
         <!--Zero or more repetitions:-->
