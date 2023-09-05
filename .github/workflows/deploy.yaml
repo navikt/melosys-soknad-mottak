@@ -10,6 +10,9 @@ on:
           description: 'Miljø'
           required: true
           default: 'dev'
+permissions:
+  contents: write
+  packages: write
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-soknad-mottak:${{ github.sha }}
   IMAGE_MANIFEST: https://docker.pkg.github.com/v2/${{ github.repository }}/melosys-soknad-mottak/manifests/${{ github.sha }}
