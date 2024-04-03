@@ -13,11 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
@@ -68,6 +63,11 @@
             <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+            <version>${jackson-module.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
@@ -79,8 +79,8 @@
             <version>${ulid.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.microutils</groupId>
-            <artifactId>kotlin-logging</artifactId>
+            <groupId>io.github.oshai</groupId>
+            <artifactId>kotlin-logging-jvm</artifactId>
             <version>${kotlin-logging.version}</version>
         </dependency>
         <dependency>
@@ -116,15 +116,26 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>no.nav.melosys</groupId>
+            <artifactId>altinn-correspondence-agency-external-basic</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring</artifactId>
             <version>${token-support.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>altinn-correspondence-agency-external-basic</artifactId>
-            <version>${tjenestespesifikasjoner.version}</version>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>3.0.0</version> <!-- TODO -->
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>no.nav.tjenestespesifikasjoner</groupId>-->
+        <!--            <artifactId>altinn-correspondence-agency-external-basic</artifactId>-->
+        <!--            <version>${tjenestespesifikasjoner.version}</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>altinn-download-queue-external</artifactId>
@@ -155,6 +166,11 @@
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
 
         <!--test-->
         <dependency>
@@ -164,33 +180,24 @@
             <version>${kotest.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk-jvm</artifactId>
+            <scope>test</scope>
+            <version>${mockk.version}</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kafka-embedded-env</artifactId>
             <version>${kafka-embedded-env.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-annotations</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-test-support</artifactId>
-            <version>${token-support.version}</version>
+            <version>${token-validation-test-support.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -228,7 +235,7 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <configuration>
-                    <jvmTarget>11</jvmTarget>
+                    <jvmTarget>17</jvmTarget>
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
@@ -237,7 +244,7 @@
                         <plugin>spring</plugin>
                     </compilerPlugins>
                     <pluginOptions>
-                        <option>spring:annotation=javax.persistence.Entity</option>
+                        <option>spring:annotation=jakarta.persistence.Entity</option>
                     </pluginOptions>
                 </configuration>
                 <dependencies>

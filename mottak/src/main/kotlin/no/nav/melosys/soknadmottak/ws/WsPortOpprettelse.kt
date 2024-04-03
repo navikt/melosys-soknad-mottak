@@ -16,5 +16,5 @@ fun <PORT_TYPE : Any> createServicePort(
     }
     .create(serviceClazz)
     .apply {
-        stsClient(stsProperties).configureFor(this, STS_SAML_POLICY)
+        stsClient(stsProperties).configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING) //TODO: Er dette ok?
     }

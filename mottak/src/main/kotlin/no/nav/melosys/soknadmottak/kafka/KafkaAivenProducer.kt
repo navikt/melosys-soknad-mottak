@@ -3,9 +3,7 @@ package no.nav.melosys.soknadmottak.kafka
 import no.nav.melosys.soknadmottak.common.PubliserSoknadException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.support.SendResult
 import org.springframework.stereotype.Service
-import org.springframework.util.concurrent.ListenableFutureCallback
 
 @Service
 class KafkaAivenProducer(
@@ -22,14 +20,11 @@ class KafkaAivenProducer(
             )
         }
     ) {
-        val future = aivenKafkaTemplate.send(topicName, soknadMottatt)
-
-        future.addCallback(object : ListenableFutureCallback<SendResult<String, SoknadMottatt>?> {
-            override fun onSuccess(result: SendResult<String, SoknadMottatt>?) {
-                callbackService.kvitter(result)
+        aivenKafkaTemplate.send(topicName, soknadMottatt).toCompletableFuture()
+            .thenAccept(callbackService::kvitter)
+            .exceptionally { throwable ->
+                vedFeil(throwable)
+                null
             }
-
-            override fun onFailure(throwable: Throwable) = vedFeil(throwable)
-        })
     }
 }

@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import jakarta.persistence.EntityManagerFactory
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer
@@ -16,7 +17,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
-import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
 @Profile("prod")

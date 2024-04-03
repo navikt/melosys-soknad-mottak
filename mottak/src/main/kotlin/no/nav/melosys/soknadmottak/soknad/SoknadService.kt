@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.soknad
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.altinn.schemas.services.archive.reporteearchive._2012._08.ArchivedAttachmentDQBE
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import no.nav.melosys.soknadmottak.dokument.Dokument

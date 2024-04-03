@@ -1,9 +1,7 @@
 package no.nav.melosys.soknadmottak.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "altinn")
 data class AltinnConfig(
     val username: String,
@@ -16,13 +14,16 @@ data class AltinnConfig(
     data class BehandleMelding(
         var url: String
     )
+
     data class Informasjon(
         var url: String
     )
+
     data class DownloadQueue(
         var code: String,
         var editionCode: String
     )
+
     data class Correspondence(
         var code: String,
         var editionCode: String

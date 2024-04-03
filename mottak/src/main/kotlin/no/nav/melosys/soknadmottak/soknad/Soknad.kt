@@ -1,11 +1,11 @@
 package no.nav.melosys.soknadmottak.soknad
 
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
 import java.time.Instant
 import java.util.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "SOKNAD_MOTTAK")

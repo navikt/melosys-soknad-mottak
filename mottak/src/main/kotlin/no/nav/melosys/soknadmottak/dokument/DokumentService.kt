@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.dokument
 
 import de.huxhorn.sulky.ulid.ULID
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.melosys.soknadmottak.common.IkkeFunnetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

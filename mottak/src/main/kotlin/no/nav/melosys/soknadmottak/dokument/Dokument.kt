@@ -1,11 +1,11 @@
 package no.nav.melosys.soknadmottak.dokument
 
+import jakarta.persistence.*
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
 import java.time.Instant
-import javax.persistence.*
 
 @Entity
 @Table(name = "DOKUMENT")

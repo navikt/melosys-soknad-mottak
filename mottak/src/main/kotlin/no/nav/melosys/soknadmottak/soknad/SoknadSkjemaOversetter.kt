@@ -1,9 +1,13 @@
 package no.nav.melosys.soknadmottak.soknad
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector
 import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
+import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.melosys.altinn.soknad.*
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.*
@@ -19,17 +23,24 @@ import no.nav.melosys.soknadmottak.soknad.dokgen.modell.OffshoreEnhet
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.OffshoreEnheter
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.Skip
 import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SkipListe
-import no.nav.melosys.soknadmottak.soknad.dokgen.modell.SoknadsdataBuilder
 import org.apache.commons.lang3.StringUtils
 import javax.xml.datatype.XMLGregorianCalendar
 
-private val kotlinXmlMapper = XmlMapper(
-    JacksonXmlModule().apply {
-        setDefaultUseWrapper(false)
-    }
-).registerKotlinModule()
-    .registerModule(JaxbAnnotationModule())
-    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+private val kotlinXmlMapper =
+
+    XmlMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+        .addModule(JakartaXmlBindAnnotationModule())
+        .addModule(JacksonXmlModule().apply { setDefaultUseWrapper(false) })
+        .annotationIntrospector(JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance()))
+        .build()
+        .registerKotlinModule()
+        .setAnnotationIntrospector(
+            AnnotationIntrospector.pair(
+                JacksonAnnotationIntrospector(),
+                JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance())
+            )
+        )
+
 
 object SoknadSkjemaOversetter {
     fun tilSøknadsdata(søknad: Soknad): Soknadsdata {
