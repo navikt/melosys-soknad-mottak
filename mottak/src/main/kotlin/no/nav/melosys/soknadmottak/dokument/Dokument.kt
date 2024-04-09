@@ -3,13 +3,12 @@ package no.nav.melosys.soknadmottak.dokument
 import jakarta.persistence.*
 import no.nav.melosys.soknadmottak.soknad.Soknad
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.GenericGenerator
-import org.hibernate.annotations.Parameter
 import java.time.Instant
 
 @Entity
 @Table(name = "DOKUMENT")
 class Dokument(
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "fk_soknad")
     var soknad: Soknad,
@@ -32,9 +31,10 @@ class Dokument(
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dokument_seq")
-    @GenericGenerator(
-        name = "dokument_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = [Parameter(name = "sequence_name", value = "dokument_id_seq")]
+    @SequenceGenerator(
+        name = "dokument_seq",
+        sequenceName = "dokument_id_seq",
+        allocationSize = 1
     )
     var id: Long? = null
 ) {

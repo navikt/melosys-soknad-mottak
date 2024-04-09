@@ -2,8 +2,6 @@ package no.nav.melosys.soknadmottak.soknad
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.GenericGenerator
-import org.hibernate.annotations.Parameter
 import java.time.Instant
 import java.util.*
 
@@ -28,9 +26,10 @@ class Soknad(
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "soknad_mottak_seq")
-    @GenericGenerator(
-        name = "soknad_mottak_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = [Parameter(name = "sequence_name", value = "soknad_mottak_id_seq")]
+    @SequenceGenerator(
+        name = "soknad_mottak_seq",
+        sequenceName = "soknad_mottak_id_seq",
+        allocationSize = 1
     )
     var id: Long? = null,
 
