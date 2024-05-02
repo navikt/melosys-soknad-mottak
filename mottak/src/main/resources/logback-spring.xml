@@ -12,7 +12,8 @@
       <appender-ref ref="stdout_json"/>
     </root>
 
-    <logger name="org.apache.cxf" level="ERROR"/>
+    <logger name="org.apache.cxf" level="DEBUG"/>
+    <logger name="org.apache.cxf.ws.security" level="DEBUG"/>
   </springProfile>
 
   <springProfile name="local">
