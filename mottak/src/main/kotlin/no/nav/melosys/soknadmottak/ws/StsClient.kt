@@ -10,7 +10,6 @@ import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.ws.addressing.WSAddressingFeature
 import org.apache.cxf.ws.policy.PolicyBuilder
 import org.apache.cxf.ws.policy.PolicyEngine
-import org.apache.cxf.ws.policy.attachment.reference.ReferenceResolver
 import org.apache.cxf.ws.policy.attachment.reference.RemoteReferenceResolver
 import org.apache.cxf.ws.security.SecurityConstants
 import org.apache.cxf.ws.security.trust.STSClient
@@ -51,11 +50,11 @@ fun STSClient.configureFor(servicePort: Any, policyUri: String) {
 fun Client.configureSTS(
     stsClient: STSClient,
     policyUri: String = STS_SAML_POLICY,
-    cacheTokenInEndpoint: Boolean = false
+    cacheTokenInEndpoint: Boolean = true
 ) {
     requestContext[SecurityConstants.STS_CLIENT] = stsClient
     requestContext[SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT] = cacheTokenInEndpoint
-    setClientEndpointPolicy(stsClient.client, resolvePolicyReference(stsClient.client, policyUri))
+    setClientEndpointPolicy(bus.resolvePolicy(policyUri))
 }
 
 private fun Bus.resolvePolicy(policyUri: String): Policy {
@@ -68,22 +67,9 @@ private fun Bus.resolvePolicy(policyUri: String): Policy {
     return resolved ?: referenceResolver.resolveReference(policyUri)
 }
 
-private fun setClientEndpointPolicy(client: Client, policy: Policy) {
-    val endpoint = client.endpoint
-    val endpointInfo = endpoint.endpointInfo
-
-    val policyEngine = client.bus.getExtension(
-        PolicyEngine::class.java
-    )
+private fun Client.setClientEndpointPolicy(policy: Policy) {
+    val policyEngine: PolicyEngine = bus.getExtension(PolicyEngine::class.java)
     val message = SoapMessage(Soap12.getInstance())
-    val endpointPolicy = policyEngine.getClientEndpointPolicy(endpointInfo, null, message)
-    policyEngine.setClientEndpointPolicy(endpointInfo, endpointPolicy.updatePolicy(policy, message))
-}
-
-private fun resolvePolicyReference(client: Client, uri: String): Policy {
-    val policyBuilder = client.bus.getExtension(
-        PolicyBuilder::class.java
-    )
-    val resolver: ReferenceResolver = RemoteReferenceResolver("", policyBuilder)
-    return resolver.resolveReference(uri)
+    val endpointPolicy = policyEngine.getClientEndpointPolicy(endpoint.endpointInfo, null, message)
+    policyEngine.setClientEndpointPolicy(endpoint.endpointInfo, endpointPolicy.updatePolicy(policy, message))
 }
