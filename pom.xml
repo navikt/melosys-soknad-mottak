@@ -51,7 +51,7 @@
         <nimbus-jose-jwt.version>9.37.1</nimbus-jose-jwt.version>
         <guava.version>31.1-jre</guava.version>
         <woodstox.version>6.5.1</woodstox.version>
-        <xmlsec.version>2.3.2</xmlsec.version>
+        <xmlsec.version>4.0.2</xmlsec.version>
     </properties>
 
     <dependencyManagement>
