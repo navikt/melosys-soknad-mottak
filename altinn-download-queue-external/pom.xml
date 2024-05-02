@@ -54,7 +54,7 @@
                             <goal>wsdl2java</goal>
                         </goals>
                         <configuration>
-                            <encoding>${project.build.sourceEncoding}</encoding> <!-- Nødvendig? -->
+                            <encoding>${project.build.sourceEncoding}</encoding>
                             <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
                             <defaultOptions>
                                 <extraargs>
