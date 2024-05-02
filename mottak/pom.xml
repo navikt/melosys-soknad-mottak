@@ -136,11 +136,11 @@
         <!--            <artifactId>altinn-correspondence-agency-external-basic</artifactId>-->
         <!--            <version>${tjenestespesifikasjoner.version}</version>-->
         <!--        </dependency>-->
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>altinn-download-queue-external</artifactId>
-            <version>${tjenestespesifikasjoner.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>no.nav.tjenestespesifikasjoner</groupId>-->
+        <!--            <artifactId>altinn-download-queue-external</artifactId>-->
+        <!--            <version>${tjenestespesifikasjoner.version}</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -218,6 +218,12 @@
             <artifactId>pdfbox</artifactId>
             <version>${pdfbox.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.melosys</groupId>
+            <artifactId>altinn-download-queue-external</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -17,6 +17,7 @@
 
     <modules>
         <module>altinn-correspondence-agency-external-basic</module>
+        <module>altinn-download-queue-external</module>
         <module>altinn-soknad-skjema</module>
         <module>mottak</module>
     </modules>
@@ -35,7 +36,7 @@
         <logstash-encoder.version>7.4</logstash-encoder.version>
         <micrometer.version>1.12.3</micrometer.version>
         <pdfbox.version>2.0.26</pdfbox.version>
-        <tjenestespesifikasjoner.version>1.858e92e</tjenestespesifikasjoner.version>
+        <!--        <tjenestespesifikasjoner.version>1.858e92e</tjenestespesifikasjoner.version>-->
         <token-support.version>3.2.0</token-support.version>
         <token-validation-test-support.version>2.0.0</token-validation-test-support.version>
         <ulid.version>8.3.0</ulid.version>
