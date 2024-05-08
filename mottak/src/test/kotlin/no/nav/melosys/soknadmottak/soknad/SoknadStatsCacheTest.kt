@@ -11,12 +11,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+// NB!
+// Litt ustabile tester på raskere PC-er. Kan være at det er for lite tid mellom oppdatering av cache og henting av data.
+// Kjører stabilt i Github Actions.
 @ExtendWith(MockKExtension::class)
 internal class SoknadStatsCacheTest {
     @MockK
     lateinit var soknadRepository: SoknadRepository
 
-    private lateinit var cache : SoknadStatsCache
+    private lateinit var cache: SoknadStatsCache
 
     @BeforeEach
     internal fun setUp() {
