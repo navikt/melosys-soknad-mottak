@@ -8,12 +8,10 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.melosys.soknadmottak.config.MetrikkConfig
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
-@Disabled("Alt for ustabile tester")
 internal class SoknadStatsCacheTest {
     @MockK
     lateinit var soknadRepository: SoknadRepository
@@ -26,7 +24,6 @@ internal class SoknadStatsCacheTest {
     }
 
     @Test
-    @Disabled("Alt for ustabile tester")
     internal fun antallSoknaderICache() {
         every { soknadRepository.hentAntallSoknaderIkkeLevert() } returns 3
         every { soknadRepository.hentAntallSoknaderLevert() } returns 6
@@ -38,7 +35,6 @@ internal class SoknadStatsCacheTest {
     }
 
     @Test
-    @Disabled("Alt for ustabile tester")
     internal fun soknadMottattIncrement() {
         Metrics.addRegistry(SimpleMeterRegistry())
         MetrikkConfig.Metrikker.søknadMottatt.count().shouldBeExactly(0.0)
