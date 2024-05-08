@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RestController
 @Protected
 @RestController
 @RequestMapping("/soknader")
-//@Api(tags = ["soknader"])
 class SoknadController @Autowired constructor(
     private val soknadService: SoknadService
 ) {
-    //    @ApiOperation("Henter XML-innhold til en søknad med gitt ID")
     @GetMapping("{soknadID}", produces = [MediaType.APPLICATION_XML_VALUE + "; charset=UTF-8"])
     fun hentSøknad(@PathVariable soknadID: String): ResponseEntity<String> =
         ResponseEntity.ok(

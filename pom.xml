@@ -42,6 +42,10 @@
         <vault-jdbc.version>1.3.10</vault-jdbc.version>
         <jackson-module.version>2.17.0</jackson-module.version>
         <mockk.version>1.13.10</mockk.version>
+        <org.jvnet.jaxb.version>4.0.3</org.jvnet.jaxb.version>
+        <cxf-codegen-plugin.version>4.0.3</cxf-codegen-plugin.version>
+        <jaxb-impl.version>4.0.4</jaxb-impl.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
 
         <!-- Transitive avhengiheter med konflikter -->
         <asm.version>9.5</asm.version>
@@ -51,6 +55,8 @@
         <guava.version>31.1-jre</guava.version>
         <woodstox.version>6.6.2</woodstox.version>
         <xmlsec.version>4.0.2</xmlsec.version>
+        <jaxws-ri.version>4.0.2</jaxws-ri.version>
+        <stax2-api.version>4.2.2</stax2-api.version>
     </properties>
 
     <dependencyManagement>
@@ -109,7 +115,7 @@
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
-                <version>4.2.2</version>
+                <version>${stax2-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
