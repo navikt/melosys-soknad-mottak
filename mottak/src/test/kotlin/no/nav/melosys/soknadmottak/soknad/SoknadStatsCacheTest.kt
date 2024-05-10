@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 // NB!
 // Litt ustabile tester på raskere PC-er. Kan være at det er for lite tid mellom oppdatering av cache og henting av data.
 // Kjører stabilt i Github Actions.
+// En mulig fiks kan være å bruke @Cacheable i stedet for å lage en egen cache-klasse.
 @ExtendWith(MockKExtension::class)
 internal class SoknadStatsCacheTest {
     @MockK
