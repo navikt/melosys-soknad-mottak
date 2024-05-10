@@ -28,3 +28,10 @@ ALTINN_SERVICE_CODE: 0000
 DOKGEN_URL: changeme
 
 DATABASE_NAME: testdb
+
+kotest:
+  framework:
+    classpath:
+      scanning:
+        config:
+          disable: true

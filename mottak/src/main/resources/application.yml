@@ -3,9 +3,12 @@ spring:
     url: jdbc:postgresql://${PG_HOST}:5432/${DATABASE_NAME}
   jpa:
     open-in-view: false
+    properties:
+      hibernate:
+        id:
+          db_structure_naming_strategy: legacy
   profiles:
     active: prod
-
 management:
   endpoint:
     metrics:

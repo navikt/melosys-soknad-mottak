@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.12</version>
+        <version>3.2.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -16,150 +16,52 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>altinn-correspondence-agency-external-basic</module>
+        <module>altinn-download-queue-external</module>
         <module>altinn-soknad-skjema</module>
         <module>mottak</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.6.21</kotlin.version>
+        <kotlin.version>1.9.23</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
 
-        <cxf.version>3.4.2</cxf.version>
-        <flyway.version>7.15.0</flyway.version>
-        <h2.version>1.4.200</h2.version>
-        <kotlin-logging.version>1.12.5</kotlin-logging.version>
-        <kotest.version>4.4.1</kotest.version>
-        <kafka-embedded-env.version>2.4.0</kafka-embedded-env.version>
-        <log4j.version>1.2.17</log4j.version>
-        <logstash-encoder.version>6.6</logstash-encoder.version>
-        <micrometer.version>1.8.5</micrometer.version>
+        <cxf.version>4.0.1</cxf.version>
+        <flyway.version>10.9.1</flyway.version>
+        <h2.version>2.2.224</h2.version>
+        <kotlin-logging.version>6.0.3</kotlin-logging.version>
+        <kotest.version>5.8.1</kotest.version>
+        <kafka-embedded-env.version>3.2.6</kafka-embedded-env.version>
+        <logstash-encoder.version>7.4</logstash-encoder.version>
+        <micrometer.version>1.12.3</micrometer.version>
         <pdfbox.version>2.0.26</pdfbox.version>
-        <springfox.version>3.0.0</springfox.version>
-        <tjenestespesifikasjoner.version>1.2020.10.21-14.38-e6bb56478815</tjenestespesifikasjoner.version>
-        <token-support.version>1.3.7</token-support.version>
-        <ulid.version>8.2.0</ulid.version>
+        <token-support.version>3.2.0</token-support.version>
+        <token-validation-test-support.version>2.0.0</token-validation-test-support.version>
+        <ulid.version>8.3.0</ulid.version>
         <vault-jdbc.version>1.3.10</vault-jdbc.version>
+        <jackson-module.version>2.17.0</jackson-module.version>
+        <mockk.version>1.13.10</mockk.version>
+        <org.jvnet.jaxb.version>4.0.3</org.jvnet.jaxb.version>
+        <cxf-codegen-plugin.version>4.0.3</cxf-codegen-plugin.version>
+        <jaxb-impl.version>4.0.4</jaxb-impl.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
 
         <!-- Transitive avhengiheter med konflikter -->
-        <asm.version>9.3</asm.version>
-        <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
-        <cglib-nodep.version>3.3.0</cglib-nodep.version>
-        <github-classgraph.version>4.8.146</github-classgraph.version>
-        <guava.version>30.1.1-jre</guava.version>
-        <javassist.version>3.28.0-GA</javassist.version>
-        <jboss.logging.annotations.version>2.2.1.Final</jboss.logging.annotations.version>
-        <json-smart.version>2.4.8</json-smart.version>
-        <jsr305.version>3.0.2</jsr305.version>
-        <org.osgi.core.version>6.0.0</org.osgi.core.version>
-        <paranamer.version>2.8</paranamer.version>
-        <scala.version>2.12.15</scala.version>
-        <snappy.version>1.1.8.4</snappy.version>
-        <stax2-api.version>4.2.1</stax2-api.version>
-        <woodstox.version>6.2.8</woodstox.version>
-        <xmlsec.version>2.3.0</xmlsec.version>
-        <zkclient.version>0.11</zkclient.version>
-        <zookeeper.version>3.6.2</zookeeper.version>
+        <asm.version>9.5</asm.version>
+        <bcprov-jdk18on.version>1.72</bcprov-jdk18on.version>
+        <jetbrains-annotations.version>23.0.0</jetbrains-annotations.version>
+        <nimbus-jose-jwt.version>9.37.1</nimbus-jose-jwt.version>
+        <guava.version>31.1-jre</guava.version>
+        <woodstox.version>6.6.2</woodstox.version>
+        <xmlsec.version>4.0.2</xmlsec.version>
+        <jaxws-ri.version>4.0.2</jaxws-ri.version>
+        <stax2-api.version>4.2.2</stax2-api.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- Transitive avhengiheter med konflikter -->
-            <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib-nodep</artifactId>
-                <version>${cglib-nodep.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.101tec</groupId>
-                <artifactId>zkclient</artifactId>
-                <version>${zkclient.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.woodstox</groupId>
-                <artifactId>woodstox-core</artifactId>
-                <version>${woodstox.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${jsr305.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.thoughtworks.paranamer</groupId>
-                <artifactId>paranamer</artifactId>
-                <version>${paranamer.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-cli</groupId>
-                <artifactId>commons-cli</artifactId>
-                <version>1.5.0</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.classgraph</groupId>
-                <artifactId>classgraph</artifactId>
-                <version>${github-classgraph.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.el</groupId>
-                <artifactId>jakarta.el-api</artifactId>
-                <version>3.0.3</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.activation</groupId>
-                <artifactId>activation</artifactId>
-                <version>1.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.minidev</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>${json-smart.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.santuario</groupId>
-                <artifactId>xmlsec</artifactId>
-                <version>${xmlsec.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.zookeeper</groupId>
-                <artifactId>zookeeper</artifactId>
-                <version>${zookeeper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bcprov-jdk15on.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.woodstox</groupId>
-                <artifactId>stax2-api</artifactId>
-                <version>${stax2-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>${javassist.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging-annotations</artifactId>
-                <version>${org.jboss.logging.annotations.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging-processor</artifactId>
-                <version>${org.jboss.logging.annotations.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.core</artifactId>
-                <version>${org.osgi.core.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
@@ -181,19 +83,39 @@
                 <version>${asm.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.scala-lang</groupId>
-                <artifactId>scala-library</artifactId>
-                <version>${scala.version}</version>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains-annotations.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.scala-lang</groupId>
-                <artifactId>scala-reflect</artifactId>
-                <version>${scala.version}</version>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.xerial.snappy</groupId>
-                <artifactId>snappy-java</artifactId>
-                <version>${snappy.version}</version>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>stax2-api</artifactId>
+                <version>${stax2-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

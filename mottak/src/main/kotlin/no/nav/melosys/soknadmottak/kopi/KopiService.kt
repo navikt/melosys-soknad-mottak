@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.kopi
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
 import no.nav.melosys.soknadmottak.common.IntegrasjonException
 import no.nav.melosys.soknadmottak.kopi.altinn.KorrespondanseService

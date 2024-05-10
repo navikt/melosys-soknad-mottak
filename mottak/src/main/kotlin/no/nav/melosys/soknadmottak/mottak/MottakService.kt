@@ -1,7 +1,7 @@
 package no.nav.melosys.soknadmottak.mottak
 
-import mu.KotlinLogging
-import mu.withLoggingContext
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.withLoggingContext
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBE
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic

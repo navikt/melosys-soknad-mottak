@@ -1,6 +1,6 @@
 package no.nav.melosys.soknadmottak.kafka
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.melosys.soknadmottak.soknad.SoknadService
 import org.springframework.kafka.support.SendResult
 import org.springframework.stereotype.Service
