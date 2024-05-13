@@ -73,7 +73,7 @@ jobs:
     if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped')
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Deploy til dev-fss
         if: github.event.inputs.environment == 'dev' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
         uses: nais/deploy/actions/deploy@v1
