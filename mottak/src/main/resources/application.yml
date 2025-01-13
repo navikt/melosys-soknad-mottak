@@ -9,7 +9,11 @@ spring:
           db_structure_naming_strategy: legacy
   profiles:
     active: prod
+
 management:
+  health:
+    diskspace:
+      enabled: false
   endpoint:
     metrics:
       enabled: true
