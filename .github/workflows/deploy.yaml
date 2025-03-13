@@ -13,27 +13,32 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-soknad-mottak:${{ github.sha }}
-  IMAGE_MANIFEST: https://docker.pkg.github.com/v2/${{ github.repository }}/melosys-soknad-mottak/manifests/${{ github.sha }}
+  IMAGE: europe-north1-docker.pkg.dev/nais-management-233d/teammelosys/melosys-soknad-mottak:${{ github.sha }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   check_docker_image_exists:
     name: Check if docker image exists in registry
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "DOCKER_IMAGE_EXISTS_HTTP_STATUS=$(curl -X GET -s -o /dev/null -w "%{http_code}" ${{ env.IMAGE_MANIFEST }} -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }})" >> $GITHUB_ENV
-      - id: set_output
+      - name: Login to NAIS registry
+        uses: nais/login@v0
+        with:
+          team: teammelosys
+      - name: Check if image exists
+        id: check_image
         run: |
-          if [ ${{ env.DOCKER_IMAGE_EXISTS_HTTP_STATUS }} -eq 200 ]
-          then
-            echo "::set-output name=exists::true"
+          if docker manifest inspect ${{ env.IMAGE }} >/dev/null 2>&1; then
+            echo "Image eksisterer i registry"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=exists::false"
+            echo "Image eksisterer ikke i registry"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
     outputs:
-      exists: ${{ steps.set_output.outputs.exists }}
+      exists: ${{ steps.check_image.outputs.image_exists }}
 
   build:
     runs-on: ubuntu-latest
@@ -58,14 +63,11 @@ jobs:
         run: mvn --settings .github/maven-settings.xml clean package -B -e -U
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build docker image
-        run: docker build -t ${IMAGE} .
-      - name: Login to Github Package Registry
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-      - name: Push Docker image
-        run: docker push ${IMAGE}
+      - name: Build and publish Docker image
+        uses: nais/docker-build-push@v0
+        with:
+          team: teammelosys
+          tag: ${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -76,19 +78,19 @@ jobs:
         uses: actions/checkout@v3
       - name: Deploy til dev-fss
         if: github.event.inputs.environment == 'dev' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais.yaml
+          IMAGE: ${{ env.IMAGE }}
           VAR: ingress=https://melosys-soknad-mottak.dev.intern.nav.no,KAFKA_POOL=nav-dev
       - name: Deploy til prod-fss
         if: github.event.inputs.environment == 'prod' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais.yaml
+          IMAGE: ${{ env.IMAGE }}
           VAR: ingress=https://melosys-soknad-mottak.intern.nav.no,KAFKA_POOL=nav-prod
       - run: echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
       - name: Slack Notification (deploy success)
