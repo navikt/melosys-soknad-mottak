@@ -19,7 +19,7 @@ class SoknadRepositoryTest @Autowired constructor(
         val soknad = Soknad("ref_altinn", false, "blech", Instant.now())
         entityManager.persist(soknad)
         entityManager.flush()
-        val found = soknadRepository.findByIdOrNull(soknad.id)
+        val found = soknadRepository.findByIdOrNull(soknad.id!!)
         assertThat(found).isEqualTo(soknad)
     }
 }
