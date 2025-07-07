@@ -23,7 +23,7 @@ class DokumentRepositoryTest @Autowired constructor(
         }
         entityManager.persist(dokument)
         entityManager.flush()
-        val funnet = dokumentRepository.findByIdOrNull(dokument.id)
+        val funnet = dokumentRepository.findByIdOrNull(dokument.id!!)
         assertThat(funnet).isEqualTo(dokument)
         assertThat(funnet!!.lagretTidspunkt).isNotNull()
     }
