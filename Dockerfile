@@ -1,8 +1,2 @@
-FROM gcr.io/distroless/java17-debian12:nonroot
-LABEL maintainer="Team Melosys"
-WORKDIR /app
-
+FROM ghcr.io/navikt/baseimages/temurin:17
 COPY mottak/target/melosys-soknad-mottak.jar app.jar
-
-ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 -Duser.language=no -Duser.country=NO -Duser.timezone=Europe/Oslo"
-CMD ["/app/app.jar"]
