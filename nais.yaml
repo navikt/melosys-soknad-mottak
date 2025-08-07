@@ -29,6 +29,12 @@ spec:
     requests:
       cpu: 200m
       memory: 512Mi
+  accessPolicy:
+    inbound:
+      rules:
+        {{#each accessPolicy.inbound.rules }}
+           - application: {{application}}
+          {{/each }}
   ingresses:
     - {{ingress}}
   vault:
