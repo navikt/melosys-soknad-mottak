@@ -1,0 +1,11 @@
+{
+  "accessPolicy": {
+    "inbound": {
+      "rules": [
+        {
+          "application": "melosys"
+        }
+      ]
+    }
+  }
+}

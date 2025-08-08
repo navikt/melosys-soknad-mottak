@@ -84,6 +84,7 @@ jobs:
           RESOURCE: nais.yaml
           IMAGE: ${{ env.IMAGE }}
           VAR: ingress=https://melosys-soknad-mottak.dev.intern.nav.no,KAFKA_POOL=nav-dev
+          VARS: nais-dev.json
       - name: Deploy til prod-fss
         if: github.event.inputs.environment == 'prod' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
         uses: nais/deploy/actions/deploy@v2
@@ -92,6 +93,7 @@ jobs:
           RESOURCE: nais.yaml
           IMAGE: ${{ env.IMAGE }}
           VAR: ingress=https://melosys-soknad-mottak.intern.nav.no,KAFKA_POOL=nav-prod
+          VARS: nais-prod.json
       - run: echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
       - name: Slack Notification (deploy success)
         if: success() && (github.event.inputs.environment == 'prod' || (github.event_name == 'push' && github.ref == 'refs/heads/master'))
