@@ -34,7 +34,6 @@
         <kotest.version>5.8.1</kotest.version>
         <kafka-embedded-env.version>3.2.6</kafka-embedded-env.version>
         <logstash-encoder.version>7.4</logstash-encoder.version>
-        <micrometer.version>1.12.3</micrometer.version>
         <pdfbox.version>2.0.26</pdfbox.version>
         <token-support.version>3.2.0</token-support.version>
         <token-validation-test-support.version>2.0.0</token-validation-test-support.version>
