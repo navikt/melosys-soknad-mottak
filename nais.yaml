@@ -29,6 +29,10 @@ spec:
     requests:
       cpu: 200m
       memory: 512Mi
+  azure:
+    application:
+      enabled: true
+      tenant: {{TENANT_URL}}
   accessPolicy:
     inbound:
       rules:
