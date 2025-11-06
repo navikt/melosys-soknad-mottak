@@ -2,7 +2,7 @@ package no.nav.melosys.soknadmottak.soknad.dokgen
 
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import no.nav.melosys.soknadmottak.soknad.SoknadSkjemaOversetter
-import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.Loader
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ internal class DokgenConsumerImplTestIT @Autowired constructor(
         val søknad = SoknadFactory.lagSoknadFraXmlFil()
         val felter = SoknadSkjemaOversetter.tilSøknadsdata(søknad)
 
-        val doc = PDDocument.load(dokgenConsumer.lagPDF("soeknad", felter))
+        val doc = Loader.loadPDF(dokgenConsumer.lagPDF("soeknad", felter))
         assertThat(doc.numberOfPages).isGreaterThan(0)
     }
 }
