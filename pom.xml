@@ -33,7 +33,7 @@
         <kotlin-logging.version>6.0.3</kotlin-logging.version>
         <kotest.version>6.0.4</kotest.version>
         <kafka-embedded-env.version>3.2.8</kafka-embedded-env.version>
-        <logstash-encoder.version>7.4</logstash-encoder.version>
+        <logstash-encoder.version>9.0</logstash-encoder.version>
         <pdfbox.version>3.0.6</pdfbox.version>
         <token-support.version>3.2.0</token-support.version>
         <token-validation-test-support.version>2.0.0</token-validation-test-support.version>
