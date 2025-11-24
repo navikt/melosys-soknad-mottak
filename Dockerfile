@@ -9,7 +9,7 @@ USER root
 # Fjern avhengigheter som ikke er nødvendige for å kjøre mottak, og som skaper CVEs.
 # Oppdater openssl og dpkg til nyeste versjoner for å fikse CVE-ene
 RUN apt-get update && \
-    apt-get install -y --only-upgrade openssl dpkg && \
+    apt-get upgrade -y openssl dpkg && \
     apt-get remove -y wget && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
