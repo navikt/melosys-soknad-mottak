@@ -51,7 +51,7 @@
         <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
         <jetbrains-annotations.version>26.0.2-1</jetbrains-annotations.version>
         <nimbus-jose-jwt.version>9.37.4</nimbus-jose-jwt.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <woodstox.version>6.6.2</woodstox.version>
         <xmlsec.version>4.0.4</xmlsec.version>
         <jaxws-ri.version>4.0.3</jaxws-ri.version>
