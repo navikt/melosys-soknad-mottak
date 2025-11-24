@@ -28,7 +28,7 @@
         <kotlin.code.style>official</kotlin.code.style>
 
         <cxf.version>4.1.1</cxf.version>
-        <flyway.version>10.22.0</flyway.version>
+        <flyway.version>11.17.1</flyway.version>
         <h2.version>2.4.240</h2.version>
         <kotlin-logging.version>6.0.3</kotlin-logging.version>
         <kotest.version>6.0.5</kotest.version>
