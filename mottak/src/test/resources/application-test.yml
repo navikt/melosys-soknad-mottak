@@ -1,14 +1,12 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:${DATABASE_NAME}
-    username: postgres
-    password: su
+    url: jdbc:tc:postgresql:15:///some-name
   main:
     banner-mode: off
   application:
     name: melosys-soknad-mottak
   flyway:
-    enabled: false
+    enabled: true
 
 port: 60065
 KAFKA_BOOTSTRAP_SERVERS: localhost:${port}
