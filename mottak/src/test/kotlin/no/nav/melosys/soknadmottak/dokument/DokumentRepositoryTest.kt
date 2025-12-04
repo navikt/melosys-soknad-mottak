@@ -1,10 +1,9 @@
 package no.nav.melosys.soknadmottak.dokument
 
+import no.nav.melosys.soknadmottak.RepositoryBaseTest
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
-import no.nav.melosys.soknadmottak.soknad.SoknadRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
@@ -14,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 @DataJpaTest
 @ActiveProfiles("test")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class DokumentRepositoryTest @Autowired constructor(
-    val soknadRepository: SoknadRepository,
-    val dokumentRepository: DokumentRepository,
-) {
+class DokumentRepositoryTest: RepositoryBaseTest(){
 
     @Test
     fun givenNyttDokument_whenLagret_thenFunnet() {
