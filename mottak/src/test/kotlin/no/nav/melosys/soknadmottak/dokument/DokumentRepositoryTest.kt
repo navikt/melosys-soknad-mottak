@@ -1,30 +1,30 @@
 package no.nav.melosys.soknadmottak.dokument
 
+import no.nav.melosys.soknadmottak.RepositoryBaseTest
 import no.nav.melosys.soknadmottak.soknad.SoknadFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @DataJpaTest
-class DokumentRepositoryTest @Autowired constructor(
-    val entityManager: TestEntityManager,
-    val dokumentRepository: DokumentRepository
-) {
+@ActiveProfiles("test")
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+class DokumentRepositoryTest: RepositoryBaseTest(){
 
     @Test
     fun givenNyttDokument_whenLagret_thenFunnet() {
-        val soknad = SoknadFactory.lagSoknad()
-        entityManager.persist(soknad)
-        val dokument = DokumentFactory.lagDokument(soknad).apply {
-            lagretTidspunkt = null
-        }
-        entityManager.persist(dokument)
-        entityManager.flush()
+        val soknad = soknadRepository.save(SoknadFactory.lagSoknad())
+
+        val dokument = dokumentRepository.save(DokumentFactory.lagDokument(soknad))
+
         val funnet = dokumentRepository.findByIdOrNull(dokument.id!!)
+
         assertThat(funnet).isEqualTo(dokument)
         assertThat(funnet!!.lagretTidspunkt).isNotNull()
     }
+
 }
