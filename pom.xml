@@ -57,10 +57,18 @@
         <jaxws-ri.version>4.0.3</jaxws-ri.version>
         <stax2-api.version>4.2.2</stax2-api.version>
         <bcpkix-jdk18on.version>1.83</bcpkix-jdk18on.version>
+        <testcontainers.version>2.0.3</testcontainers.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- Støtte for nyere versjoner av Docker enn gjennom spring-boot-testcontainers-->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-postgresql</artifactId>
+                <version>${testcontainers.version}</version>
+            </dependency>
+
             <!-- Transitive avhengiheter med konflikter -->
             <dependency>
                 <groupId>org.ow2.asm</groupId>
