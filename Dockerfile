@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25
+FROM eclipse-temurin:21
 
 # Fang opp nåværende bruker-ID og gruppe-ID (apprunner?)
 RUN echo "$(id -u):$(id -g)" > /tmp/original_user
