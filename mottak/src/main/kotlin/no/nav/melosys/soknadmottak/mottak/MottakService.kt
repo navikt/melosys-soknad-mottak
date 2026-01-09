@@ -5,6 +5,7 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBE
 import no.altinn.schemas.services.archive.downloadqueue._2012._08.DownloadQueueItemBEList
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasicGetDownloadQueueItemsAltinnFaultFaultFaultMessage
 import no.nav.melosys.soknadmottak.common.MDC_CALL_ID
 import no.nav.melosys.soknadmottak.config.AltinnConfig
 import no.nav.melosys.soknadmottak.config.MetrikkConfig
@@ -190,7 +191,12 @@ class MottakService(
         }
 
     fun getDownloadQueueItems(serviceCode: String): DownloadQueueItemBEList =
-        iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)
+        try {
+            iDownloadQueueExternalBasic.getDownloadQueueItems(brukernavn, passord, serviceCode)
+        } catch (e: IDownloadQueueExternalBasicGetDownloadQueueItemsAltinnFaultFaultFaultMessage) {
+            logger.error { "Altinn fault in getDownloadQueueItems: ${e.faultInfo}" }
+            throw e
+        }
 
     private fun purgeItem(arkivRef: String) =
         iDownloadQueueExternalBasic.purgeItem(brukernavn, passord, arkivRef)
