@@ -1,4 +1,4 @@
-FROM ghcr.io/navikt/baseimages/temurin:17
+FROM eclipse-temurin:21
 
 # Fang opp nåværende bruker-ID og gruppe-ID (apprunner?)
 RUN echo "$(id -u):$(id -g)" > /tmp/original_user
