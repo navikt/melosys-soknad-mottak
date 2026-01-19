@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: {{APP_NAME}}
+  name: melosys-soknad-mottak
   namespace: teammelosys
   labels:
     team: teammelosys
@@ -31,7 +31,7 @@ spec:
       memory: 512Mi
   envFrom:
     - secret:
-        name: {{APP_NAME}}
+        name: melosys-soknad-mottak
   azure:
     application:
       enabled: true
