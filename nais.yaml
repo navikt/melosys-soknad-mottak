@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: melosys-soknad-mottak
+  name: {{APP_NAME}}
   namespace: teammelosys
   labels:
     team: teammelosys
@@ -29,6 +29,9 @@ spec:
     requests:
       cpu: 200m
       memory: 512Mi
+  envFrom:
+    - secret:
+        name: {{APP_NAME}}
   azure:
     application:
       enabled: true
@@ -41,8 +44,6 @@ spec:
           {{/each }}
   ingresses:
     - {{ingress}}
-  vault:
-    enabled: true
   kafka:
     pool: {{ KAFKA_POOL }}
 
