@@ -3,7 +3,6 @@ package no.nav.melosys.soknadmottak.config
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import jakarta.persistence.EntityManagerFactory
-import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer
 import org.springframework.context.annotation.Bean
@@ -23,14 +22,6 @@ import javax.sql.DataSource
 @Configuration
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {
-    companion object {
-        private const val PROD_MOUNT_PATH = "postgresql/prod-fss"
-        private const val PREPROD_MOUNT_PATH = "postgresql/preprod-fss"
-    }
-
-    private val isProduction: Boolean =
-        environment.getProperty("NAIS_CLUSTER_NAME")?.equals("prod-fss", ignoreCase = true) ?: false
-
     @Bean
     fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean =
         LocalContainerEntityManagerFactoryBean().apply {
@@ -59,24 +50,14 @@ class DatabaseConfig(private val environment: Environment) {
 
     @Bean
     fun flywayConfig(@Qualifier("adminDataSource") adminDataSource: DataSource): FlywayConfigurationCustomizer =
-        FlywayConfigurationCustomizer {
-            it.initSql("SET ROLE \"${environment.getRequiredProperty("DATABASE_NAME")}-admin\"")
-                .dataSource(adminDataSource)
-        }
+        FlywayConfigurationCustomizer { it.dataSource(adminDataSource) }
 
     private fun dataSource(user: String): HikariDataSource =
         HikariConfig().apply {
-            jdbcUrl = environment.getProperty("spring.datasource.url")
+            jdbcUrl = environment.getRequiredProperty("spring.datasource.url")
             maximumPoolSize = 3
             minimumIdle = 1
-        }.let { config ->
-            HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, getMountPath(), dbRole(user))
-        }
-
-    private fun getMountPath() = when {
-        isProduction -> PROD_MOUNT_PATH
-        else -> PREPROD_MOUNT_PATH
-    }
-
-    private fun dbRole(role: String) = arrayOf(environment.getProperty("DATABASE_NAME"), role).joinToString("-")
+            username = environment.getRequiredProperty("spring.datasource.username")
+            password = environment.getRequiredProperty("spring.datasource.password")
+        }.let { config -> HikariDataSource(config) }
 }
