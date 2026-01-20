@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21
+FROM ghcr.io/navikt/baseimages/temurin:17
 
 # Fang opp nåværende bruker-ID og gruppe-ID (apprunner?)
 RUN echo "$(id -u):$(id -g)" > /tmp/original_user
@@ -16,14 +16,6 @@ RUN apt-get update && \
 
 # Bytt tilbake til den opprinnelige brukeren ved hjelp av fanget ID
 RUN USER_INFO=$(cat /tmp/original_user) && chown $USER_INFO /tmp/original_user
+USER $(cat /tmp/original_user | cut -d: -f1)
 
 COPY mottak/target/melosys-soknad-mottak.jar app.jar
-
-COPY scripts/init-scripts/ /init-scripts
-COPY scripts/entrypoint.sh /entrypoint.sh
-COPY scripts/run-java.sh /run-java.sh
-RUN chmod +x /entrypoint.sh /run-java.sh
-
-ENV APP_JAR=/app.jar
-USER $(cat /tmp/original_user | cut -d: -f1)
-ENTRYPOINT ["/entrypoint.sh"]
