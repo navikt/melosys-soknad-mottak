@@ -52,15 +52,12 @@ class DatabaseConfig(private val environment: Environment) {
         FlywayConfigurationCustomizer { it.dataSource(adminDataSource) }
 
     private fun dataSource(): HikariDataSource {
-        val jdbcUrl = environment.getProperty("spring.datasource.url")
-            ?: "jdbc:postgresql://${environment.getRequiredProperty("PG_HOST")}:5432/${environment.getRequiredProperty("DATABASE_NAME")}"
-        val username = environment.getProperty("spring.datasource.username")
-            ?: environment.getRequiredProperty("SRV_USERNAME")
-        val password = environment.getProperty("spring.datasource.password")
-            ?: environment.getRequiredProperty("SRV_PASSWORD")
+        val jdbcUrl = environment.getRequiredProperty("spring.datasource.url")
+        val username = environment.getRequiredProperty("spring.datasource.username")
+        val password = environment.getRequiredProperty("spring.datasource.password")
 
-        logger.info {
-            "DB config resolved: url=$jdbcUrl, user=$username, passwordSet=${password.isNotBlank()}, " +
+        logger.warn { // temp visibility in tests; remove before prod
+            "DB_CONFIG url=$jdbcUrl user=$username passwordSet=${password.isNotBlank()} " +
                 "cluster=${environment.getProperty("NAIS_CLUSTER_NAME")}"
         }
 
