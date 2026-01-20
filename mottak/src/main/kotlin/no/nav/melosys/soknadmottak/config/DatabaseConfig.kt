@@ -2,6 +2,7 @@ package no.nav.melosys.soknadmottak.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManagerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer
@@ -22,6 +23,8 @@ import javax.sql.DataSource
 @Configuration
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {
+    private val logger = KotlinLogging.logger {}
+
     @Bean
     fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean =
         LocalContainerEntityManagerFactoryBean().apply {
@@ -38,26 +41,37 @@ class DatabaseConfig(private val environment: Environment) {
         JpaTransactionManager(entityManagerFactory)
 
     @Bean
-    fun adminDataSource(): DataSource {
-        return dataSource("admin")
-    }
+    fun adminDataSource(): DataSource = dataSource()
 
     @Primary
     @Bean
-    fun userDataSource(): DataSource {
-        return dataSource("user")
-    }
+    fun userDataSource(): DataSource = dataSource()
 
     @Bean
     fun flywayConfig(@Qualifier("adminDataSource") adminDataSource: DataSource): FlywayConfigurationCustomizer =
         FlywayConfigurationCustomizer { it.dataSource(adminDataSource) }
 
-    private fun dataSource(user: String): HikariDataSource =
-        HikariConfig().apply {
-            jdbcUrl = environment.getRequiredProperty("spring.datasource.url")
-            maximumPoolSize = 3
-            minimumIdle = 1
-            username = environment.getRequiredProperty("spring.datasource.username")
-            password = environment.getRequiredProperty("spring.datasource.password")
-        }.let { config -> HikariDataSource(config) }
+    private fun dataSource(): HikariDataSource {
+        val jdbcUrl = environment.getProperty("spring.datasource.url")
+            ?: "jdbc:postgresql://${environment.getRequiredProperty("PG_HOST")}:5432/${environment.getRequiredProperty("DATABASE_NAME")}"
+        val username = environment.getProperty("spring.datasource.username")
+            ?: environment.getRequiredProperty("SRV_USERNAME")
+        val password = environment.getProperty("spring.datasource.password")
+            ?: environment.getRequiredProperty("SRV_PASSWORD")
+
+        logger.info {
+            "DB config resolved: url=$jdbcUrl, user=$username, passwordSet=${password.isNotBlank()}, " +
+                "cluster=${environment.getProperty("NAIS_CLUSTER_NAME")}"
+        }
+
+        return HikariDataSource(
+            HikariConfig().apply {
+                this.jdbcUrl = jdbcUrl
+                maximumPoolSize = 3
+                minimumIdle = 1
+                this.username = username
+                this.password = password
+            }
+        )
+    }
 }
