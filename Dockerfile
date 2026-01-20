@@ -18,3 +18,4 @@ RUN USER_INFO=$(cat /tmp/original_user) && chown $USER_INFO /tmp/original_user
 USER $(cat /tmp/original_user | cut -d: -f1)
 
 COPY mottak/target/melosys-soknad-mottak.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
