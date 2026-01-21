@@ -2,8 +2,8 @@ package no.nav.melosys.soknadmottak.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManagerFactory
+import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer
 import org.springframework.context.annotation.Bean
@@ -23,7 +23,13 @@ import javax.sql.DataSource
 @Configuration
 @EnableJpaRepositories(basePackages = ["no.nav.melosys.soknadmottak"])
 class DatabaseConfig(private val environment: Environment) {
-    private val logger = KotlinLogging.logger {}
+    companion object {
+        private const val PROD_MOUNT_PATH = "postgresql/prod-fss"
+        private const val PREPROD_MOUNT_PATH = "postgresql/preprod-fss"
+    }
+
+    private val isProduction: Boolean =
+        environment.getProperty("NAIS_CLUSTER_NAME")?.equals("prod-fss", ignoreCase = true) ?: false
 
     @Bean
     fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean =
@@ -41,34 +47,36 @@ class DatabaseConfig(private val environment: Environment) {
         JpaTransactionManager(entityManagerFactory)
 
     @Bean
-    fun adminDataSource(): DataSource = dataSource()
+    fun adminDataSource(): DataSource {
+        return dataSource("admin")
+    }
 
     @Primary
     @Bean
-    fun userDataSource(): DataSource = dataSource()
+    fun userDataSource(): DataSource {
+        return dataSource("user")
+    }
 
     @Bean
     fun flywayConfig(@Qualifier("adminDataSource") adminDataSource: DataSource): FlywayConfigurationCustomizer =
-        FlywayConfigurationCustomizer { it.dataSource(adminDataSource) }
-
-    private fun dataSource(): HikariDataSource {
-        val jdbcUrl = environment.getRequiredProperty("spring.datasource.url")
-        val username = environment.getRequiredProperty("spring.datasource.username")
-        val password = environment.getRequiredProperty("spring.datasource.password")
-
-        logger.warn { // temp visibility in tests; remove before prod
-            "DB_CONFIG url=$jdbcUrl user=$username passwordSet=${password.isNotBlank()} " +
-                "cluster=${environment.getProperty("NAIS_CLUSTER_NAME")}"
+        FlywayConfigurationCustomizer {
+            it.initSql("SET ROLE \"${environment.getRequiredProperty("DATABASE_NAME")}-admin\"")
+                .dataSource(adminDataSource)
         }
 
-        return HikariDataSource(
-            HikariConfig().apply {
-                this.jdbcUrl = jdbcUrl
-                maximumPoolSize = 3
-                minimumIdle = 1
-                this.username = username
-                this.password = password
-            }
-        )
+    private fun dataSource(user: String): HikariDataSource =
+        HikariConfig().apply {
+            jdbcUrl = environment.getProperty("spring.datasource.url")
+            maximumPoolSize = 3
+            minimumIdle = 1
+        }.let { config ->
+            HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, getMountPath(), dbRole(user))
+        }
+
+    private fun getMountPath() = when {
+        isProduction -> PROD_MOUNT_PATH
+        else -> PREPROD_MOUNT_PATH
     }
+
+    private fun dbRole(role: String) = arrayOf(environment.getProperty("DATABASE_NAME"), role).joinToString("-")
 }
