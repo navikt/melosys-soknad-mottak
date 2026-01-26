@@ -29,6 +29,8 @@ spec:
     requests:
       cpu: 200m
       memory: 512Mi
+  envFrom:
+    - secret: melosys-soknad-mottak
   azure:
     application:
       enabled: true

@@ -1,5 +1,4 @@
-FROM ghcr.io/navikt/baseimages/temurin:17
-
+FROM eclipse-temurin:21
 # Fang opp nåværende bruker-ID og gruppe-ID (apprunner?)
 RUN echo "$(id -u):$(id -g)" > /tmp/original_user
 
@@ -19,3 +18,4 @@ RUN USER_INFO=$(cat /tmp/original_user) && chown $USER_INFO /tmp/original_user
 USER $(cat /tmp/original_user | cut -d: -f1)
 
 COPY mottak/target/melosys-soknad-mottak.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
