@@ -13,9 +13,13 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
+# Kopier filer mens vi er root for å sikre riktige tillatelser
+COPY mottak/target/melosys-soknad-mottak.jar /app.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Bytt tilbake til den opprinnelige brukeren ved hjelp av fanget ID
 RUN USER_INFO=$(cat /tmp/original_user) && chown $USER_INFO /tmp/original_user
 USER $(cat /tmp/original_user | cut -d: -f1)
 
-COPY mottak/target/melosys-soknad-mottak.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["/entrypoint.sh"]
