@@ -45,5 +45,5 @@ spec:
     enabled: true
   kafka:
     pool: {{ KAFKA_POOL }}
-
-
+  envFrom:
+    - secret: melosys-soknad-mottak
