@@ -21,21 +21,21 @@ class MottakAdminController @Autowired constructor(
     private val altinnConfig: AltinnConfig
 ) {
     @GetMapping
-    fun sjekkDownloadQueueStatus(
+    fun sjekkAltinnIntegrasjonStatus(
         @RequestParam(required = false) serviceCode: String?
-    ): ResponseEntity<DownloadQueueStatusDto> {
+    ): ResponseEntity<AltinnIntegrasjonStatusDto> {
         val code = serviceCode ?: altinnConfig.downloadQueue.code
         return try {
             mottakService.getDownloadQueueItems(code)
-            ResponseEntity.ok(DownloadQueueStatusDto(status = "UP"))
+            ResponseEntity.ok(AltinnIntegrasjonStatusDto(altinnIntegrasjon = "Up"))
         } catch (t: Throwable) {
             logger.warn(t) { "Klarte ikke å hente download queue items fra Altinn" }
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(DownloadQueueStatusDto(status = "DOWN"))
+                .body(AltinnIntegrasjonStatusDto(altinnIntegrasjon = "Down"))
         }
     }
 }
 
-data class DownloadQueueStatusDto(
-    val status: String,
+data class AltinnIntegrasjonStatusDto(
+    val altinnIntegrasjon: String
 )
