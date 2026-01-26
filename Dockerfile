@@ -1,21 +1,31 @@
-FROM ghcr.io/navikt/baseimages/temurin:17
+FROM eclipse-temurin:21-jre
 
-# Fang opp nåværende bruker-ID og gruppe-ID (apprunner?)
-RUN echo "$(id -u):$(id -g)" > /tmp/original_user
-
-# Bytt til root for å oppdatere og fjerne pakker
-USER root
-
-# Fjern avhengigheter som ikke er nødvendige for å kjøre mottak, og som skaper CVEs.
-# Oppdater openssl og dpkg til nyeste versjoner for å fikse CVE-ene
 RUN apt-get update && \
+    apt-get install -y --no-install-recommends dumb-init locales && \
     apt-get upgrade -y openssl dpkg && \
-    apt-get remove -y wget && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-# Bytt tilbake til den opprinnelige brukeren ved hjelp av fanget ID
-RUN USER_INFO=$(cat /tmp/original_user) && chown $USER_INFO /tmp/original_user
-USER $(cat /tmp/original_user | cut -d: -f1)
+RUN sed -i -e 's/# nb_NO.UTF-8 UTF-8/nb_NO.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
+ENV LC_ALL="nb_NO.UTF-8"
+ENV LANG="nb_NO.UTF-8"
+ENV TZ="Europe/Oslo"
+ENV APP_JAR=app.jar
+
+RUN groupadd -r --gid 1069 apprunner && useradd -r --uid 1069 -g apprunner apprunner
+
+WORKDIR /app
+
+COPY --chown=apprunner:root docker/init-scripts/ /init-scripts/
+COPY --chown=apprunner:root docker/entrypoint.sh /entrypoint.sh
+COPY --chown=apprunner:root docker/run-java.sh /run-java.sh
+RUN chmod +x /entrypoint.sh /run-java.sh /init-scripts/*.sh
+
+RUN chown -R apprunner /app
+USER apprunner
+
+EXPOSE 8080
 
 COPY mottak/target/melosys-soknad-mottak.jar app.jar
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/entrypoint.sh"]
