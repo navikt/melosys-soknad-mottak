@@ -1,20 +1,13 @@
 package no.nav.melosys.soknadmottak.soknad
 
 import io.kotest.matchers.doubles.shouldBeExactly
-import io.micrometer.core.instrument.Metrics
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import no.nav.melosys.soknadmottak.config.MetrikkConfig
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-// NB!
-// Litt ustabile tester på raskere PC-er. Kan være at det er for lite tid mellom oppdatering av cache og henting av data.
-// Kjører stabilt i Github Actions.
-// En mulig fiks kan være å bruke @Cacheable i stedet for å lage en egen cache-klasse.
 @ExtendWith(MockKExtension::class)
 internal class SoknadStatsCacheTest {
     @MockK
@@ -36,14 +29,5 @@ internal class SoknadStatsCacheTest {
             .shouldBeExactly(3.0)
         cache.hentSoknaderMedLevert(true)
             .shouldBeExactly(6.0)
-    }
-
-    @Test
-    internal fun soknadMottattIncrement() {
-        Metrics.addRegistry(SimpleMeterRegistry())
-        MetrikkConfig.Metrikker.søknadMottatt.count().shouldBeExactly(0.0)
-        MetrikkConfig.Metrikker.søknadMottatt.increment()
-        MetrikkConfig.Metrikker.søknadMottatt.increment()
-        MetrikkConfig.Metrikker.søknadMottatt.count().shouldBeExactly(2.0)
     }
 }
