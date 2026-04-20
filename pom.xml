@@ -56,7 +56,7 @@
         <xmlsec.version>4.0.4</xmlsec.version>
         <jaxws-ri.version>4.0.3</jaxws-ri.version>
         <stax2-api.version>4.2.2</stax2-api.version>
-        <bcpkix-jdk18on.version>1.83</bcpkix-jdk18on.version>
+        <bcpkix-jdk18on.version>1.84</bcpkix-jdk18on.version>
         <testcontainers.version>2.0.3</testcontainers.version>
     </properties>
 
