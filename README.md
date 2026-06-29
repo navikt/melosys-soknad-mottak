@@ -1,3 +1,5 @@
+Erstattet av https://github.com/navikt/melosys-skjema-api
+
 # melosys-soknad-mottak
 Mottaksapplikasjon for søknader om trygdetilhørighet av utsendte arbeidstakere.
 
