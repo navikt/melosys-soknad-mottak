@@ -30,7 +30,7 @@
         <cxf.version>4.1.2</cxf.version>
         <flyway.version>11.18.0</flyway.version>
         <h2.version>2.4.240</h2.version>
-        <kotlin-logging.version>6.0.3</kotlin-logging.version>
+        <kotlin-logging.version>8.0.01</kotlin-logging.version>
         <kotest.version>6.1.11</kotest.version>
         <kafka-embedded-env.version>3.2.8</kafka-embedded-env.version>
         <logstash-encoder.version>9.0</logstash-encoder.version>
